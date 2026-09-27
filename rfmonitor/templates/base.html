@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Renda Fixa Monitor{% endblock %}</title>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--ink:#1c2230;--muted:#667085;--line:#e4e7ec;--accent:#1d4ed8;
+--up:#067647;--down:#b42318;--warn:#b54708;--chip:#eef2ff}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1115;--card:#171a21;--ink:#e6e8ee;--muted:#98a2b3;
+--line:#2a2f3a;--accent:#7aa2ff;--up:#47cd89;--down:#f97066;--warn:#fdb022;--chip:#1e2640}}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+background:var(--bg);color:var(--ink)}a{color:var(--accent);text-decoration:none}
+header{display:flex;gap:16px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--card)}
+header b{font-size:16px}header nav{display:flex;gap:14px;margin-left:auto}
+main{max-width:1280px;margin:0 auto;padding:20px 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+h2{font-size:15px;margin:0 0 12px}table{width:100%;border-collapse:collapse}
+th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.02em}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.up{color:var(--up)}.down{color:var(--down)}.muted{color:var(--muted)}.small{font-size:12px}
+.chip{display:inline-block;padding:1px 8px;border-radius:99px;background:var(--chip);font-size:12px;font-weight:600}
+.BUY{background:#dcfae6;color:#067647}.SELL{background:#fee4e2;color:#b42318}
+.HOLD\*{background:#fef0c7;color:#b54708}
+@media (prefers-color-scheme:dark){.BUY{background:#053321;color:#47cd89}.SELL{background:#55160c;color:#f97066}
+.HOLD\*{background:#4e1d09;color:#fdb022}}
+.sev-high{color:var(--down);font-weight:600}
+input,button,select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+button{background:var(--accent);color:#fff;border:0;cursor:pointer}button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+form.inline{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.scroll{overflow-x:auto}.kv td:first-child{color:var(--muted);width:40%}
+canvas{max-height:260px}
+</style>
+</head>
+<body>
+<header><b>📈 Renda Fixa Monitor</b>
+<nav><a href="/">Dashboard</a><a href="/alerts">Alertas</a><a href="/docs">API</a></nav></header>
+<main>{% block body %}{% endblock %}</main>
+</body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="card">
+  <h2>Adicionar ativo</h2>
+  <form class="inline" method="post" action="/add">
+    <input name="isin" placeholder="ISIN (ex.: BRBRKMDBS0A1, USN15516AB8)" required size="34">
+    <input name="stock_ticker" placeholder="Ação do emissor (opcional)" size="20">
+    <input name="cetip_code" placeholder="Código CETIP (CRI/CRA)" size="20">
+    <button>Adicionar</button>
+  </form>
+  <p class="muted small">Debêntures, CRI/CRA, Tesouro e eurobonds. O ISIN é resolvido automaticamente (SND, CVM, OpenFIGI, brapi).</p>
+</div>
+
+<div class="card">
+  <div class="inline" style="display:flex;justify-content:space-between;align-items:center">
+    <h2>Carteira monitorada</h2>
+    <form method="post" action="/collect"><button class="ghost">↻ Atualizar agora</button></form>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Ativo</th><th>Tipo</th><th class="num">Preço</th><th class="num">Taxa</th><th class="num">Spread</th>
+      <th class="num">Ação emissor</th><th>Sinal</th><th>Último alerta</th></tr>
+    {% for r in rows %}{% set i = r.info %}{% set l = r.last %}
+    <tr>
+      <td><a href="/asset/{{ i.isin }}"><b>{{ i.name }}</b></a><br><span class="muted small">{{ i.isin }}{% if i.cetip_code %} · {{ i.cetip_code }}{% endif %}{% if i.maturity %} · venc. {{ i.maturity }}{% endif %}</span></td>
+      <td><span class="chip">{{ i.kind }}</span><br><span class="small muted">{{ i.index_text or i.tpf_titulo or '' }}</span></td>
+      <td class="num">{{ l.price|fmt(2) }}<br><span class="small muted">{{ l.price_date or '' }}</span></td>
+      <td class="num">{{ l['yield']|fmt(2, '%') }}{% if l.yield_chg %}<br><span class="small {{ 'down' if l.yield_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.yield_chg*100) }} bps</span>{% endif %}</td>
+      <td class="num">{{ l.spread_bps|fmt(0, ' bps') }}{% if l.spread_bps_chg %}<br><span class="small {{ 'down' if l.spread_bps_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.spread_bps_chg) }}</span>{% endif %}</td>
+      <td class="num">{% if i.stock_ticker %}{{ i.stock_ticker }} {{ l.stock_close|fmt(2) }}{% if l.stock_pct is not none %}<br><span class="small {{ 'up' if l.stock_pct >= 0 else 'down' }}">{{ '%+.1f'|format(l.stock_pct) }}%</span>{% endif %}{% else %}—{% endif %}</td>
+      <td><span class="chip {{ r.signal.label }}">{{ r.signal.label }}</span>{% if r.signal.score is not none %}<br><span class="small muted">score {{ r.signal.score }}</span>{% endif %}</td>
+      <td class="small">{% if r.last_alert %}<span class="{{ 'sev-high' if r.last_alert.severity == 'high' }}">{{ r.last_alert.message[:90] }}</span><br><span class="muted">{{ r.last_alert.ts[:16] }}</span>{% else %}—{% endif %}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" class="muted">Nenhum ativo ainda — adicione um ISIN acima.</td></tr>
+    {% endfor %}
+  </table></div>
+</div>
+
+<div class="card">
+  <h2>Alertas recentes</h2>
+  <table>{% for a in alerts %}
+    <tr><td class="small muted" style="width:140px">{{ a.ts[:16] }}</td><td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td></tr>
+  {% else %}<tr><td class="muted">Sem alertas.</td></tr>{% endfor %}</table>
+  <p class="small muted">E-mail: {{ 'ativo → ' ~ settings.alert_email_to if settings.email_enabled else 'desativado (configure SMTP_* no .env)' }}
+   · Atualização a cada {{ settings.collect_every_minutes }} min</p>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+# secrets & personal data — never commit
+.env
+watchlist.yaml
+data/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+*.egg-info/

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Alertas · Renda Fixa Monitor{% endblock %}
+{% block body %}
+<div class="card">
+  <h2>Todos os alertas</h2>
+  <div class="scroll"><table>
+    <tr><th>Quando (UTC)</th><th>ISIN</th><th>Regra</th><th>Mensagem</th><th>E-mail</th></tr>
+    {% for a in alerts %}
+    <tr><td class="small muted">{{ a.ts[:16] }}</td><td class="small"><a href="/asset/{{ a.isin }}">{{ a.isin }}</a></td>
+      <td><span class="chip">{{ a.rule }}</span></td>
+      <td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td><td>{{ '✓' if a.emailed else '' }}</td></tr>
+    {% else %}<tr><td colspan="5" class="muted">Sem alertas.</td></tr>{% endfor %}
+  </table></div>
+</div>
+{% endblock %}

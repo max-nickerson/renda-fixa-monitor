@@ -1,0 +1,10 @@
+# Your watchlist. Copied to watchlist.yaml (git-ignored) on first run; edit that file or use the dashboard.
+# Only `isin` is required. Everything else is optional and overrides what the resolver finds.
+assets:
+  - isin: BRBRKMDBS0A1          # Braskem debenture BRKMA6 (DI + 1.75%)
+  - isin: USN15516AB8           # Braskem Netherlands 4.5% 2028 eurobond (11-char code is OK)
+    stock_ticker: BRKM5         # issuer stock to watch
+    alerts:
+      price_move_pct: 1.5       # per-asset thresholds (see rfmonitor/config.py DEFAULT_ALERTS)
+#  - isin: BRXXXXCRI0X0         # CRI/CRA need the CETIP code for ANBIMA prices
+#    cetip_code: 21L0123456

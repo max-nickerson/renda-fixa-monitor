@@ -1,0 +1,8 @@
+[project]
+name = "renda-fixa-monitor"
+version = "0.1.0"
+description = "Local dashboard, alerts and a relative-value strategy for Brazilian fixed income (debentures, CRI/CRA, Tesouro) and eurobonds."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

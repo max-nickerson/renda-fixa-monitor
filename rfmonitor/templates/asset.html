@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}{{ info.name }} · Renda Fixa Monitor{% endblock %}
+{% block body %}
+<div class="card" style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap">
+  <div>
+    <h2 style="font-size:20px;margin-bottom:4px">{{ info.name }}</h2>
+    <div class="muted">{{ info.isin }} · <span class="chip">{{ info.kind }}</span> · {{ info.issuer or '' }}</div>
+  </div>
+  <div style="text-align:right">
+    <span class="chip {{ signal.label }}" style="font-size:16px;padding:4px 14px">{{ signal.label }}</span>
+    <div class="small muted">score {{ signal.score if signal.score is not none else '—' }} · base {{ signal.basis }} · {{ signal.asof or '' }}</div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Cadastro</h2>
+    <table class="kv">
+      {% for k, label in [('issuer','Emissor'),('parent_name','Controladora (CVM)'),('cnpj','CNPJ'),('cvm_code','Código CVM'),
+        ('stock_ticker','Ação'),('cetip_code','Código CETIP'),('index_text','Indexador'),('tpf_titulo','Título'),
+        ('coupon','Cupom (% a.a.)'),('maturity','Vencimento'),('currency','Moeda'),('tv_symbol','TradingView'),
+        ('news_query','Busca de notícias'),('last_collected','Última coleta')] %}
+        {% if info.get(k) %}<tr><td>{{ label }}</td><td>{{ info.get(k) }}</td></tr>{% endif %}
+      {% endfor %}
+    </table>
+    {% for n in info.notes or [] %}<p class="small" style="color:var(--warn)">⚠ {{ n }}</p>{% endfor %}
+  </div>
+  <div class="card">
+    <h2>Sinal da estratégia</h2>
+    <table class="kv">
+      {% for k, v in signal.components.items() %}<tr><td>{{ k }}</td><td class="num {{ 'up' if v > 0 else 'down' }}">{{ '%+.2f'|format(v) }}</td></tr>{% endfor %}
+    </table>
+    {% if signal.blocked_by %}<p class="small" style="color:var(--warn)">Compra bloqueada: {{ signal.blocked_by|join('; ') }}</p>{% endif %}
+    <p class="small muted">+ = barato/comprar, − = caro/vender. value = z-score do spread · momentum = tendência 20d ·
+      equity = divergência ação×crédito · carry = spread/duration vs volatilidade. Não é recomendação de investimento.</p>
+    <form class="inline" onsubmit="runBacktest(event)">
+      <label class="small">custo (bps) <input id="cost" value="30" size="4"></label>
+      <label class="small">entrada <input id="entry" value="0.75" size="4"></label>
+      <label class="small">saída <input id="exit" value="-0.25" size="4"></label>
+      <button>Rodar backtest</button>
+    </form>
+    <div id="bt" class="small" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card"><h2>Spread (bps)</h2><canvas id="c_spread"></canvas></div>
+  <div class="card"><h2>Taxa (%) / Preço</h2><canvas id="c_yield"></canvas></div>
+  <div class="card"><h2>Ação do emissor</h2><canvas id="c_stock"></canvas></div>
+  <div class="card" id="bt_card" style="display:none"><h2>Backtest — curva de capital</h2><canvas id="c_bt"></canvas></div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Eventos (CVM, notícias)</h2>
+    <table>{% for e in events %}
+      <tr><td class="small muted" style="width:90px">{{ e.ts[:10] }}</td>
+        <td><span class="chip">{{ e.kind }}</span> <a href="{{ e.url }}" target="_blank" rel="noopener" class="{{ 'sev-high' if e.severity == 'high' }}">{{ e.title }}</a>
+        <span class="small muted">{{ e.source }}</span></td></tr>
+    {% else %}<tr><td class="muted">Nenhum evento.</td></tr>{% endfor %}</table>
+  </div>
+  <div class="card">
+    <h2>Alertas</h2>
+    <table>{% for a in alerts %}
+      <tr><td class="small muted" style="width:120px">{{ a.ts[:16] }}</td><td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td></tr>
+    {% else %}<tr><td class="muted">Sem alertas.</td></tr>{% endfor %}</table>
+    <h2 style="margin-top:18px">Inserir preço manual</h2>
+    <form class="inline" method="post" action="/asset/{{ info.isin }}/price">
+      <input type="date" name="d" value="{{ today }}"><input name="price" placeholder="preço (ex.: 54.45)" size="12" required>
+      <button>Salvar</button>
+    </form>
+    <p class="small muted">Útil para eurobonds sem fonte automática (preço limpo em % do par).</p>
+    <form method="post" action="/remove/{{ info.isin }}" onsubmit="return confirm('Remover este ativo e todo o histórico?')" style="margin-top:14px">
+      <button class="ghost" style="color:var(--down)">Remover ativo</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const isin = "{{ info.isin }}";
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--line');
+function line(id, labels, sets) {
+  const el = document.getElementById(id);
+  if (!sets.some(s => s.data.some(v => v !== null))) { el.replaceWith(Object.assign(document.createElement('p'), {className:'muted', textContent:'Sem dados.'})); return; }
+  return new Chart(el, {type:'line', data:{labels, datasets:sets.map(s => ({pointRadius:0, borderWidth:1.6, spanGaps:true, tension:.1, ...s}))},
+    options:{animation:false, interaction:{mode:'index', intersect:false}, scales:{x:{ticks:{maxTicksLimit:8}}}}});
+}
+fetch(`/api/asset/${isin}/series`).then(r => r.json()).then(({dates, series}) => {
+  const s = k => series[k] || dates.map(() => null);
+  line('c_spread', dates, [{label:'spread (bps)', data:s('spread_bps'), borderColor:css('--accent')}]);
+  const hasYield = (series['yield'] || []).some(v => v !== null);
+  line('c_yield', dates, hasYield
+    ? [{label:'taxa %', data:s('yield'), borderColor:css('--warn')}]
+    : [{label:'preço', data:s('price'), borderColor:css('--warn')}]);
+  line('c_stock', dates, [{label:'{{ info.stock_ticker or "ação" }}', data:s('stock_close'), borderColor:css('--up')}]);
+});
+let btChart;
+function runBacktest(ev) {
+  ev.preventDefault();
+  const q = new URLSearchParams({cost_bps:cost.value, entry:entry.value, exit:exit.value});
+  bt.textContent = 'Rodando…';
+  fetch(`/api/asset/${isin}/backtest?${q}`).then(r => r.json()).then(b => {
+    if (b.error) { bt.textContent = b.error; return; }
+    const row = (n, s) => `<tr><td>${n}</td><td class="num">${s.total_return_pct}%</td><td class="num">${s.cagr_pct}%</td><td class="num">${s.vol_pct}%</td><td class="num">${s.sharpe_vs_cash ?? '—'}</td><td class="num">${s.max_drawdown_pct}%</td></tr>`;
+    bt.innerHTML = `<p>${b.from} → ${b.to} · ${b.trades} trades · ${b.time_in_market_pct}% do tempo comprado · acerto ${b.hit_rate_pct ?? '—'}%</p>
+      <table><tr><th></th><th class="num">Retorno</th><th class="num">a.a.</th><th class="num">Vol</th><th class="num">Sharpe</th><th class="num">Max DD</th></tr>
+      ${row('Estratégia', b.strategy)}${row('Buy & hold', b.buy_and_hold)}${row('Caixa', b.cash)}</table>
+      <p class="muted">${b.caveats.join('<br>')}</p>`;
+    bt_card.style.display = '';
+    btChart && btChart.destroy();
+    btChart = line('c_bt', b.equity_curve.dates, [
+      {label:'estratégia', data:b.equity_curve.strategy, borderColor:css('--accent')},
+      {label:'buy & hold', data:b.equity_curve.buy_and_hold, borderColor:css('--muted')}]);
+  });
+}
+</script>
+{% endblock %}
