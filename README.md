@@ -17,6 +17,22 @@ Type an ISIN → the app works out what it is, who the issuer is, which stock to
 
 Alerts appear on the dashboard and can be e-mailed (SMTP).
 
+### How fresh is the data?
+
+Each source is polled as often as it actually changes:
+
+| Data | Updated at source | App polls |
+|---|---|---|
+| Issuer stock (brapi) | ~5 s | every `QUOTES_EVERY_SECONDS` (60 s) during B3 hours, one batched call |
+| Eurobond price (TradingView MCP, optional) | intraday, ~15 min delayed | every 5 min during US hours |
+| Debentures & títulos públicos (ANBIMA) | once a day, ~20h Brasília | every `COLLECT_EVERY_MINUTES` (15 min); new file picked up within ~10 min |
+| Tesouro Direto | once a day | every 15 min |
+| CVM filings / material facts | CVM refreshes daily files | every 15 min (cached 6 h) |
+| News | continuous | every 15 min |
+
+Debentures and CRI/CRA have no free intraday price anywhere — ANBIMA's end-of-day rate is the market reference.
+The dashboard reloads itself every 60 s.
+
 > ⚠️ Research tool, **not investment advice**. Indicative prices are not executable quotes.
 
 ---

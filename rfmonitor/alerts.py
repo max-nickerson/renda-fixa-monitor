@@ -21,6 +21,11 @@ def _last_change(s: pd.Series, periods: int = 1) -> tuple[pd.Timestamp, float, f
     return s.index[-1], float(s.iloc[-1]), float(s.iloc[-1] - s.iloc[-1 - periods])
 
 
+def _week(ts: pd.Timestamp) -> str:
+    y, w, _ = ts.isocalendar()
+    return f"{y}-W{w:02d}"
+
+
 def evaluate(info: dict, new_events: list[dict], entry: dict) -> list[dict]:
     cfg = alert_config(entry)
     isin, name = info["isin"], info.get("name") or info["isin"]
@@ -54,7 +59,7 @@ def evaluate(info: dict, new_events: list[dict], entry: dict) -> list[dict]:
                     fire("spread_move_5d", "high" if ch > 0 else "info", f"spread {ch:+.0f} bps (5d) to {v:.0f} bps", d.date())
             z = strategy._z(s.dropna()).dropna()
             if not z.empty and abs(z.iloc[-1]) >= cfg["spread_zscore"]:
-                fire("spread_zscore", "info", f"spread z-score {z.iloc[-1]:+.1f} (vs {strategy.WINDOW}d)", z.index[-1].date())
+                fire("spread_zscore", "info", f"spread z-score {z.iloc[-1]:+.1f} (vs {strategy.WINDOW}d)", _week(z.index[-1]))
         if "stock_close" in df and (c := _last_change(df["stock_close"])):
             d, v, ch = c
             pct = ch / (v - ch) * 100 if v - ch else 0
@@ -64,8 +69,8 @@ def evaluate(info: dict, new_events: list[dict], entry: dict) -> list[dict]:
             px = df["stock_close"].dropna()
             if len(px) > 20:
                 dd = (px.iloc[-1] / px.tail(20).max() - 1) * 100
-                if dd <= -cfg["stock_drawdown_20d_pct"]:
-                    fire("stock_drawdown", "high", f"stock {dd:.0f}% below 20d high", px.index[-1].date())
+                if dd <= -cfg["stock_drawdown_20d_pct"]:  # state-like condition: at most once a week
+                    fire("stock_drawdown", "high", f"stock {dd:.0f}% below 20d high", _week(px.index[-1]))
 
     recent_cutoff = (pd.Timestamp.now() - pd.Timedelta(days=3)).strftime("%Y-%m-%d")
     for ev in new_events:

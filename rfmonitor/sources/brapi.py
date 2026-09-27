@@ -39,6 +39,18 @@ def quote(ticker: str, range_: str | None = None, interval: str = "1d", modules:
     return (res.get("results") or [{}])[0]
 
 
+def quotes(tickers: list[str]) -> dict[str, dict]:
+    """Latest quotes for many tickers in few calls: {ticker: {price, time, change_pct}}."""
+    out: dict[str, dict] = {}
+    for i in range(0, len(tickers), 20):
+        chunk = tickers[i:i + 20]
+        for r in _get(f"/quote/{','.join(chunk)}").get("results") or []:
+            if r.get("regularMarketPrice") is not None:
+                out[r["symbol"]] = {"price": r["regularMarketPrice"], "time": r.get("regularMarketTime"),
+                                    "change_pct": r.get("regularMarketChangePercent")}
+    return out
+
+
 def history(ticker: str, range_: str = "1y") -> list[tuple[str, float, float | None]]:
     """[(YYYY-MM-DD, close, volume)]"""
     q = quote(ticker, range_=range_)

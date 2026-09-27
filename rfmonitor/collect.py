@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import logging
 from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -293,6 +294,62 @@ def collect_events(info: dict, first_run: bool) -> list[dict]:
             if db.put_event(isin, it["ts"], "news", it["title"], it["url"], it["source"], it["uid"], it["severity"]):
                 new.append({**it, "kind": "news"})
     return new
+
+
+# ---------------------------------------------------------------- intraday refresh
+BRT = ZoneInfo("America/Sao_Paulo")
+NY = ZoneInfo("America/New_York")
+
+
+def b3_open(now: datetime | None = None) -> bool:
+    n = (now or datetime.now(timezone.utc)).astimezone(BRT)
+    return n.weekday() < 5 and (10, 0) <= (n.hour, n.minute) <= (18, 10)
+
+
+def us_bond_hours(now: datetime | None = None) -> bool:
+    n = (now or datetime.now(timezone.utc)).astimezone(NY)
+    return n.weekday() < 5 and 8 <= n.hour < 17
+
+
+def refresh_quotes(include_eurobonds: bool = True) -> list[str]:
+    """Fast path: live issuer stock prices (one batched brapi call) and eurobond prices (TradingView).
+    Today's value is overwritten on every run, so the dashboard and alerts see the latest print."""
+    infos = []
+    for e in load_watchlist():
+        try:
+            info = db.get_asset(isin_mod.normalize(e["isin"]))
+        except ValueError:
+            continue
+        if info:
+            infos.append(info)
+    updated: list[str] = []
+    tickers = sorted({i["stock_ticker"] for i in infos if i.get("stock_ticker")})
+    if tickers and b3_open():
+        try:
+            q = brapi.quotes(tickers)
+        except Exception as e:
+            log.warning("brapi quotes failed: %s", e)
+            q = {}
+        for info in infos:
+            hit = q.get(info.get("stock_ticker"))
+            if not hit:
+                continue
+            d = (pd.Timestamp(hit["time"]).tz_convert(BRT) if hit.get("time") else pd.Timestamp.now(BRT))
+            db.put_observations(info["isin"], [(d.strftime("%Y-%m-%d"), "stock_close", hit["price"])], "brapi_live")
+            info["stock_last"] = {"price": hit["price"], "time": d.strftime("%d/%m %H:%M"),
+                                  "change_pct": hit.get("change_pct")}
+            db.save_asset(info)
+            updated.append(info["isin"])
+    if include_eurobonds and settings.tradingview_mcp and us_bond_hours():
+        now = datetime.now(timezone.utc)
+        for info in infos:
+            last = info.get("tv_last_fetch")
+            if info.get("kind") == "eurobond" and (not last or (now - datetime.fromisoformat(last)).total_seconds() >= 300):
+                collect_eurobond(info)  # at most every 5 min — TradingView data is delayed ~15 min anyway
+                info["tv_last_fetch"] = now.isoformat()
+                db.save_asset(info)
+                updated.append(info["isin"])
+    return sorted(set(updated))
 
 
 # ---------------------------------------------------------------- orchestration

@@ -59,7 +59,8 @@ class Settings:
     tradingview_mcp: bool = field(default_factory=lambda: _env("TRADINGVIEW_MCP", "false").lower() == "true")
     host: str = field(default_factory=lambda: _env("HOST", "127.0.0.1"))
     port: int = field(default_factory=lambda: int(_env("PORT", "8000")))
-    collect_every_minutes: int = field(default_factory=lambda: int(_env("COLLECT_EVERY_MINUTES", "30")))
+    collect_every_minutes: int = field(default_factory=lambda: int(_env("COLLECT_EVERY_MINUTES", "15")))
+    quotes_every_seconds: int = field(default_factory=lambda: int(_env("QUOTES_EVERY_SECONDS", "60")))
     backfill_days: int = field(default_factory=lambda: int(_env("BACKFILL_DAYS", "180")))
 
     @property

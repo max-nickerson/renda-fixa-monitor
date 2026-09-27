@@ -26,7 +26,7 @@
       <td class="num">{{ l.price|fmt(2) }}<br><span class="small muted">{{ l.price_date or '' }}</span></td>
       <td class="num">{{ l['yield']|fmt(2, '%') }}{% if l.yield_chg %}<br><span class="small {{ 'down' if l.yield_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.yield_chg*100) }} bps</span>{% endif %}</td>
       <td class="num">{{ l.spread_bps|fmt(0, ' bps') }}{% if l.spread_bps_chg %}<br><span class="small {{ 'down' if l.spread_bps_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.spread_bps_chg) }}</span>{% endif %}</td>
-      <td class="num">{% if i.stock_ticker %}{{ i.stock_ticker }} {{ l.stock_close|fmt(2) }}{% if l.stock_pct is not none %}<br><span class="small {{ 'up' if l.stock_pct >= 0 else 'down' }}">{{ '%+.1f'|format(l.stock_pct) }}%</span>{% endif %}{% else %}—{% endif %}</td>
+      <td class="num">{% if i.stock_ticker %}{{ i.stock_ticker }} {{ l.stock_close|fmt(2) }}{% if l.stock_pct is not none %}<br><span class="small {{ 'up' if l.stock_pct >= 0 else 'down' }}">{{ '%+.1f'|format(l.stock_pct) }}%</span>{% endif %}{% if i.stock_last %}<br><span class="small muted">{{ i.stock_last.time }}</span>{% endif %}{% else %}—{% endif %}</td>
       <td><span class="chip {{ r.signal.label }}">{{ r.signal.label }}</span>{% if r.signal.score is not none %}<br><span class="small muted">score {{ r.signal.score }}</span>{% endif %}</td>
       <td class="small">{% if r.last_alert %}<span class="{{ 'sev-high' if r.last_alert.severity == 'high' }}">{{ r.last_alert.message[:90] }}</span><br><span class="muted">{{ r.last_alert.ts[:16] }}</span>{% else %}—{% endif %}</td>
     </tr>
@@ -42,6 +42,11 @@
     <tr><td class="small muted" style="width:140px">{{ a.ts[:16] }}</td><td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td></tr>
   {% else %}<tr><td class="muted">Sem alertas.</td></tr>{% endfor %}</table>
   <p class="small muted">E-mail: {{ 'ativo → ' ~ settings.alert_email_to if settings.email_enabled else 'desativado (configure SMTP_* no .env)' }}
-   · Atualização a cada {{ settings.collect_every_minutes }} min</p>
+   · Ações a cada {{ settings.quotes_every_seconds }}s no pregão · coleta completa a cada {{ settings.collect_every_minutes }} min
+   · página atualiza sozinha a cada 60s</p>
 </div>
+<script>
+// Auto-refresh unless the user is typing in the add form.
+setInterval(() => { if (!document.activeElement || document.activeElement.tagName !== 'INPUT') location.reload(); }, 60000);
+</script>
 {% endblock %}

@@ -8,5 +8,6 @@ numpy>=1.26
 apscheduler>=3.10,<4
 pyyaml>=6.0
 python-dotenv>=1.0
+tzdata>=2024.1
 pytest>=8.0
 # Optional: TradingView MCP adapter (eurobond prices). Install with: pip install "mcp>=1.10"

@@ -25,8 +25,8 @@ TPF_COLS = ["titulo", "data_referencia", "codigo_selic", "data_base", "venciment
 
 
 def _read(url: str, name: str, header_token: str, cols: list[str], is_today: bool) -> pd.DataFrame | None:
-    # Past files never change: cache for a year. Today's may not exist yet: re-check hourly.
-    raw = cached_bytes(url, max_age_hours=1 if is_today else 24 * 365, name=name)
+    # Past files never change: cache for a year. Today's may not exist yet (published ~20h): re-check every 10 min.
+    raw = cached_bytes(url, max_age_hours=1 / 6 if is_today else 24 * 365, name=name)
     if not raw:
         return None
     text = raw.decode("latin1")
