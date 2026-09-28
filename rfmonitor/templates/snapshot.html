@@ -49,6 +49,7 @@ td.n,th.n{text-align:right;font-family:var(--mono);font-size:12.5px}
 tr:last-child td{border-bottom:0}
 .nm{font-weight:600}.mut{color:var(--muted);font-size:12px}
 .up{color:var(--good)}.down{color:var(--bad)}.w{color:var(--warn)}
+.spark{display:block;max-width:100%}
 .range{position:relative;height:6px;width:96px;border-radius:3px;background:linear-gradient(90deg,var(--bar-lo),var(--bar-mid),var(--bar-hi));margin-block:5px 3px}
 .range i{position:absolute;top:-3px;width:3px;height:12px;border-radius:1px;background:var(--ink);transform:translateX(-1px)}
 .filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
@@ -113,7 +114,7 @@ const sgn = (v, d = 0) => v === null || v === undefined ? "—" : (v > 0 ? "+" :
 const chg = v => v === null || v === undefined ? '<span class="mut">—</span>' : `<span class="${v > 0 ? "down" : v < 0 ? "up" : "mut"}">${sgn(v)}</span>`;
 
 // header
-$("meta").textContent = `Instantâneo de ${D.generated} · preços ANBIMA de ${D.anbima_date ?? "—"} · somente leitura`;
+$("meta").textContent = `Atualizado em ${D.generated} (Brasília)${D.auto ? " · atualiza sozinho a cada ~30 min em dias úteis" : ""} · preços ANBIMA de ${D.anbima_date ?? "—"} · somente leitura`;
 const reg = (D.regime && D.regime.series) || {};
 $("regime").innerHTML = Object.entries(reg).map(([k, r]) =>
   `<span class="pill ${r.position >= 1 ? "good" : "bad"}" title="${esc(r.model)} · ${esc(r.asof)}"><span class="dot"></span>${esc(k.split(" (")[0])}: ${r.position >= 1 ? "risk-on" : "defensivo"}</span>`).join("");
@@ -143,8 +144,17 @@ function verdictCell(v) {
   const cls = v.startsWith("Barato") ? "up" : v.startsWith("Caro") ? "down" : "mut";
   return `<span class="${cls}">${esc(v)}</span>`;
 }
+function spark(s) {
+  if (!s || !s.v || s.v.length < 2) return "";
+  const w = 150, h = 34, v = s.v, lo = Math.min(...v), hi = Math.max(...v), span = hi - lo || 1;
+  const pts = v.map((y, i) => `${(i / (v.length - 1) * w).toFixed(1)},${(h - 3 - (y - lo) / span * (h - 6)).toFixed(1)}`).join(" ");
+  const last = pts.split(" ").pop().split(",");
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" role="img" aria-label="${s.kind === "spread" ? "Spread" : "Preço"} de ${s.d[0]} a ${s.d[s.d.length - 1]}: mín ${num(lo)}, máx ${num(hi)}">
+    <polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="1.5"/><circle cx="${last[0]}" cy="${last[1]}" r="2.5" fill="var(--accent)"/></svg>
+    <div class="mut">${s.kind === "spread" ? "spread" : "preço"} ${esc(s.d[0].slice(2, 7))}→ · ${num(lo)}–${num(hi)}</div>`;
+}
 function assetRows(rows, withPos) {
-  if (!rows.length) return `<tr><td colspan="10" class="mut">Nenhum ativo.</td></tr>`;
+  if (!rows.length) return `<tr><td colspan="11" class="mut">Nenhum ativo.</td></tr>`;
   return rows.map(r => `<tr>
     <td><div class="nm">${esc(r.name)}</div><div class="mut">${esc(r.index)} · venc. ${esc(r.maturity ?? "—")}</div>
       ${r.alert ? `<div class="mut ${r.alert_high ? "down" : ""}">${esc(r.alert.slice(0, 90))}</div>` : ""}</td>
@@ -152,6 +162,7 @@ function assetRows(rows, withPos) {
     <td class="n">${spreadCell(r)}</td>
     <td class="n">${chg(r.d1)} / ${chg(r.d5)} / ${chg(r.d20)}</td>
     <td>${rangeCell(r)}</td>
+    <td>${spark(r.series)}</td>
     <td class="n">${num(r.fair)}</td>
     <td class="n">${num(r.price, 2)}${r.fair_price ? `<div class="mut">→ ${num(r.fair_price, 2)} <span class="${r.upside > 0 ? "up" : "down"}">(${sgn(r.upside, 1)}%)</span></div>` : ""}</td>
     <td>${verdictCell(r.verdict || "—")}</td>
@@ -159,7 +170,7 @@ function assetRows(rows, withPos) {
     <td><b>${esc(r.action)}</b>${r.blocks && r.blocks.length ? `<div class="mut w">${esc(r.blocks.join("; "))}</div>` : ""}</td>
   </tr>`).join("");
 }
-const head = pos => `<tr><th>Ativo</th><th class="n">Duration</th><th class="n">Spread</th><th class="n">Δ 1d / 5d / 20d</th><th>Faixa histórica</th><th class="n">Justo</th><th class="n">Preço → justo</th><th>Veredito</th><th${pos ? ' class="n">Valor' : ">Ação emissor"}</th><th>Ação</th></tr>`;
+const head = pos => `<tr><th>Ativo</th><th class="n">Duration</th><th class="n">Spread</th><th class="n">Δ 1d / 5d / 20d</th><th>Faixa histórica</th><th>Histórico</th><th class="n">Justo</th><th class="n">Preço → justo</th><th>Veredito</th><th${pos ? ' class="n">Valor' : ">Ação emissor"}</th><th>Ação</th></tr>`;
 const S = D.summary || {};
 $("carteira").innerHTML = `
   ${D.held.length ? `<div class="kpis">

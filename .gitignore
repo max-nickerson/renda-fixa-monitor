@@ -1,7 +1,8 @@
-# secrets & personal data — never commit
+# secrets & personal data - never commit
 .env
-watchlist.yaml
-data/
+/watchlist.yaml
+/data/
+site/
 
 # python
 __pycache__/

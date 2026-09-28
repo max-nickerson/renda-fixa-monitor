@@ -37,6 +37,7 @@ def main() -> None:
     hi.add_argument("--start-year", type=int, default=2021)
     sub.add_parser("models", help="retrain the credit-regime and bond-selection models now")
     sub.add_parser("export", help="write a read-only HTML snapshot of the dashboard (data/export/)")
+    sub.add_parser("site", help="one full cycle + regime + P4 ranking, then write site/index.html (GitHub Pages)")
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -123,6 +124,17 @@ def main() -> None:
     elif args.cmd == "export":
         from .export import export
         print(export())
+    elif args.cmd == "site":
+        from . import screener
+        from .config import ROOT
+        from .export import export
+        from .jobs import run_cycle
+        print(json.dumps(run_cycle(), default=str))
+        if screener.latest() is None:  # first run on a fresh runner/cache
+            screener.run()
+        out = ROOT / "site" / "index.html"
+        out.parent.mkdir(exist_ok=True)
+        print(export(out))
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email

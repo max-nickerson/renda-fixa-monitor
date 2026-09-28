@@ -8,8 +8,10 @@ from __future__ import annotations
 import base64
 import json
 import math
+import os
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from . import db, portfolio
 from .config import DATA_DIR, ROOT
@@ -29,6 +31,20 @@ def _img(name: str) -> str | None:
     return "data:image/png;base64," + base64.b64encode(p.read_bytes()).decode() if p.exists() else None
 
 
+def _series(isin: str, label: str, n: int = 260) -> dict | None:
+    """Last ~year of the asset's spread (or price) for a small chart."""
+    col = "cdi_spread_bps" if label == "CDI+" else "spread_bps" if label == "UST+" else "price"
+    s = db.series(isin, [col])
+    if s.empty or col not in s:
+        s = db.series(isin, ["price"])
+        col = "price"
+        if s.empty:
+            return None
+    s = s[col].dropna().tail(n)
+    return {"kind": "spread" if col != "price" else "price", "d": [d.strftime("%Y-%m-%d") for d in s.index],
+            "v": [round(float(v), 2) for v in s.values]} if len(s) > 1 else None
+
+
 def build_payload() -> dict:
     held, watched = portfolio.position_rows()
     summ = portfolio.summary(held)
@@ -45,6 +61,7 @@ def build_payload() -> dict:
             "cs01": r["cs01"], "carry": r["carry_brl"], "quantity": r["quantity"],
             "alert": (r["last_alert"] or {}).get("message"), "alert_high": (r["last_alert"] or {}).get("severity") == "high",
             "blocks": r["signal"].blocked_by if r["signal"] else [],
+            "series": _series(r["isin"], r["spread_label"]),
         }.items()}
 
     scr = db.load_screener() or {"rows": []}
@@ -63,7 +80,8 @@ def build_payload() -> dict:
     alerts = [{"ts": a["ts"][:16].replace("T", " "), "msg": a["message"], "high": a["severity"] == "high"}
               for a in db.alerts(limit=25)]
     return {
-        "generated": datetime.now().strftime("%d/%m/%Y %H:%M"), "anbima_date": scr.get("date"),
+        "generated": datetime.now(ZoneInfo("America/Sao_Paulo")).strftime("%d/%m/%Y %H:%M"),
+        "auto": bool(os.getenv("GITHUB_ACTIONS")), "anbima_date": scr.get("date"),
         "regime": live.cached_regime(), "summary": {k: _clean(v) for k, v in summ.items() if not isinstance(v, list)},
         "by_issuer": summ.get("by_issuer", []), "ladder": summ.get("ladder", []), "stress": summ.get("stress", []),
         "held": [prow(r) for r in held], "watched": [prow(r) for r in watched], "alerts": alerts,

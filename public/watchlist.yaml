@@ -1,0 +1,10 @@
+# Watchlist for the PUBLIC website (GitHub Pages). This file is public — don't put real positions here.
+# Edit it on GitHub (pencil icon) to add/remove ISINs; the site rebuilds automatically after the commit.
+# Only `isin` is required; `stock_ticker`, `cetip_code` etc. are optional overrides.
+assets:
+- isin: BRBRKMDBS0A1
+- isin: USN15516AB8
+  stock_ticker: BRKM5
+- isin: BRNEOEDBS047
+- isin: BRAALMDBS017
+- isin: BRSTNCNTB0O7
