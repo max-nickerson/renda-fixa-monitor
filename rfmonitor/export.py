@@ -45,6 +45,34 @@ def _series(isin: str, label: str, n: int = 260) -> dict | None:
             "v": [round(float(v), 2) for v in s.values]} if len(s) > 1 else None
 
 
+def _lab3(a: dict | None, b: dict | None) -> dict | None:
+    """Compact round-4 results (stock, commodities, ratings, regulators, sector news) for the snapshot."""
+    if not a:
+        return None
+    ev = [{"name": k, "n": v["n"], "post": v["post_ret_bps"], "post_t": v["post_ret_t"], "spread": v["post_spread_bps"],
+           "spread_t": v["post_spread_t"]} for k, v in a.get("events", {}).items()]
+    strat = []
+    for src in (a.get("strategies", {}), (b or {}).get("strategies", {})):
+        for k, v in src.items():
+            if any(s["name"] == k for s in strat):
+                continue
+            strat.append({"name": k, "vs": v["lag1_25"]["vs_bench_ann_%"], "lag2": v["lag2_25"]["vs_bench_ann_%"],
+                          "c50": v["lag1_50"]["vs_bench_ann_%"], "sharpe": v["lag1_25"]["sharpe"],
+                          "dd": v["lag1_25"]["max_dd_%"], "n": v["lag1_25"]["avg_bonds"]})
+    paired = {k: {"diff": v["diff_ann_%"], "t": v["t"], "p_holm": v.get("p_holm")} for k, v in a.get("paired_vs_p4", {}).items()}
+    abl = [{"name": k, "ic": v["IC"], "vs": v["lag1_25"], "lag2": v["lag2_25"], "c50": v["lag1_50"], "sharpe": v["sharpe"]}
+           for k, v in a.get("ablation", {}).items()]
+    pl = a.get("placebo") or {}
+    rp = (b or {}).get("regulator_placebo") or {}
+    return {"events": ev, "strategies": strat, "paired": paired, "ablation": abl,
+            "com_placebo": {"real_rule": pl.get("real_rule"), "placebo_mean": float(sum(pl.get("placebo_rule", [0])) /
+                            max(len(pl.get("placebo_rule", [])), 1)), "pctile": pl.get("rule_pctile"),
+                            "real_ic": pl.get("real_ic"), "ic_pctile": pl.get("ic_pctile")},
+            "reg_placebo": {"real": rp.get("real"), "shifted_mean": float(sum(rp.get("shifted", [0])) /
+                            max(len(rp.get("shifted", [])), 1))},
+            "coverage": a.get("coverage", {})}
+
+
 def build_payload() -> dict:
     held, watched = portfolio.position_rows()
     summ = portfolio.summary(held)
@@ -88,9 +116,10 @@ def build_payload() -> dict:
         "opp": opp, "universe": scr.get("universe"), "ranked": scr.get("ranked"), "c3_n": scr.get("c3_n"),
         "rich_n": scr.get("rich_n"), "regime_on": scr.get("regime_on"),
         "lab": load("lab_summary.json"), "timing": load("timing_results.json"),
-        "selection": load("selection_results.json"),
+        "selection": load("selection_results.json"), "lab3": _lab3(load("lab3_results.json"), load("lab3b_results.json")),
         "img": {"lab": _img("lab_final_equity_curves.png"), "timing": _img("timing_equity_curves.png"),
-                "selection": _img("selection_equity_curves.png"), "ic": _img("selection_feature_ic.png")},
+                "selection": _img("selection_equity_curves.png"), "ic": _img("selection_feature_ic.png"),
+                "events": _img("lab3_event_studies.png")},
     }
 
 

@@ -1,0 +1,141 @@
+cnpj8,variable,weight,rationale
+50746577,sugar,0.2,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,ethanol_br,0.2,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,soy,0.1,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,corn,0.1,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,diesel_br,-0.1,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,ipca,0.1,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+50746577,selic,-0.3,"Cosan: holding of Raizen (sugar/ethanol/fuel), Rumo (grain rail), Compass (gas), Moove; high holdco leverage"
+33453598,sugar,0.3,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+33453598,ethanol_br,0.3,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+33453598,diesel_br,0.1,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+33453598,gasoline_br,0.1,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+33453598,ibc_br,0.1,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+33453598,usdbrl,0.1,Raizen S.A.: integrated sugar-ethanol + fuel distribution
+07415333,selic,-0.5,"Simpar: holding of Movida, Vamos, JSL; CDI-funded fleets"
+07415333,used_cars,0.3,"Simpar: holding of Movida, Vamos, JSL; CDI-funded fleets"
+07415333,ibc_br,0.2,"Simpar: holding of Movida, Vamos, JSL; CDI-funded fleets"
+07415333,diesel_br,-0.1,"Simpar: holding of Movida, Vamos, JSL; CDI-funded fleets"
+12648327,soy,0.3,"Hidrovias do Brasil: grain barging (Arco Norte), USD-linked contracts, fuel cost"
+12648327,corn,0.2,"Hidrovias do Brasil: grain barging (Arco Norte), USD-linked contracts, fuel cost"
+12648327,diesel_br,-0.3,"Hidrovias do Brasil: grain barging (Arco Norte), USD-linked contracts, fuel cost"
+12648327,usdbrl,0.2,"Hidrovias do Brasil: grain barging (Arco Norte), USD-linked contracts, fuel cost"
+01417222,iron_ore,0.5,MRS: rail volumes dominated by iron ore of Vale/CSN/Usiminas
+01417222,steel,0.1,MRS: rail volumes dominated by iron ore of Vale/CSN/Usiminas
+01417222,diesel_br,-0.3,MRS: rail volumes dominated by iron ore of Vale/CSN/Usiminas
+01417222,ipca,0.1,MRS: rail volumes dominated by iron ore of Vale/CSN/Usiminas
+04739720,coal,-0.3,"Pampa Sul: coal-fired thermal, dispatched when reservoirs low"
+04739720,reservoir,-0.3,"Pampa Sul: coal-fired thermal, dispatched when reservoirs low"
+04739720,pld,0.3,"Pampa Sul: coal-fired thermal, dispatched when reservoirs low"
+01838723,corn,-0.5,"BRF: poultry/pork, feed-grain cost"
+01838723,soy,-0.3,"BRF: poultry/pork, feed-grain cost"
+01838723,usdbrl,0.2,"BRF: poultry/pork, feed-grain cost"
+03853896,cattle_br,-0.6,"Marfrig: beef packer, cattle is cost, USD export/US ops"
+03853896,usdbrl,0.4,"Marfrig: beef packer, cattle is cost, USD export/US ops"
+67620377,cattle_br,-0.6,"Minerva: beef packer, ~60%+ export revenue"
+67620377,usdbrl,0.5,"Minerva: beef packer, ~60%+ export revenue"
+33958695,pld,-0.4,Unipar: electricity-intensive chlor-alkali/PVC; dollarized prices; ethylene cost
+33958695,usdbrl,0.3,Unipar: electricity-intensive chlor-alkali/PVC; dollarized prices; ethylene cost
+33958695,naphtha,-0.2,Unipar: electricity-intensive chlor-alkali/PVC; dollarized prices; ethylene cost
+33958695,ibc_br,0.2,Unipar: electricity-intensive chlor-alkali/PVC; dollarized prices; ethylene cost
+05303439,naphtha,-0.3,Unigel: styrenics/acrylics + leased nitrogen plants (gas -> ammonia/urea)
+05303439,brent,0.2,Unigel: styrenics/acrylics + leased nitrogen plants (gas -> ammonia/urea)
+05303439,urea,0.3,Unigel: styrenics/acrylics + leased nitrogen plants (gas -> ammonia/urea)
+05303439,gas_eu,-0.2,Unigel: styrenics/acrylics + leased nitrogen plants (gas -> ammonia/urea)
+05303439,usdbrl,0.2,Unigel: styrenics/acrylics + leased nitrogen plants (gas -> ammonia/urea)
+33042730,steel,0.5,CSN: steel + large iron-ore mining (CSN Mineracao) + cement
+33042730,iron_ore,0.4,CSN: steel + large iron-ore mining (CSN Mineracao) + cement
+33042730,coal,-0.3,CSN: steel + large iron-ore mining (CSN Mineracao) + cement
+33042730,usdbrl,0.2,CSN: steel + large iron-ore mining (CSN Mineracao) + cement
+33611500,steel,0.6,"Gerdau: scrap-based long steel, large US operations (USD)"
+33611500,iron_ore,-0.1,"Gerdau: scrap-based long steel, large US operations (USD)"
+33611500,coal,-0.1,"Gerdau: scrap-based long steel, large US operations (USD)"
+33611500,usdbrl,0.3,"Gerdau: scrap-based long steel, large US operations (USD)"
+33611500,ibc_br,0.2,"Gerdau: scrap-based long steel, large US operations (USD)"
+60894730,steel,0.7,Usiminas: flat steel with captive iron-ore mine (ore roughly hedged)
+60894730,coal,-0.3,Usiminas: flat steel with captive iron-ore mine (ore roughly hedged)
+60894730,usdbrl,0.2,Usiminas: flat steel with captive iron-ore mine (ore roughly hedged)
+60894730,ibc_br,0.2,Usiminas: flat steel with captive iron-ore mine (ore roughly hedged)
+08213823,usdbrl,0.5,"Aura Almas: gold miner (gold not in variable set), USD revenue"
+08213823,diesel_br,-0.2,"Aura Almas: gold miner (gold not in variable set), USD revenue"
+61409892,usdbrl,0.4,"CBA: aluminium (LME not in variable set), USD revenue, power-intensive"
+61409892,pld,-0.2,"CBA: aluminium (LME not in variable set), USD revenue, power-intensive"
+14998371,wheat,-0.6,Wheat miller: imported wheat is main cost
+14998371,usdbrl,-0.2,Wheat miller: imported wheat is main cost
+61065199,wheat,-0.6,Wheat miller: imported wheat is main cost
+61065199,usdbrl,-0.2,Wheat miller: imported wheat is main cost
+64904295,sugar,-0.2,Camil: rice/beans/pasta + refined sugar (buys crystal sugar)
+64904295,usdbrl,-0.1,Camil: rice/beans/pasta + refined sugar (buys crystal sugar)
+64904295,ibc_br,0.1,Camil: rice/beans/pasta + refined sugar (buys crystal sugar)
+07526557,usdbrl,-0.3,"Ambev: USD barley/aluminium, corn/sugar inputs"
+07526557,corn,-0.1,"Ambev: USD barley/aluminium, corn/sugar inputs"
+07526557,sugar,-0.1,"Ambev: USD barley/aluminium, corn/sugar inputs"
+07526557,ibc_br,0.2,"Ambev: USD barley/aluminium, corn/sugar inputs"
+17314329,ibc_br,0.3,"Restaurant chain: beef input cost, discretionary demand"
+17314329,cattle_br,-0.2,"Restaurant chain: beef input cost, discretionary demand"
+17314329,selic,-0.1,"Restaurant chain: beef input cost, discretionary demand"
+13574594,ibc_br,0.3,"Restaurant chain: beef input cost, discretionary demand"
+13574594,cattle_br,-0.2,"Restaurant chain: beef input cost, discretionary demand"
+13574594,selic,-0.1,"Restaurant chain: beef input cost, discretionary demand"
+13783221,ibc_br,0.3,"Restaurant chain: beef input cost, discretionary demand"
+13783221,cattle_br,-0.2,"Restaurant chain: beef input cost, discretionary demand"
+13783221,selic,-0.1,"Restaurant chain: beef input cost, discretionary demand"
+91830836,soy,-0.5,Olfar: soy crushing + biodiesel (priced vs diesel)
+91830836,diesel_br,0.4,Olfar: soy crushing + biodiesel (priced vs diesel)
+46710597,ethanol_br,0.7,FS: corn-ethanol producer
+46710597,corn,-0.5,FS: corn-ethanol producer
+08322396,ethanol_br,0.6,Cerradinho: cane + corn ethanol
+08322396,sugar,0.1,Cerradinho: cane + corn ethanol
+08322396,corn,-0.2,Cerradinho: cane + corn ethanol
+08322396,diesel_br,-0.1,Cerradinho: cane + corn ethanol
+81243735,usdbrl,-0.4,"Positivo: PC/hardware assembler, USD components"
+81243735,ibc_br,0.1,"Positivo: PC/hardware assembler, USD components"
+20247322,usdbrl,-0.3,Allied: imported electronics distributor
+20247322,ibc_br,0.1,Allied: imported electronics distributor
+05917486,usdbrl,-0.3,"Livetech: electronics maker, USD components"
+05917486,ibc_br,0.1,"Livetech: electronics maker, USD components"
+02932074,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+02932074,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+61190096,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+61190096,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+60665981,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+60665981,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+60659463,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+60659463,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+48344725,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+48344725,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+02814497,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+02814497,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+16619378,usdbrl,-0.2,Pharma manufacturer: imported APIs priced in USD
+16619378,ibc_br,0.1,Pharma manufacturer: imported APIs priced in USD
+84684455,naphtha,-0.3,"Tigre: PVC pipes, resin cost, construction demand"
+84684455,ibc_br,0.4,"Tigre: PVC pipes, resin cost, construction demand"
+84684455,selic,-0.1,"Tigre: PVC pipes, resin cost, construction demand"
+42278291,brent,-0.3,"Log-In: cabotage shipping, bunker fuel cost"
+42278291,ibc_br,0.3,"Log-In: cabotage shipping, bunker fuel cost"
+02762121,ibc_br,0.4,"Santos Brasil: container terminal, trade volumes"
+02762121,usdbrl,0.1,"Santos Brasil: container terminal, trade volumes"
+12091809,brent,0.9,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+12091809,usdbrl,0.4,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+08926302,brent,0.9,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+08926302,usdbrl,0.4,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+03342704,brent,0.9,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+03342704,usdbrl,0.4,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+32021201,brent,0.9,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+32021201,usdbrl,0.4,"Pure E&P: USD oil revenue, BRL-denominated debt service"
+09114805,brent,0.4,Oilfield/offshore services: activity follows oil price; USD contracts
+09114805,usdbrl,0.2,Oilfield/offshore services: activity follows oil price; USD contracts
+29980141,brent,0.4,Oilfield/offshore services: activity follows oil price; USD contracts
+29980141,usdbrl,0.2,Oilfield/offshore services: activity follows oil price; USD contracts
+08091102,brent,0.4,Oilfield/offshore services: activity follows oil price; USD contracts
+08091102,usdbrl,0.2,Oilfield/offshore services: activity follows oil price; USD contracts
+03670763,brent,0.4,Oilfield/offshore services: activity follows oil price; USD contracts
+03670763,usdbrl,0.2,Oilfield/offshore services: activity follows oil price; USD contracts
+11198242,brent,0.4,Oilfield/offshore services: activity follows oil price; USD contracts
+11198242,usdbrl,0.2,Oilfield/offshore services: activity follows oil price; USD contracts
+94845674,diesel_br,0.4,Refinaria Riograndense: refining crack spread
+94845674,gasoline_br,0.3,Refinaria Riograndense: refining crack spread
+94845674,brent,-0.6,Refinaria Riograndense: refining crack spread
+14031191,soy,0.2,"Hinove: specialty fertilizers/biologicals, demand from grain farmers"
+14031191,corn,0.1,"Hinove: specialty fertilizers/biologicals, demand from grain farmers"
+14031191,usdbrl,-0.1,"Hinove: specialty fertilizers/biologicals, demand from grain farmers"

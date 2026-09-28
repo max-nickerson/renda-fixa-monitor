@@ -89,7 +89,8 @@ tr.star td{background:var(--good-bg)}
           <option value="">Todas as estratégias</option>
           <option value="C3 · comprar">Comprar (P4)</option>
           <option value="C3 · aguardar">Aguardar regime</option>
-          <option value="C3 · não comprar">Não comprar (imprensa)</option>
+          <option value="C3 · não comprar (ação">Não comprar (ação caiu / rebaixado)</option>
+          <option value="C3 · não comprar (imprensa">Não comprar (imprensa)</option>
           <option value="VENDER">Vender (caro)</option>
         </select>
         <select id="f_peer" aria-label="Grupo"><option value="">Todos os grupos</option></select>
@@ -186,7 +187,7 @@ $("carteira").innerHTML = `
   <div class="panel"><h2>Alertas recentes</h2><table>${(D.alerts || []).map(a => `<tr><td class="mut" style="width:130px">${esc(a.ts)}</td><td class="${a.high ? "down" : ""}">${esc(a.msg)}</td></tr>`).join("") || '<tr><td class="mut">Sem alertas.</td></tr>'}</table></div>`;
 
 // oportunidades
-$("p4note").innerHTML = `Carrega o top 30% de CDI+ que <b>não</b> está caro vs pares, <b>não compra</b> emissor com notícia negativa na imprensa nos últimos 30 dias, <b>vende</b> os caros e vai para CDI quando o regime está defensivo. Regime hoje: ${D.regime_on ? '<span class="pill good">risk-on</span>' : '<span class="pill bad">defensivo → CDI</span>'} · ${D.ranked} de ${D.universe} debêntures ranqueadas · ${D.c3_n} na carteira C3 · ${D.rich_n} caras.`;
+$("p4note").innerHTML = `Carrega o top 30% de CDI+ que <b>não</b> está caro vs pares, <b>não compra</b> emissor com notícia negativa na imprensa nos últimos 30 dias, com ação em queda de 15% ou mais em 4 semanas ou rebaixado nos últimos 180 dias, <b>vende</b> os caros e vai para CDI quando o regime está defensivo. Regime hoje: ${D.regime_on ? '<span class="pill good">risk-on</span>' : '<span class="pill bad">defensivo → CDI</span>'} · ${D.ranked} de ${D.universe} debêntures ranqueadas · ${D.c3_n} na carteira C3 · ${D.rich_n} caras.`;
 const peers = [...new Set(D.opp.map(r => r.peer).filter(Boolean))].sort();
 peers.forEach(p => $("f_peer").add(new Option(p, p)));
 function stratCls(s) { return s.startsWith("VENDER") ? "bad" : s.startsWith("C3 · comprar") ? "good" : s.startsWith("C3") ? "warn" : ""; }
@@ -220,7 +221,38 @@ renderOpp();
 // pesquisa
 const lab = (D.lab || []).slice().sort((a, b) => (b.sharpe ?? -9) - (a.sharpe ?? -9));
 const tim = D.timing || {};
-$("pesquisa").innerHTML = `
+const L3 = D.lab3;
+const lab3Html = !L3 ? "" : `
+  <div class="panel"><h2>O que aprendemos: ação, rating, commodities, regulador e notícia setorial</h2>
+    <p class="note" style="margin-top:0">Mesmo protocolo (semanal 2022–26, crédito puro, execução na semana seguinte, 25 bps; robustez com atraso de 2 semanas e 50 bps). Dados com data de divulgação: preço e volume de 161 ações (68% dos títulos, emissor ou controladora), 53 séries de commodities/energia/macro, mapa de custos e receitas de 967 emissores, 1.033 ações de rating, 6.334 decisões de reguladores e 27,7 mil manchetes setoriais.</p>
+    <ul class="find">
+      <li><b>Rebaixamento de rating e queda forte da ação são alertas reais por título.</b> Depois do evento a debênture continua perdendo e o spread continua abrindo por semanas, então dá tempo de agir. Títulos com a ação −15% em 4 semanas perderam −5,7% a.a. vs o universo; rebaixados nos últimos 180 dias, −3,3% a.a.</li>
+      <li><b>Eles quase não mudam a estratégia P4.</b> O P4 já evita a maioria desses nomes (caro vs pares ou com imprensa negativa), e só ~5% do universo está nessa situação ao mesmo tempo. Usamos como alerta e filtro de compra: “não comprar (ação caiu / rebaixado)”.</li>
+      <li><b>Cadeia produtiva (commodities):</b> só ~11% do universo tem exposição relevante (açúcar/etanol, óleo e gás, petroquímica, mineração). O sinal existe contra o placebo, mas é pequeno demais para importar (≈ +0,02% a.a.).</li>
+      <li><b>Regulador:</b> o ganho aparente é inclinação setorial. Com as datas das decisões embaralhadas o resultado quase não muda (${num(L3.reg_placebo.real, 2)}% real vs ${num(L3.reg_placebo.shifted_mean, 2)}% deslocado). <b>Notícia setorial:</b> sem efeito.</li>
+      <li><b>No ML</b>, só o bloco de ação ajudou (+0,25% a.a.). Mesmo assim o ML fica abaixo do P4.</li>
+    </ul>
+  </div>
+  ${D.img.events ? `<div class="panel"><h2>O crédito anda depois do sinal?</h2><figure><img src="${D.img.events}" alt="Estudos de evento: retorno e spread acumulados em volta de cada tipo de evento"><figcaption>Semana 0 = evento público. À direita de 0 é o que ainda dá para capturar.</figcaption></figure>
+    <div class="scroll" style="margin-top:10px"><table>
+      <tr><th>Evento</th><th class="n">casos</th><th class="n">retorno nas 13 semanas seguintes</th><th class="n">t</th><th class="n">spread depois</th><th class="n">t</th></tr>
+      ${L3.events.map(e => `<tr><td>${esc(e.name)}</td><td class="n">${num(e.n)}</td><td class="n ${e.post < 0 ? "down" : "up"}">${sgn(e.post)} bps</td><td class="n">${num(e.post_t, 1)}</td><td class="n">${sgn(e.spread)} bps</td><td class="n">${num(e.spread_t, 1)}</td></tr>`).join("")}
+    </table></div></div>` : ""}
+  <div class="panel"><h2>P4 com os novos sinais</h2>
+    <div class="scroll"><table>
+      <tr><th>Estratégia</th><th class="n">vs universo</th><th class="n">exec. +2 sem.</th><th class="n">custo 50 bps</th><th class="n">Sharpe</th><th class="n">Max DD</th><th class="n">vs P4 (t)</th></tr>
+      ${L3.strategies.map(s => { const p = L3.paired[s.name]; return `<tr class="${s.name.startsWith("P4 (") ? "star" : ""}"><td>${esc(s.name)}</td>
+        <td class="n ${s.vs > 0 ? "up" : "down"}">${sgn(s.vs, 2)}%</td><td class="n">${sgn(s.lag2, 2)}%</td><td class="n">${sgn(s.c50, 2)}%</td>
+        <td class="n">${num(s.sharpe, 2)}</td><td class="n">${num(s.dd, 1)}%</td><td class="n">${p ? sgn(p.diff, 2) + "% (" + num(p.t, 1) + ")" : "—"}</td></tr>`; }).join("")}
+    </table></div>
+    <p class="note">Nenhuma variante melhora o P4 de forma estatisticamente significativa (correção para múltiplos testes). “Diag” são carteiras só com os títulos afetados, para medir o sinal.</p>
+    <h3>ML: adicionando um bloco de dados por vez</h3>
+    <div class="scroll"><table>
+      <tr><th>Modelo</th><th class="n">IC</th><th class="n">vs universo</th><th class="n">exec. +2 sem.</th><th class="n">custo 50 bps</th><th class="n">Sharpe</th></tr>
+      ${L3.ablation.map(a => `<tr><td>${esc(a.name)}</td><td class="n">${num(a.ic, 3)}</td><td class="n">${sgn(a.vs, 2)}%</td><td class="n">${sgn(a.lag2, 2)}%</td><td class="n">${sgn(a.c50, 2)}%</td><td class="n">${num(a.sharpe, 2)}</td></tr>`).join("")}
+    </table></div>
+  </div>`;
+$("pesquisa").innerHTML = lab3Html + `
   <div class="panel"><h2>Laboratório de estratégias com notícias point-in-time</h2>
     <p class="note" style="margin-top:0">Semanal, fora da amostra 2022–2026, retornos de crédito puro (juros hedgeados com DI×Pré / NTN-B), decisão na segunda com dados até domingo, execução nos negócios da semana seguinte, 25 bps por giro. Robustez: execução 2 semanas depois e custo de 50 bps. Notícias: CVM IPE (286 mil documentos) e imprensa via Google News (32 mil manchetes negativas de 217 emissores).</p>
     <div class="scroll" style="margin-top:10px"><table>

@@ -50,9 +50,10 @@ def run_cycle(backfill_days: int | None = None) -> dict:
         if res and "rows" in res:
             codes = [r["codigo"] for r in res["rows"] if r.get("c3")]
             codes += [(db.get_asset(i) or {}).get("cetip_code", "").strip() for i in _entries()]
-            before = len(live.cached_press())
+            before = (len(live.cached_press()), len(live.cached_risk()))
             live.press_now([c for c in codes if c])
-            if len(live.cached_press()) != before:
+            live.risk_now([c for c in codes if c])  # stock crash / rating downgrade flags (P5)
+            if (len(live.cached_press()), len(live.cached_risk())) != before:
                 screener.run()
         return {"assets": len(results), "alerts": len(fired), "emailed": emailed,
                 "errors": [r for r in results if "error" in r]}

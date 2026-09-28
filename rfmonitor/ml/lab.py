@@ -136,10 +136,11 @@ def run_rule(g: pd.DataFrame, rule: Rule, lag: int = 1, cost_bps: float = 25.0,
     banned: dict[str, pd.Timestamp] = {}
     decided: list[set] = []
     for w in weeks:
-        d = by_week[w]
+        # plain dict rows: ~10× faster than pandas row objects in the rule callbacks
+        d = by_week[w].to_dict("index")
         # exits
         for code in list(held):
-            row = d.loc[code] if code in d.index else None
+            row = d.get(code)
             st = held[code]
             weeks_held = (w - st["since"]).days // 7
             if row is None or (row["age_days"] > 7 * STALE_WEEKS):
@@ -150,9 +151,8 @@ def run_rule(g: pd.DataFrame, rule: Rule, lag: int = 1, cost_bps: float = 25.0,
                 if rule.reentry_weeks:
                     banned[code] = w + pd.Timedelta(weeks=rule.reentry_weeks)
         # entries (only fresh, eligible bonds)
-        cand = d[d["eligible"]]
-        for code, row in cand.iterrows():
-            if code in held or (code in banned and w < banned[code]):
+        for code, row in d.items():
+            if not row["eligible"] or code in held or (code in banned and w < banned[code]):
                 continue
             if rule.enter(row):
                 held[code] = {"since": w, "entry_spread": row["cdi_bps"], "entry_ratio": row["ratio"]}

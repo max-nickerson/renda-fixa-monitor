@@ -1,0 +1,109 @@
+sector,variable,weight,rationale
+utilities_transmission,ipca,0.3,"RAP revenue IPCA/IGP-M indexed, no volume/commodity risk; highly levered"
+utilities_transmission,selic,-0.2,"RAP revenue IPCA/IGP-M indexed, no volume/commodity risk; highly levered"
+utilities_distribution,ipca,0.2,"Parcela B tariff inflation-indexed, load follows activity; energy cost pass-through with CVA/overcontracting lag"
+utilities_distribution,ibc_br,0.2,"Parcela B tariff inflation-indexed, load follows activity; energy cost pass-through with CVA/overcontracting lag"
+utilities_distribution,selic,-0.2,"Parcela B tariff inflation-indexed, load follows activity; energy cost pass-through with CVA/overcontracting lag"
+utilities_distribution,pld,-0.1,"Parcela B tariff inflation-indexed, load follows activity; energy cost pass-through with CVA/overcontracting lag"
+utilities_generation_hydro,pld,0.6,Uncontracted energy sold at PLD; low reservoirs -> GSF deficit forces spot purchases
+utilities_generation_hydro,reservoir,0.5,Uncontracted energy sold at PLD; low reservoirs -> GSF deficit forces spot purchases
+utilities_generation_hydro,selic,-0.1,Uncontracted energy sold at PLD; low reservoirs -> GSF deficit forces spot purchases
+utilities_generation_renewables,pld,0.3,Mostly IPCA-indexed PPAs; merchant/curtailment tail at PLD; project-finance leverage
+utilities_generation_renewables,ipca,0.2,Mostly IPCA-indexed PPAs; merchant/curtailment tail at PLD; project-finance leverage
+utilities_generation_renewables,selic,-0.2,Mostly IPCA-indexed PPAs; merchant/curtailment tail at PLD; project-finance leverage
+utilities_generation_thermal,reservoir,-0.4,Dispatched (variable revenue) when reservoirs low; fuel (LNG/oil-indexed gas) only partly passed through
+utilities_generation_thermal,pld,0.3,Dispatched (variable revenue) when reservoirs low; fuel (LNG/oil-indexed gas) only partly passed through
+utilities_generation_thermal,gas_eu,-0.2,Dispatched (variable revenue) when reservoirs low; fuel (LNG/oil-indexed gas) only partly passed through
+utilities_generation_thermal,brent,-0.1,Dispatched (variable revenue) when reservoirs low; fuel (LNG/oil-indexed gas) only partly passed through
+oil_gas,brent,0.8,Revenue = oil (and oil-indexed gas) priced in USD
+oil_gas,usdbrl,0.3,Revenue = oil (and oil-indexed gas) priced in USD
+petrochemicals,naphtha,-0.6,Resin/chemical prices track crude & USD; naphtha is main feedstock cost; domestic demand
+petrochemicals,brent,0.4,Resin/chemical prices track crude & USD; naphtha is main feedstock cost; domestic demand
+petrochemicals,usdbrl,0.3,Resin/chemical prices track crude & USD; naphtha is main feedstock cost; domestic demand
+petrochemicals,ibc_br,0.2,Resin/chemical prices track crude & USD; naphtha is main feedstock cost; domestic demand
+fertilizers,urea,0.8,Nitrogen revenue at import-parity urea; natural gas is dominant cost
+fertilizers,dap,0.2,Nitrogen revenue at import-parity urea; natural gas is dominant cost
+fertilizers,gas_eu,-0.5,Nitrogen revenue at import-parity urea; natural gas is dominant cost
+fertilizers,gas_hh,-0.3,Nitrogen revenue at import-parity urea; natural gas is dominant cost
+fertilizers,usdbrl,0.2,Nitrogen revenue at import-parity urea; natural gas is dominant cost
+sugar_ethanol,sugar,0.6,Revenue sugar (USD export) + hydrous/anhydrous ethanol; diesel & fertilizer in CCT cost
+sugar_ethanol,ethanol_br,0.4,Revenue sugar (USD export) + hydrous/anhydrous ethanol; diesel & fertilizer in CCT cost
+sugar_ethanol,diesel_br,-0.2,Revenue sugar (USD export) + hydrous/anhydrous ethanol; diesel & fertilizer in CCT cost
+sugar_ethanol,usdbrl,0.2,Revenue sugar (USD export) + hydrous/anhydrous ethanol; diesel & fertilizer in CCT cost
+sugar_ethanol,potash,-0.1,Revenue sugar (USD export) + hydrous/anhydrous ethanol; diesel & fertilizer in CCT cost
+agribusiness_grains,soy,0.5,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_grains,corn,0.3,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_grains,usdbrl,0.3,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_grains,diesel_br,-0.2,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_grains,potash,-0.2,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_grains,urea,-0.1,Revenue soy/corn in USD; fertilizer and diesel are main input costs
+agribusiness_protein,corn,-0.4,Feed grains (poultry/pork) and live cattle are main costs; export revenue in USD
+agribusiness_protein,soy,-0.3,Feed grains (poultry/pork) and live cattle are main costs; export revenue in USD
+agribusiness_protein,cattle_br,-0.3,Feed grains (poultry/pork) and live cattle are main costs; export revenue in USD
+agribusiness_protein,usdbrl,0.3,Feed grains (poultry/pork) and live cattle are main costs; export revenue in USD
+mining,iron_ore,0.8,Iron-ore revenue in USD; diesel for mine fleet/rail
+mining,usdbrl,0.4,Iron-ore revenue in USD; diesel for mine fleet/rail
+mining,diesel_br,-0.2,Iron-ore revenue in USD; diesel for mine fleet/rail
+steel_metals,steel,0.7,Steel price vs ore + met-coal spread; import parity via FX; domestic demand
+steel_metals,iron_ore,-0.3,Steel price vs ore + met-coal spread; import parity via FX; domestic demand
+steel_metals,coal,-0.3,Steel price vs ore + met-coal spread; import parity via FX; domestic demand
+steel_metals,usdbrl,0.2,Steel price vs ore + met-coal spread; import parity via FX; domestic demand
+steel_metals,ibc_br,0.2,Steel price vs ore + met-coal spread; import parity via FX; domestic demand
+pulp_paper,usdbrl,0.6,Pulp exported in USD with BRL cost base (no pulp price in variable set); fuel/logistics cost
+pulp_paper,diesel_br,-0.1,Pulp exported in USD with BRL cost base (no pulp price in variable set); fuel/logistics cost
+cement_construction_materials,ibc_br,0.4,Volume follows activity/construction; pet-coke (coal proxy) and power are energy-intensive costs
+cement_construction_materials,coal,-0.2,Volume follows activity/construction; pet-coke (coal proxy) and power are energy-intensive costs
+cement_construction_materials,pld,-0.2,Volume follows activity/construction; pet-coke (coal proxy) and power are energy-intensive costs
+cement_construction_materials,diesel_br,-0.1,Volume follows activity/construction; pet-coke (coal proxy) and power are energy-intensive costs
+cement_construction_materials,selic,-0.2,Volume follows activity/construction; pet-coke (coal proxy) and power are energy-intensive costs
+real_estate,selic,-0.5,Mortgage affordability & funding cost; INCC/IGP-M-indexed receivables and leases
+real_estate,ipca,0.2,Mortgage affordability & funding cost; INCC/IGP-M-indexed receivables and leases
+real_estate,ibc_br,0.1,Mortgage affordability & funding cost; INCC/IGP-M-indexed receivables and leases
+toll_roads,ipca,0.3,Tariffs IPCA-indexed by contract; heavy-vehicle traffic tracks activity; high leverage
+toll_roads,ibc_br,0.2,Tariffs IPCA-indexed by contract; heavy-vehicle traffic tracks activity; high leverage
+toll_roads,selic,-0.2,Tariffs IPCA-indexed by contract; heavy-vehicle traffic tracks activity; high leverage
+airports_ports_logistics,ibc_br,0.4,Volume-driven (cargo/passengers); fuel cost for trucking/cabotage; tariffs partly inflation-indexed
+airports_ports_logistics,diesel_br,-0.2,Volume-driven (cargo/passengers); fuel cost for trucking/cabotage; tariffs partly inflation-indexed
+airports_ports_logistics,ipca,0.1,Volume-driven (cargo/passengers); fuel cost for trucking/cabotage; tariffs partly inflation-indexed
+railways,soy,0.3,Freight volumes are grain/ore exports; diesel is largest variable cost
+railways,corn,0.2,Freight volumes are grain/ore exports; diesel is largest variable cost
+railways,iron_ore,0.2,Freight volumes are grain/ore exports; diesel is largest variable cost
+railways,diesel_br,-0.3,Freight volumes are grain/ore exports; diesel is largest variable cost
+railways,ipca,0.1,Freight volumes are grain/ore exports; diesel is largest variable cost
+car_rental_fleet,selic,-0.6,Fleet funded with CDI debt; used-car resale prices drive depreciation/capital gains
+car_rental_fleet,used_cars,0.4,Fleet funded with CDI debt; used-car resale prices drive depreciation/capital gains
+car_rental_fleet,ibc_br,0.1,Fleet funded with CDI debt; used-car resale prices drive depreciation/capital gains
+trucking_equipment_rental,selic,-0.5,Asset-heavy CDI-funded rental; resale value of trucks/machinery (used-car proxy); activity
+trucking_equipment_rental,used_cars,0.2,Asset-heavy CDI-funded rental; resale value of trucks/machinery (used-car proxy); activity
+trucking_equipment_rental,ibc_br,0.2,Asset-heavy CDI-funded rental; resale value of trucks/machinery (used-car proxy); activity
+airlines,brent,-0.7,Jet fuel ~ crude; USD leases/maintenance; demand follows activity
+airlines,usdbrl,-0.5,Jet fuel ~ crude; USD leases/maintenance; demand follows activity
+airlines,ibc_br,0.2,Jet fuel ~ crude; USD leases/maintenance; demand follows activity
+retail,ibc_br,0.3,Consumer demand and credit cost; imported goods
+retail,selic,-0.3,Consumer demand and credit cost; imported goods
+retail,usdbrl,-0.1,Consumer demand and credit cost; imported goods
+healthcare,ibc_br,0.1,Weak link: formal employment drives health-plan lives; no commodity driver
+education,selic,-0.2,Student affordability/financing and employment; no commodity driver
+education,ibc_br,0.1,Student affordability/financing and employment; no commodity driver
+telecom,ipca,0.1,Contracts loosely inflation-indexed; USD-linked network capex; no commodity driver
+telecom,usdbrl,-0.1,Contracts loosely inflation-indexed; USD-linked network capex; no commodity driver
+sanitation,ipca,0.3,Regulated tariffs inflation-indexed; leverage; electricity is 2nd-largest opex
+sanitation,selic,-0.2,Regulated tariffs inflation-indexed; leverage; electricity is 2nd-largest opex
+sanitation,pld,-0.1,Regulated tariffs inflation-indexed; leverage; electricity is 2nd-largest opex
+banks_financials,,0.0,No production-chain commodity link (Selic effect ambiguous: NII vs credit)
+holding_diversified,ibc_br,0.2,"Generic: diversified portfolio, holding-level leverage; use issuer override where known"
+holding_diversified,selic,-0.2,"Generic: diversified portfolio, holding-level leverage; use issuer override where known"
+fuel_distribution,diesel_br,0.2,Volume follows activity; inventory gains when pump prices rise
+fuel_distribution,gasoline_br,0.2,Volume follows activity; inventory gains when pump prices rise
+fuel_distribution,ethanol_br,0.1,Volume follows activity; inventory gains when pump prices rise
+fuel_distribution,ibc_br,0.2,Volume follows activity; inventory gains when pump prices rise
+food_beverages,wheat,-0.2,Grain/sugar/imported inputs are costs; domestic demand
+food_beverages,sugar,-0.1,Grain/sugar/imported inputs are costs; domestic demand
+food_beverages,corn,-0.1,Grain/sugar/imported inputs are costs; domestic demand
+food_beverages,usdbrl,-0.2,Grain/sugar/imported inputs are costs; domestic demand
+food_beverages,ibc_br,0.1,Grain/sugar/imported inputs are costs; domestic demand
+textiles_apparel,ibc_br,0.2,Discretionary demand & store-card credit; imported inputs (cotton not in variable set)
+textiles_apparel,selic,-0.2,Discretionary demand & store-card credit; imported inputs (cotton not in variable set)
+textiles_apparel,usdbrl,-0.1,Discretionary demand & store-card credit; imported inputs (cotton not in variable set)
+technology,usdbrl,-0.1,Weak link: USD-priced hardware/cloud costs
+other,,0.0,Unclassified / no clear commodity link

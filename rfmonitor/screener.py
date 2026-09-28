@@ -182,10 +182,26 @@ def run(history_days: int = 10) -> dict:
     u["press_neg_30d"] = u["codigo"].map(lambda c: (pr.get(c) or {}).get("n"))
     u["press_titles"] = u["codigo"].map(lambda c: (pr.get(c) or {}).get("titles") or [])
     neg = u["press_neg_30d"].fillna(0) > 0
+    # P5 risk flags (research/run_lab3b.py): issuer stock −15%+ in ~4 weeks or a rating downgrade ≤180 days.
+    rk = live.cached_risk()
+    u["eq_ret_4w"] = u["codigo"].map(lambda c: (rk.get(c) or {}).get("eq_ret_4w"))
+    u["eq_ticker"] = u["codigo"].map(lambda c: (rk.get(c) or {}).get("ticker"))
+    u["downgrade"] = u["codigo"].map(lambda c: (rk.get(c) or {}).get("downgrade"))
+    stock_crash = pd.to_numeric(u["eq_ret_4w"], errors="coerce").fillna(0) <= -0.15
+    downgraded = u["downgrade"].notna()
+    for i in u.index[stock_crash | downgraded]:
+        fl = list(u.at[i, "flags"])
+        if stock_crash.at[i]:
+            fl.append(f"Ação {u.at[i, 'eq_ticker']} {u.at[i, 'eq_ret_4w']:+.0%} em 4 semanas")
+        if downgraded.at[i]:
+            d = u.at[i, "downgrade"]
+            fl.append(f"Rebaixamento {d['date']}: {d['title'][:80]}")
+        u.at[i, "flags"] = fl
+    risk = stock_crash | downgraded
     u["strategy"] = np.select(
-        [u["rich"], u["c3"] & neg, u["c3"] & di_on, u["c3"] & ~di_on],
-        ["VENDER · caro vs pares", "C3 · não comprar (imprensa negativa 30d)", "C3 · comprar/manter",
-         "C3 · aguardar (regime defensivo → CDI)"], "—")
+        [u["rich"], u["c3"] & risk, u["c3"] & neg, u["c3"] & di_on, u["c3"] & ~di_on],
+        ["VENDER · caro vs pares", "C3 · não comprar (ação caiu / rebaixado)", "C3 · não comprar (imprensa negativa 30d)",
+         "C3 · comprar/manter", "C3 · aguardar (regime defensivo → CDI)"], "—")
 
     cols = ["rank", "codigo", "isin", "nome", "group", "peer", "indice", "vencimento", "duration", "taxa_indicativa",
             "spread_bps", "spread_native_bps", "fair_bps", "fair_cdi_bps", "resid_bps", "chg_5d_bps", "pu",

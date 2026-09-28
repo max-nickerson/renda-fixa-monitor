@@ -147,6 +147,8 @@ def _action(r: dict) -> str:
     blocked = bool(r["signal"] and r["signal"].blocked_by)
     if st.startswith("C3 · aguardar"):
         return "Manter sem aumentar (regime defensivo)"
+    if st.startswith("C3 · não comprar (ação"):
+        return "Manter sem aumentar (ação caiu / rating rebaixado)"
     if st.startswith("C3 · não comprar"):
         return "Manter sem aumentar (imprensa negativa 30d)"
     if st.startswith("C3"):

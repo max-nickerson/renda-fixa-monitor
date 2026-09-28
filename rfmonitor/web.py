@@ -149,7 +149,7 @@ def create_app(scheduler: bool = True) -> FastAPI:
         load = lambda n: json.loads((out / n).read_text()) if (out / n).exists() else None
         return templates.TemplateResponse(request, "research.html", {
             "tab": "research", "timing": load("timing_results.json"), "selection": load("selection_results.json"),
-            "lab": load("lab_summary.json"),
+            "lab": load("lab_summary.json"), "lab3": load("lab3_results.json"), "lab3b": load("lab3b_results.json"),
             "coefs": (live.cached_selection() or {}).get("coefs", {})})
 
     @app.get("/research/img/{name}")

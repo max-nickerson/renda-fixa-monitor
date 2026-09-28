@@ -87,6 +87,78 @@ def press_now(codes: list[str], refresh: bool = False) -> dict:
     return cached["codes"]
 
 
+DOWNGRADE_Q = '"{b}" (rebaixa OR rebaixamento OR corta OR "perspectiva negativa" OR downgrade) (Fitch OR Moody\'s OR "S&P")'
+
+
+def risk_now(codes: list[str], refresh: bool = False) -> dict:
+    """Per bond: issuer/parent stock return over ~4 weeks (brapi) and a rating downgrade in the last 180 days
+    (Google News, covered brands). Both had strong post-event drift in research/run_lab3.py
+    (stock −15%+ → bonds −5.7% a.a. vs universe; downgraded ≤180d → −3.3% a.a.). Cached for the day."""
+    STATE.mkdir(parents=True, exist_ok=True)
+    path = STATE / "risk_now.json"
+    cached = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    if cached.get("computed") != date.today().isoformat() or refresh:
+        cached = {"computed": date.today().isoformat(), "tickers": {}, "brands": {}, "codes": {}}
+    import re
+    import time
+    from datetime import timedelta
+    import pandas as pd
+    from . import press
+    from .selection import reference
+    from ..config import ROOT
+    from ..sources import brapi
+    rd = ROOT / "research" / "data"
+    emap = pd.read_csv(rd / "equity_map.csv", dtype={"cnpj8": str}) if (rd / "equity_map.csv").exists() else pd.DataFrame()
+    if not emap.empty:
+        emap = emap[emap["ticker"].notna() & (emap["mapping_type"] != "none")]
+        emap["cnpj8"] = emap["cnpj8"].str.zfill(8)
+        emap["_c"] = emap["confidence"].map({"high": 0, "med": 1, "low": 2}).fillna(1)
+        emap = emap.sort_values(["cnpj8", "_c"]).groupby("cnpj8")["ticker"].apply(list)  # fallbacks if delisted
+    covered_path = ROOT / "research" / "out" / "press_brands.json"
+    covered = json.loads(covered_path.read_text(encoding="utf-8")) if covered_path.exists() else {}
+    ref = reference().drop_duplicates("codigo").set_index("codigo")
+    today = date.today()
+    for code in codes:
+        if code in cached["codes"] or code not in ref.index:
+            continue
+        cnpj8 = re.sub(r"\D", "", str(ref.at[code, "cnpj"]))[:8]
+        out = {}
+        for tkr in (emap.get(cnpj8) or []) if len(emap) else []:
+            if tkr not in cached["tickers"]:
+                try:
+                    hist = brapi.history(tkr, "3mo")
+                    closes = [c for _, c, _ in hist]
+                    cached["tickers"][tkr] = (closes[-1] / closes[-21] - 1) if len(closes) > 21 else None
+                except Exception as e:  # delisted / renamed → try the next candidate
+                    log.debug("stock %s: %s", tkr, e)
+                    cached["tickers"][tkr] = None
+            if cached["tickers"][tkr] is not None:
+                out.update(ticker=tkr, eq_ret_4w=cached["tickers"][tkr])
+                break
+        b = covered.get(cnpj8)
+        if b:
+            if b not in cached["brands"]:
+                try:
+                    its = press._fetch(DOWNGRADE_Q.format(b=b), today - timedelta(days=181), today + timedelta(days=1))
+                    bn = press._norm(b)
+                    its = [i for i in its if bn in press._norm(i["title"]) and re.search(
+                        r"rebaix|corta|perspectiva negativa|downgrade", press._norm(i["title"]))]
+                    cached["brands"][b] = sorted(its, key=lambda i: i["date"])[-1] if its else None
+                except Exception as e:
+                    log.warning("rating %s: %s", b, e)
+                    cached["brands"][b] = None
+                time.sleep(0.7)
+            out["downgrade"] = cached["brands"][b]
+        cached["codes"][code] = out
+    path.write_text(json.dumps(cached, ensure_ascii=False), encoding="utf-8")
+    return cached["codes"]
+
+
+def cached_risk() -> dict:
+    path = STATE / "risk_now.json"
+    return json.loads(path.read_text(encoding="utf-8")).get("codes", {}) if path.exists() else {}
+
+
 def cached_press() -> dict:
     path = STATE / "press_now.json"
     return json.loads(path.read_text(encoding="utf-8")).get("codes", {}) if path.exists() else {}
