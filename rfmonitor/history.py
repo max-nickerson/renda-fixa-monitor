@@ -240,13 +240,31 @@ def bcb_series(code: int, start: date) -> pd.Series:
         return s
     frames = []
     s = start
-    while s <= date.today():
-        e = min(date(s.year + 9, 12, 31), date.today())
-        r = get(f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json"
-                f"&dataInicial={s:%d/%m/%Y}&dataFinal={e:%d/%m/%Y}")
-        r.raise_for_status()
-        frames.append(pd.DataFrame(r.json()))
-        s = date(e.year + 1, 1, 1)
+    try:
+        while s <= date.today():
+            e = min(date(s.year + 9, 12, 31), date.today())
+            url = (f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados?formato=json"
+                   f"&dataInicial={s:%d/%m/%Y}&dataFinal={e:%d/%m/%Y}")
+            for k in range(4):  # BCB sometimes answers 200 with an HTML error page
+                r = get(url)
+                try:
+                    frames.append(pd.DataFrame(r.json()))
+                    break
+                except ValueError:
+                    time.sleep(5 * (k + 1))
+            else:
+                raise RuntimeError(f"BCB SGS {code}: no valid JSON")
+            s = date(e.year + 1, 1, 1)
+    except Exception:
+        # fall back to any cached copy of the same series that starts on/before `start`
+        olds = sorted(HIST.glob(f"bcb_{code}_*.csv"))
+        for p in olds:
+            if p.stem.split("_")[-1] <= f"{start:%Y%m%d}":
+                s_ = pd.read_csv(p, index_col=0, parse_dates=True).iloc[:, 0]
+                s_.index.name = None
+                log.warning("BCB %s unavailable, using cached %s", code, p.name)
+                return s_[s_.index >= pd.Timestamp(start)]
+        raise
     df = pd.concat(frames)
     ser = pd.Series(pd.to_numeric(df["valor"]).values, index=pd.to_datetime(df["data"], dayfirst=True))
     ser = ser[~ser.index.duplicated()].sort_index()
