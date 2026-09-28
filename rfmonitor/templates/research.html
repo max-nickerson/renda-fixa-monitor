@@ -15,6 +15,49 @@
 </div>
 
 <div class="card">
+  <h2>C · Laboratório de estratégias com notícias point-in-time (semanal, 2022–26, crédito puro)</h2>
+  <p class="small">Retornos com <b>juros hedgeados</b> (duration × variação da curva DI×Pré / NTN-B, como um gestor faria com DI/DAP),
+    decisão na segunda-feira com dados até domingo, execução no negócio da semana seguinte (sem bid-ask bounce), 25 bps por giro.
+    Robustez: execução 2 semanas depois e custo de 50 bps. Notícias: <b>CVM IPE</b> (286 mil documentos: fatos relevantes, RJ, waiver,
+    vencimento antecipado, assembleias de debenturistas, ofícios) e <b>imprensa via Google News</b> (32 mil manchetes negativas de 217 emissores
+    + índice de mercado de “recuperação judicial”/“calote”).</p>
+  <img src="/research/img/lab_final_equity_curves.png" style="width:100%;max-width:1100px">
+  {% if lab %}
+  <table class="small"><tr><th>Estratégia</th><th class="num">vs universo</th><th class="num">exec. +2 sem.</th><th class="num">custo 50bps</th>
+    <th class="num">Sharpe</th><th class="num">Max DD</th><th class="num">nº títulos</th></tr>
+  {% for r in lab|sort(attribute='sharpe', reverse=true) %}
+    <tr style="{{ 'font-weight:700' if r.strategy.startswith('P4') else '' }}"><td>{{ r.strategy }}</td>
+      <td class="num {{ 'up' if (r.vs_u0 or 0) > 0 else 'down' }}">{{ r.vs_u0|fmt(2, '%') }}</td>
+      <td class="num">{{ r.vs_u0_lag2|fmt(2, '%') }}</td><td class="num">{{ r.vs_u0_50bps|fmt(2, '%') }}</td>
+      <td class="num">{{ r.sharpe|fmt(2) }}</td><td class="num">{{ r.max_dd|fmt(1, '%') }}</td><td class="num">{{ r.n|fmt(0) }}</td></tr>
+  {% endfor %}</table>{% endif %}
+  <ul class="small">
+    <li><b>Em uso:</b> P4 = carry alto (top 30% CDI+), nunca caro vs pares, <b>não compra emissor com notícia negativa na imprensa em 30 dias</b>,
+      e vai para CDI quando o regime de momentum do crédito está negativo.</li>
+    <li>Notícia <b>prevê</b> perda (emissores com pico de imprensa negativa: −1,4% a.a.), mas <b>vender depois</b> da notícia não ajuda — o preço já andou.
+      Serve como <b>filtro de entrada</b>, não como gatilho de saída.</li>
+    <li>Sair quando o spread abre (stop) <b>piora</b> o resultado: spreads revertem no curto prazo.</li>
+    <li>Títulos <b>caros vs pares</b> perdem −4,7% a.a. mesmo hedgeados — sinal de venda mais forte encontrado.</li>
+    <li>Adicionar notícias ao Ridge não melhorou o ML; ML segue frágil a atraso de execução.</li>
+  </ul>
+  <details class="small"><summary>Fontes de notícia testadas (12)</summary>
+    <table class="small">
+      <tr><th>Fonte</th><th>Histórico PIT 2021–26?</th><th>Uso</th></tr>
+      <tr><td>CVM IPE (dados.cvm.gov.br)</td><td>Sim (data de entrega)</td><td>✅ em uso</td></tr>
+      <tr><td>Google News RSS (after:/before:)</td><td>Sim (data; ≤100 itens por consulta)</td><td>✅ em uso</td></tr>
+      <tr><td>GDELT DOC 2.0</td><td>Sim, mas baixa cobertura de mid-caps e throttling forte</td><td>testado, não usado</td></tr>
+      <tr><td>GDELT GKG/Events brutos</td><td>~1 TB; só via BigQuery</td><td>inviável</td></tr>
+      <tr><td>B3 Plantão de Empresas</td><td>Só ~12 meses (timestamp ao segundo)</td><td>arquivar daqui pra frente</td></tr>
+      <tr><td>Sitemaps (Valor, Pipeline, Brazil Journal, InfoMoney)</td><td>Sim (URLs datadas)</td><td>backup</td></tr>
+      <tr><td>Wayback CDX (sites + Fitch rating actions)</td><td>Parcial, lento</td><td>backup</td></tr>
+      <tr><td>Bing News RSS</td><td>Só recente</td><td>não</td></tr>
+      <tr><td>NewsAPI, GNews, NewsData, Mediastack, TheNewsAPI, Currents</td><td>Histórico só pago</td><td>não</td></tr>
+      <tr><td>SND inadimplências/repactuações</td><td>Parado em 2007/2010</td><td>não</td></tr>
+      <tr><td>Agências de rating (feeds)</td><td>Sem feed histórico gratuito</td><td>não</td></tr>
+    </table></details>
+</div>
+
+<div class="card">
   <h2>A · Timing de crédito (2013–2026, custo 15 bps por troca)</h2>
   <img src="/research/img/timing_equity_curves.png" style="width:100%;max-width:1100px">
   {% if timing %}{% for name, t in timing.items() %}

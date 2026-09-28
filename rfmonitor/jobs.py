@@ -44,7 +44,15 @@ def run_cycle(backfill_days: int | None = None) -> dict:
         log.info("cycle: %d assets, %d alerts, %d e-mailed", len(results), len(fired), emailed)
         live.regime()            # credit-timing model, recomputed once a day
         live.selection()         # bond-selection model (SND trades), retrained once a day
-        screener.ensure_fresh()  # re-rank the universe when ANBIMA publishes a new day
+        res = screener.ensure_fresh()  # re-rank the universe when ANBIMA publishes a new day
+        # Negative-press check (P4) for C3 candidates + holdings, once a day; re-rank to apply it.
+        if res and "rows" in res:
+            codes = [r["codigo"] for r in res["rows"] if r.get("c3")]
+            codes += [(db.get_asset(i) or {}).get("cetip_code", "").strip() for i in _entries()]
+            before = len(live.cached_press())
+            live.press_now([c for c in codes if c])
+            if len(live.cached_press()) != before:
+                screener.run()
         return {"assets": len(results), "alerts": len(fired), "emailed": emailed,
                 "errors": [r for r in results if "error" in r]}
     finally:

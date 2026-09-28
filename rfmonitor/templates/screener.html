@@ -11,7 +11,7 @@
   <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
     <div>
       <h2 style="margin-bottom:4px">Oportunidades — modelo quant validado (blend heurística + Ridge)</h2>
-      <div class="small" style="margin-bottom:4px">Regra testada: <b>comprar o top 20%</b>, <b>manter até sair do top 50%</b>.
+      <div class="small" style="margin-bottom:4px"><b>Estratégia principal P4</b> (mais robusta no laboratório com notícias point-in-time, crédito puro 2022–26: +1,2% a.a. vs universo, Sharpe 3,2, drawdown −0,6%; +1,05% com execução 2 semanas depois; +1,17% com 50 bps): carregar o top 30% de CDI+ que <b>não</b> está caro vs pares, <b>não comprar</b> emissor com notícia negativa na imprensa nos últimos 30 dias, <b>vender caros</b> (perderam −3,8% a.a.) e ir para CDI quando o regime estiver defensivo. Regime hoje: {% if res.regime_on %}<span class="chip BUY">risk-on</span>{% else %}<span class="chip SELL">defensivo → CDI</span>{% endif %} · {{ res.c3_n }} na C3 · {{ res.rich_n }} caros.<br>Ranking secundário: <b>comprar o top 20%</b>, <b>manter até sair do top 50%</b>.
         Fora da amostra 2023–26, após 25 bps de custo: +0,7% a.a. vs universo, drawdown −1,9% vs −3,5%.
         <a href="/research">ver pesquisa →</a></div>
       <div class="muted small">ANBIMA {{ res.date }} · {{ res.universe }} debêntures precificadas · {{ res.ranked }} ranqueadas
@@ -40,6 +40,7 @@
     <label class="small">duration <input id="f_dmin" size="3" value="0.5"> a <input id="f_dmax" size="3" value="15"> anos</label>
     <label class="small"><input type="checkbox" id="f_isenta"> só isentas (12.431)</label>
     <label class="small"><input type="checkbox" id="f_noflag" checked> esconder com alerta</label>
+    <select id="f_strat"><option value="">Todas as estratégias</option><option value="c3">Só carteira C3 (carry alto, não-caro)</option><option value="rich">Só CAROS (vender/evitar)</option></select>
     <input id="f_q" placeholder="buscar emissor / código" size="22">
   </form>
   <div class="grid" style="margin-top:12px">
@@ -57,7 +58,7 @@
       <th class="sort num" data-k="resid_bps">vs justo</th>
       <th class="sort num" data-k="chg_5d_bps">Δ5d</th>
       <th class="sort num" data-k="upside_pct">PU → justo</th><th>Veredito</th>
-      <th class="sort num" data-k="model_pct" title="Percentil no modelo validado (blend heurística + Ridge). Top 20% = comprar; fora do top 50% = vender">Modelo</th>
+      <th>Estratégia</th><th class="sort num" data-k="model_pct" title="Percentil no modelo validado (blend heurística + Ridge). Top 20% = comprar; fora do top 50% = vender">Modelo</th>
       <th class="sort num" data-k="ml_pred_bps" title="Excesso sobre CDI previsto p/ o próximo mês (Ridge)">Prev. 1m</th>
       <th class="sort num" data-k="score">Heur.</th><th></th>
     </tr></thead><tbody></tbody>
@@ -86,7 +87,8 @@ function filtered() {
   const q = $('f_q').value.trim().toUpperCase();
   return ROWS.filter(r => (!peer || r.peer === peer) && r.duration >= dmin && r.duration <= dmax
     && (!$('f_isenta').checked || r.incentivada) && (!$('f_noflag').checked || !r.flags.length)
-    && (!q || (r.nome + ' ' + r.codigo).toUpperCase().includes(q)));
+    && (!q || (r.nome + ' ' + r.codigo).toUpperCase().includes(q))
+    && (!$('f_strat').value || ($('f_strat').value === 'c3' ? r.c3 : r.rich)));
 }
 
 function render() {
@@ -109,6 +111,7 @@ function render() {
       <td class="num ${r.chg_5d_bps > 0 ? 'down' : 'up'}">${r.chg_5d_bps === null ? '—' : (r.chg_5d_bps > 0 ? '+' : '') + f(r.chg_5d_bps)}</td>
       <td class="num">${f(r.pu, 2)}<br><span class="small">→ ${f(r.fair_pu, 2)} <span class="${r.upside_pct > 0 ? 'up' : 'down'}">(${r.upside_pct > 0 ? '+' : ''}${f(r.upside_pct, 1)}%)</span></span></td>
       <td><span class="verdict-${r.verdict}">${r.verdict === 'Barato' ? 'Barato · spread alto' : r.verdict === 'Caro' ? 'Caro · spread baixo' : 'Justo'}</span></td>
+      <td class="small"><span class="chip ${r.rich ? 'SELL' : r.strategy.startsWith('C3 · comprar') ? 'BUY' : ''}" title="${esc((r.press_titles || []).join(' | '))}">${esc(r.strategy)}</span>${r.press_neg_30d ? `<br><span class="small" style="color:var(--warn)">📰 ${r.press_neg_30d} notícia(s) negativa(s) 30d</span>` : ''}</td>
       <td class="num">${r.model_pct === null || r.model_pct === undefined ? '<span class="muted small">sem negócio</span>'
         : `<span class="chip ${r.model_pct <= 0.2 ? 'BUY' : r.model_pct > 0.5 ? 'SELL' : ''}">top ${Math.max(1, Math.round(r.model_pct * 100))}%</span>`}</td>
       <td class="num ${r.ml_pred_bps > 0 ? 'up' : 'down'}">${r.ml_pred_bps === null || r.ml_pred_bps === undefined ? '—' : (r.ml_pred_bps > 0 ? '+' : '') + f(r.ml_pred_bps)}</td>
@@ -138,7 +141,7 @@ function drawCurve() {
 document.querySelectorAll('th.sort').forEach(th => th.onclick = () => {
   const k = th.dataset.k; sortDir = sortKey === k ? -sortDir : (ASC_KEYS.has(k) ? 1 : -1); sortKey = k; render();
 });
-['f_peer', 'f_dmin', 'f_dmax', 'f_isenta', 'f_noflag', 'f_q'].forEach(id => $(id).addEventListener('input', render));
+['f_peer', 'f_dmin', 'f_dmax', 'f_isenta', 'f_noflag', 'f_q', 'f_strat'].forEach(id => $(id).addEventListener('input', render));
 Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--line');
 render();
 </script>

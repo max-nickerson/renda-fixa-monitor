@@ -125,6 +125,7 @@ def position_rows() -> tuple[list[dict], list[dict]]:
             "dv01": mv * rate_dur / 10000 if mv and rate_dur else 0.0 if mv else None,
             "carry_brl": mv * spread_main / 10000 if mv and spread_main is not None else None,
             "last_alert": (db.alerts(code, limit=1) or [None])[0],
+            "strategy": (sr or {}).get("strategy"),
             "model_pct": (model.get((info.get("cetip_code") or "").strip()) or {}).get("blend_pct"),
             "ml_pred_bps": (model.get((info.get("cetip_code") or "").strip()) or {}).get("ml_pred_bps"),
         }
@@ -137,10 +138,20 @@ def position_rows() -> tuple[list[dict], list[dict]]:
 
 
 def _action(r: dict) -> str:
-    """Tested rule first (research/run_selection.py): model top 20% → add; out of top 50% → reduce.
+    """Strategy lab C3 first (most robust): rich vs peers → sell; high carry & not rich → hold/add (unless
+    regime defensive). Then the monthly selection model (top 20% add / out of top 50% reduce).
     Risk blocks (material facts, negative news, leverage) override an 'add'."""
-    pct = r.get("model_pct")
+    st = r.get("strategy") or ""
+    if st.startswith("VENDER"):
+        return "Vender: caro vs pares (caros perderam −4,7% a.a.)"
     blocked = bool(r["signal"] and r["signal"].blocked_by)
+    if st.startswith("C3 · aguardar"):
+        return "Manter sem aumentar (regime defensivo)"
+    if st.startswith("C3 · não comprar"):
+        return "Manter sem aumentar (imprensa negativa 30d)"
+    if st.startswith("C3"):
+        return "Revisar risco antes de aumentar" if blocked else "Manter / aumentar (C3: carry alto, não-caro)"
+    pct = r.get("model_pct")
     if pct is not None:
         if pct > 0.5:
             return f"Reduzir (modelo: top {pct:.0%})"

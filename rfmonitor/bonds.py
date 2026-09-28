@@ -41,7 +41,7 @@ def cdi_equivalent_bps(kind: str, rate: float | None, pre: float | None, real: f
 
     kind: DI_SPREAD (rate = x in % a.a.), DI_PCT (rate = % of CDI), PRE (nominal % a.a.), IPCA (real % a.a.)
     pre:  pre-fixed (≈ expected CDI) rate at the bond's duration, % a.a.
-    real: real (IPCA) government rate at the bond's duration, % a.a.
+    real: real (IPCA) rate at the bond's duration, % a.a. (NTN-B curve)
     IPCA → nominal via breakeven (1+pre)/(1+real): the inflation term cancels, so CDI+ = (1+y)/(1+real) − 1.
     """
     if rate is None or rate != rate:

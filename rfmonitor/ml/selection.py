@@ -111,6 +111,9 @@ def build_panel(start: date = date(2021, 1, 1), codes: set[str] | None = None) -
         [tr["kind"].eq("DI_SPREAD"), tr["kind"].eq("PRE"), tr["kind"].eq("IPCA")],
         [r * 1e4, ((1 + r) / (1 + pre / 100) - 1) * 1e4, ((1 + r) / (1 + dic / 100) - 1) * 1e4], np.nan)
     tr["pre_1y"] = tr["PRE_252"]
+    # Benchmark rate the bond's price is exposed to (for rate-hedged returns): DI x IPCA for IPCA+,
+    # DI x Pré for Pré; DI+ floaters have ~no rate exposure.
+    tr["bench_rate"] = np.select([tr["kind"].eq("IPCA"), tr["kind"].eq("PRE")], [dic, pre], np.nan)
     tr = tr.dropna(subset=["cdi_bps"])
     tr = tr[tr["cdi_bps"].abs() < 2500]  # drop broken prints / distressed outliers
     return tr.drop(columns=[c for c in tr.columns if c[:4] in ("PRE_", "DIC_")])

@@ -165,7 +165,31 @@ def b3_curve_panel(start: date, end: date | None = None, step_days: int = 1) -> 
                             row[f"{c}_{t}"] = float(np.interp(t, g["du"], g["rate"]))
                 out.append(row)
         d += timedelta(days=step_days)
-    return pd.DataFrame(out).set_index("date").sort_index() if out else pd.DataFrame()
+    p = pd.DataFrame(out).set_index("date").sort_index() if out else pd.DataFrame()
+    # B3's 'DIC' vertices are NOT a usable DI x IPCA real curve (avg −1.6pp vs NTN-B, erratic, e.g. ~4.5% at
+    # 2y in Feb-2026). Real rates come from the NTN-B curve (Tesouro Direto) instead; DI x Pré is kept
+    # (matches LTN within ~2 bps).
+    if not p.empty:
+        p = p.drop(columns=[c for c in p.columns if c.startswith("DIC_")])
+        real = ntnb_panel(p.index.min(), p.index.max())
+        p = p.join(real, how="left").ffill()
+    return p
+
+
+def ntnb_panel(start, end) -> pd.DataFrame:
+    """NTN-B real yields at standard tenors (as DIC_<du> columns for compatibility), from Tesouro Direto."""
+    from .sources import tesouro_direto as td
+    t = td.curve_like_tpf(pd.Timestamp(start) - pd.Timedelta(days=10))
+    t = t[(t["titulo"] == "NTN-B") & (t["date"] <= pd.Timestamp(end))]
+    tenors = [126, 252, 504, 756, 1260, 1764, 2520]
+    rows = {}
+    for d, g in t.groupby("date"):
+        x = ((g["vencimento"] - d).dt.days / 365.25 * 252).to_numpy()
+        y = g["taxa_indicativa"].to_numpy()
+        o = np.argsort(x)
+        if len(o) >= 3:
+            rows[d] = {f"DIC_{k}": float(np.interp(k, x[o], y[o])) for k in tenors}
+    return pd.DataFrame.from_dict(rows, orient="index").sort_index()
 
 
 def curve_rate(panel: pd.DataFrame, d: pd.Timestamp, curve: str, years: float) -> float | None:

@@ -44,6 +44,54 @@ def selection(refresh: bool = False) -> dict | None:
         return json.loads(path.read_text()) if path.exists() else None
 
 
+def press_now(codes: list[str], refresh: bool = False) -> dict:
+    """Negative press in the last 30 days per bond code (Google News, same query as the backtest).
+    {codigo: {"brand": .., "n": count, "titles": [...]}} cached for the day."""
+    STATE.mkdir(parents=True, exist_ok=True)
+    path = STATE / "press_now.json"
+    cached = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    if cached.get("computed") != date.today().isoformat() or refresh:
+        cached = {"computed": date.today().isoformat(), "brands": {}, "codes": {}}
+    import re
+    import time
+    from datetime import timedelta
+    from . import press
+    from .selection import reference
+    from ..config import ROOT
+    # Same universe as the backtest (P4): only the issuers whose press history was collected (top 250 by
+    # trading, research/out/press_brands.json). Others are not filtered — exactly as in the test.
+    covered_path = ROOT / "research" / "out" / "press_brands.json"
+    covered = json.loads(covered_path.read_text(encoding="utf-8")) if covered_path.exists() else {}
+    ref = reference().drop_duplicates("codigo").set_index("codigo")
+    today = date.today()
+    for code in codes:
+        if code in cached["codes"] or code not in ref.index:
+            continue
+        cnpj8 = re.sub(r"\D", "", str(ref.at[code, "cnpj"]))[:8]
+        b = covered.get(cnpj8)
+        if not b:
+            continue
+        if b not in cached["brands"]:
+            try:
+                its = press._fetch(press.neg_query(b), today - timedelta(days=31), today + timedelta(days=1))
+                bn = press._norm(b)
+                its = [i for i in its if bn in press._norm(i["title"])
+                       and i["date"] >= (today - timedelta(days=30)).isoformat()]
+                cached["brands"][b] = {"n": len(its), "titles": [i["title"] for i in its[:5]]}
+            except Exception as e:
+                log.warning("press %s: %s", b, e)
+                continue
+            time.sleep(0.7)
+        cached["codes"][code] = {"brand": b, **cached["brands"][b]}
+    path.write_text(json.dumps(cached, ensure_ascii=False), encoding="utf-8")
+    return cached["codes"]
+
+
+def cached_press() -> dict:
+    path = STATE / "press_now.json"
+    return json.loads(path.read_text(encoding="utf-8")).get("codes", {}) if path.exists() else {}
+
+
 def cached_selection() -> dict | None:
     path = STATE / "selection.json"
     return json.loads(path.read_text()) if path.exists() else None

@@ -168,11 +168,30 @@ def run(history_days: int = 10) -> dict:
     u["fair_cdi_bps"] = u["fair_bps"]
     u["verdict"] = np.select([u["resid_z"] >= 1, u["resid_z"] <= -1], ["Barato", "Caro"], "Justo")
 
+    # Strategy C3 (research/run_lab2.py — most robust rule, pure-credit OOS 2022–26: +1.7% a.a. vs universe,
+    # Sharpe 1.36): hold the top 30% CDI+ carry that is NOT rich vs peers; sell rich (z ≤ −1.5, which lost
+    # −4.7% a.a. hedged); whole credit book to CDI when the DI-credit momentum regime is negative.
+    regime = (live.cached_regime() or {}).get("series", {})
+    di_on = next((v["position"] for k, v in regime.items() if k.startswith("DI")), 1.0) >= 1
+    u["cdi_pct"] = u["spread_bps"].rank(pct=True, ascending=False)
+    u["rich"] = u["resid_z"] <= -1.5
+    u["c3"] = (u["cdi_pct"] <= 0.3) & ~u["rich"]
+    # P4 (best risk-adjusted rule, research/run_lab2.py with press): C3 but never BUY an issuer with negative
+    # press in the last 30 days (Google News, point-in-time). Existing holdings are not sold on press alone.
+    pr = live.cached_press()
+    u["press_neg_30d"] = u["codigo"].map(lambda c: (pr.get(c) or {}).get("n"))
+    u["press_titles"] = u["codigo"].map(lambda c: (pr.get(c) or {}).get("titles") or [])
+    neg = u["press_neg_30d"].fillna(0) > 0
+    u["strategy"] = np.select(
+        [u["rich"], u["c3"] & neg, u["c3"] & di_on, u["c3"] & ~di_on],
+        ["VENDER · caro vs pares", "C3 · não comprar (imprensa negativa 30d)", "C3 · comprar/manter",
+         "C3 · aguardar (regime defensivo → CDI)"], "—")
+
     cols = ["rank", "codigo", "isin", "nome", "group", "peer", "indice", "vencimento", "duration", "taxa_indicativa",
             "spread_bps", "spread_native_bps", "fair_bps", "fair_cdi_bps", "resid_bps", "chg_5d_bps", "pu",
             "fair_pu", "upside_pct", "verdict", "pct_pu_par", "pct_reune", "desvio_padrao",
             "incentivada", "resid_z", "carry_z", "momentum_z", "quality_z", "score", "flags",
-            "ml_pred_bps", "model_pct"]
+            "ml_pred_bps", "model_pct", "cdi_pct", "rich", "c3", "strategy", "press_neg_30d", "press_titles"]
     out = u[cols].copy()
     out["vencimento"] = out["vencimento"].dt.strftime("%Y-%m-%d")
     out = out.astype(object).where(out.notna(), None)
@@ -183,7 +202,8 @@ def run(history_days: int = 10) -> dict:
         curves[g] = {"x": pts["duration"].round(2).tolist(), "y": pts["spread_bps"].round(1).tolist(),
                      "fair": pts["fair_bps"].round(1).tolist(), "code": pts["codigo"].tolist()}
     result = {"date": last_date.strftime("%Y-%m-%d"), "universe": total, "ranked": len(rows),
-              "weights": WEIGHTS, "rows": rows, "curves": curves}
+              "weights": WEIGHTS, "rows": rows, "curves": curves, "regime_on": bool(di_on),
+              "c3_n": int(u["c3"].sum()), "rich_n": int(u["rich"].sum())}
     db.save_screener(result)
     return result
 

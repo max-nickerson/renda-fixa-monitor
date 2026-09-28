@@ -4,9 +4,9 @@ Local dashboard + alerts + a quant relative-value strategy for **Brazilian fixed
 CRI/CRA, Tesouro/títulos públicos) and **eurobonds** — keyed by **ISIN**.
 
 Built for a portfolio manager: **every bond is shown as duration + CDI+ spread** (DI+, %DI, Pré and IPCA+
-on one yardstick, using B3's DI×Pré / DI×IPCA swap curves), with **rich/cheap vs its own history and vs peers**,
-**fair spread → fair price → upside**, portfolio **CS01/DV01, carry, concentration, stress**, and two
-**out-of-sample-tested models** (credit-regime timing and bond selection). See [Research](#research).
+on one yardstick, using B3's DI×Pré curve and the NTN-B real curve), with **rich/cheap vs its own history and vs peers**,
+**fair spread → fair price → upside**, portfolio **CS01/DV01, carry, concentration, stress**, and
+**out-of-sample-tested strategies that use point-in-time news** (CVM filings + press). See [Research](#research).
 
 Type an ISIN → the app works out what it is, who the issuer is, which stock to watch, and starts tracking:
 
@@ -161,10 +161,11 @@ TradingView MCP (optional, per TradingView's terms). This project runs locally f
 | DI + x | x |
 | p% do DI | (p − 1) × pre(D) |
 | Pré y | (1+y) / (1+pre_DI(D)) − 1 |
-| IPCA + y | (1+y) / (1+real_DI×IPCA(D)) − 1 — the inflation breakeven cancels |
+| IPCA + y | (1+y) / (1+real_NTN-B(D)) − 1 — the inflation breakeven cancels |
 
-`pre_DI` and `real_DI×IPCA` come from B3's daily TaxaSwap file (DI×Pré, DI×IPCA curves) at the bond's
-duration D; government curves are only a fallback. Eurobonds are shown as UST+.
+`pre_DI` comes from B3's daily TaxaSwap file (DI×Pré — matches LTN within ~2 bps); the real curve is NTN-B
+(Tesouro Direto / ANBIMA). B3's `DIC` vertices were tested and rejected (avg −1.6 pp vs NTN-B, corrupted days
+such as 2026-02-20). Eurobonds are shown as UST+.
 
 ## Research
 
@@ -190,13 +191,40 @@ top 50%:
 
 | cost / turnover | Blend (heuristic + Ridge) vs universe | Max DD (universe −3.5%) |
 |---|---|---|
-| 0 bps | +1.4% a.a. | −1.6% |
-| 25 bps | +0.7% a.a. | −1.9% |
-| 50 bps | +0.1% a.a. | −2.6% |
+| 0 bps | +1.7% a.a. | −1.7% |
+| 25 bps | +1.1% a.a. | −2.0% |
+| 50 bps | +0.5% a.a. | −2.3% |
 
 Most robust single signal: **spread above the peer curve** (IC 0.11, positive in 95% of months) — the
 dashboard's "cheap vs peers". Edge is real but small after costs; mainly lower drawdowns. Used live as the
 **Modelo** column (Oportunidades) and the **Ação** column (carteira), retrained daily.
+
+**C · Strategy lab with point-in-time news** (weekly 2022–2026, rate-hedged "pure credit" returns, decision
+Monday with data to Sunday, execution at next week's trades, 25 bps; robustness at 2-week lag and 50 bps).
+Reproduce: `python research/build_lab.py`, `python research/build_press.py`, then
+`RET=ret_hedged python research/run_lab2.py data/history/press_weekly.pkl` (or `python research/run_all.py`).
+
+News sources tested (12): **CVM IPE** (286k filings: material facts, RJ, waivers, early maturity, debenture-holder
+meetings, CVM/B3 inquiries) and **Google News RSS** with `after:/before:` (32k negative headlines for the 217 brands
+of the 250 most-traded issuers + market "recuperação judicial"/"calote" gauge) are used. GDELT (thin mid-cap
+coverage, throttled), B3 Plantão (~12 months only), sitemaps/Wayback (backup), Bing and paid news APIs (no free
+history), SND events (stale) were rejected — see the Pesquisa tab.
+
+| Strategy (23 tested; excerpt) | vs universe | +2w lag | 50 bps | Sharpe | Max DD |
+|---|---|---|---|---|---|
+| **P4 carry top 30% CDI+, never rich, no entry with negative press 30d, CDI when momentum regime off** | **+1.22%** | +1.05% | +1.17% | **3.22** | **−0.6%** |
+| C3 same without the press filter | +1.23% | +1.10% | +1.18% | 3.14 | −0.7% |
+| M3 Ridge (CVM news) + news exit + regime | +1.34% | +1.12% | +0.80% | 1.03 | −4.7% |
+| P1 hold everything, sell on negative-press spike | −0.07% | −0.07% | −0.29% | 0.85 | −2.9% |
+| B3 buy after a >50 bps widening (no news) | −0.90% | −1.88% | −3.04% | 0.10 | −7.1% |
+| RV4 only bonds rich vs peers (diagnostic) | −3.82% | −3.89% | −4.71% | −0.97 | −14.1% |
+| P10 only issuers with a negative-press spike (diagnostic) | −1.51% | −1.76% | −2.73% | −0.22 | −4.7% |
+
+Findings: news **predicts** losses (press-spike issuers −1.5% a.a.) but **selling after** the news doesn't help —
+use news as an **entry filter**; spread-widening stops hurt (short-term reversal); rich-vs-peers is the strongest
+sell signal; adding news features to ML didn't help. Sharpe figures are on hedged credit excess returns
+(annual vol ≈ 0.4%), so they are high in absolute terms — compare them across rows, not with equity Sharpes.
+**P4 runs live** in Oportunidades/carteira (daily Google News check for the covered issuers).
 
 ## Development
 

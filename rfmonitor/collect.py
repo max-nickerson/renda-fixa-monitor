@@ -145,8 +145,8 @@ class Market:
 # ---------------------------------------------------------------- bond metrics
 def cdi_spread(r, mkt: Market, kind: str, dur: float | None) -> float | None:
     """CDI+ equivalent spread (bps) for any indexer — the common yardstick across DI+, %DI, Pré and IPCA+.
-    Benchmarks: B3 DI x Pré and DI x IPCA swap curves (same as the research history); government curves
-    (LTN/NTN-F, NTN-B) only as fallback when the B3 file isn't available."""
+    Benchmarks (same as the research history): B3 DI x Pré for pre rates (LTN/NTN-F fallback) and the NTN-B
+    real curve for IPCA+ (B3's DIC vertices proved unreliable)."""
     tx = r.get("taxa_indicativa")
     if tx is None or tx != tx:
         return None
@@ -156,7 +156,7 @@ def cdi_spread(r, mkt: Market, kind: str, dur: float | None) -> float | None:
     if kind in ("DI_PCT", "PRE"):
         pre = mkt.b3_rate(d, "PRE", yrs) or mkt.govt_rate(d, ("LTN", "NTN-F"), yrs)
     if kind in ("IPCA", "IGPM"):
-        real = mkt.b3_rate(d, "DIC", yrs) or mkt.govt_rate(d, ("NTN-B",), yrs)
+        real = mkt.govt_rate(d, ("NTN-B",), yrs)
     return cdi_equivalent_bps(kind, tx, pre, real)
 
 
@@ -208,7 +208,8 @@ def seed_trade_history(info: dict) -> int:
     except Exception as e:
         log.warning("trade history for %s failed: %s", code, e)
         return 0
-    have = set(db.series(info["isin"], ["cdi_spread_bps"]).index.strftime("%Y-%m-%d"))
+    s = db.series(info["isin"], ["cdi_spread_bps"])
+    have = set(s.index.strftime("%Y-%m-%d")) if not s.empty else set()
     rows = [(d.strftime("%Y-%m-%d"), "cdi_spread_bps", v) for d, v in zip(p["date"], p["cdi_bps"])
             if d.strftime("%Y-%m-%d") not in have]
     rows += [(d.strftime("%Y-%m-%d"), "pct_curve_trade", v) for d, v in zip(p["date"], p["pct_curve"])]
