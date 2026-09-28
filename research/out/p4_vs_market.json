@@ -1,0 +1,98 @@
+{
+ "period": [
+  "2022-01-03",
+  "2026-09-25"
+ ],
+ "stats": {
+  "CDI": {
+   "total_%": 77.62845134633803,
+   "cagr_%": 12.927823203598997,
+   "vol_%": 0.1696039609581978,
+   "pct_cdi": 100.0,
+   "sharpe_vs_cdi": null,
+   "max_dd_%": 0.0
+  },
+  "P4 (crédito, juros hedgeados)": {
+   "total_%": 104.43493012760041,
+   "cagr_%": 16.33718997032012,
+   "vol_%": 1.260764314651492,
+   "pct_cdi": 134.53177065411975,
+   "sharpe_vs_cdi": 2.299188546411861,
+   "max_dd_%": -0.318243441354471
+  },
+  "Universo de debêntures (hedgeado)": {
+   "total_%": 95.47108472755559,
+   "cagr_%": 15.23856759626998,
+   "vol_%": 1.8436302936939812,
+   "pct_cdi": 122.98465713506633,
+   "sharpe_vs_cdi": 1.0741426678336166,
+   "max_dd_%": -0.7425628918206639
+  },
+  "IDA-DI (mercado DI+)": {
+   "total_%": 86.60780484673454,
+   "cagr_%": 14.112495901761314,
+   "vol_%": 0.7849051842638158,
+   "pct_cdi": 111.56709085994166,
+   "sharpe_vs_cdi": 1.3123523379404485,
+   "max_dd_%": -1.210050263665341
+  },
+  "IDA-IPCA (mercado IPCA+, sem hedge)": {
+   "total_%": 46.361816321357985,
+   "cagr_%": 8.394499006560574,
+   "vol_%": 4.639371698381024,
+   "pct_cdi": 59.72271186309711,
+   "sharpe_vs_cdi": -0.8295862658387142,
+   "max_dd_%": -6.919442554526722
+  },
+  "Ibovespa": {
+   "total_%": 76.55260676276438,
+   "cagr_%": 12.78273677378634,
+   "vol_%": 16.755597238218183,
+   "pct_cdi": 98.61411046476533,
+   "sharpe_vs_cdi": 0.07625552264694477,
+   "max_dd_%": -20.933618491404125
+  }
+ },
+ "calendar_%": {
+  "2022": {
+   "CDI": 12.35,
+   "P4 (crédito, juros hedgeados)": 16.09,
+   "Universo de debêntures (hedgeado)": 14.52,
+   "IDA-DI (mercado DI+)": 14.52,
+   "IDA-IPCA (mercado IPCA+, sem hedge)": 5.24,
+   "Ibovespa": 5.88
+  },
+  "2023": {
+   "CDI": 13.04,
+   "P4 (crédito, juros hedgeados)": 16.58,
+   "Universo de debêntures (hedgeado)": 14.97,
+   "IDA-DI (mercado DI+)": 12.71,
+   "IDA-IPCA (mercado IPCA+, sem hedge)": 11.31,
+   "Ibovespa": 21.95
+  },
+  "2024": {
+   "CDI": 10.88,
+   "P4 (crédito, juros hedgeados)": 16.35,
+   "Universo de debêntures (hedgeado)": 16.99,
+   "IDA-DI (mercado DI+)": 12.49,
+   "IDA-IPCA (mercado IPCA+, sem hedge)": 2.9,
+   "Ibovespa": -10.36
+  },
+  "2025": {
+   "CDI": 14.32,
+   "P4 (crédito, juros hedgeados)": 17.33,
+   "Universo de debêntures (hedgeado)": 17.1,
+   "IDA-DI (mercado DI+)": 16.05,
+   "IDA-IPCA (mercado IPCA+, sem hedge)": 16.05,
+   "Ibovespa": 33.95
+  },
+  "2026": {
+   "CDI": 10.34,
+   "P4 (crédito, juros hedgeados)": 10.65,
+   "Universo de debêntures (hedgeado)": 8.38,
+   "IDA-DI (mercado DI+)": 10.75,
+   "IDA-IPCA (mercado IPCA+, sem hedge)": 4.64,
+   "Ibovespa": 13.87
+  }
+ }
+}
