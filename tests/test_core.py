@@ -83,6 +83,23 @@ def test_screener_fair_curve_and_residuals():
     assert abs((g["spread_bps"] - fair).iloc[1:].median()) < 5  # curve tracks the peer group
 
 
+def test_cdi_equivalent_spreads():
+    # DI + 1.6% is already a CDI+ spread
+    assert bonds.cdi_equivalent_bps("DI_SPREAD", 1.6, None, None) == pytest.approx(160)
+    # Pré 15% vs DI pre curve 14% → (1.15/1.14 − 1) ≈ 87.7 bps
+    assert bonds.cdi_equivalent_bps("PRE", 15.0, 14.0, None) == pytest.approx(87.72, abs=0.01)
+    # IPCA + 8% vs DI x IPCA real 7% → (1.08/1.07 − 1) ≈ 93.5 bps (inflation cancels)
+    assert bonds.cdi_equivalent_bps("IPCA", 8.0, 14.0, 7.0) == pytest.approx(93.46, abs=0.01)
+    # 110% of CDI with expected CDI 14% → 140 bps
+    assert bonds.cdi_equivalent_bps("DI_PCT", 110.0, 14.0, None) == pytest.approx(140)
+    assert bonds.cdi_equivalent_bps("IPCA", None, 14.0, 7.0) is None
+
+
+def test_fair_price_first_order():
+    # spread 50 bps above fair, duration 3 → price ~1.5% below fair
+    assert bonds.price_for_spread_change(100, 3, -50) == pytest.approx(101.5)
+
+
 def test_composite_labels():
     comp = pd.DataFrame({"value": [3.0, -3.0, 0.0], "momentum": [0, 0, 0]})
     labels = [strategy.label_for(s) for s in strategy.composite(comp)]

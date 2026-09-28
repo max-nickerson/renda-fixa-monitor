@@ -1,0 +1,136 @@
+{
+  "DI credit (IDA-DI vs CDI)": {
+    "stats": {
+      "Buy & hold cr\u00e9dito": {
+        "excess_ann_%": 1.007,
+        "vol_%": 0.747,
+        "sharpe": 1.347,
+        "max_dd_%": -7.529,
+        "hit_%": 79.066,
+        "time_in_%": 100.0,
+        "switches_per_yr": 0.0
+      },
+      "Momentum 21d > 0": {
+        "excess_ann_%": 1.119,
+        "vol_%": 0.519,
+        "sharpe": 2.155,
+        "max_dd_%": -3.039,
+        "hit_%": 73.123,
+        "time_in_%": 86.518,
+        "switches_per_yr": 3.653
+      },
+      "Logistic": {
+        "excess_ann_%": 0.947,
+        "vol_%": 0.622,
+        "sharpe": 1.523,
+        "max_dd_%": -4.75,
+        "hit_%": 71.209,
+        "time_in_%": 85.967,
+        "switches_per_yr": 1.68
+      },
+      "Gradient boosting": {
+        "excess_ann_%": 0.735,
+        "vol_%": 0.76,
+        "sharpe": 0.967,
+        "max_dd_%": -7.529,
+        "hit_%": 76.602,
+        "time_in_%": 95.39,
+        "switches_per_yr": 1.754
+      }
+    },
+    "latest": {
+      "date": "2026-09-24",
+      "prob": {
+        "Logistic": 0.38674218296954377,
+        "Gradient boosting": 0.7351332815901976
+      },
+      "position": {
+        "Buy & hold cr\u00e9dito": 1.0,
+        "Momentum 21d > 0": 0.0,
+        "Logistic": 0.0,
+        "Gradient boosting": 1.0
+      },
+      "features": {
+        "mom_5": -0.00026,
+        "mom_21": -0.00013,
+        "mom_63": 0.00202,
+        "mom_126": 0.01118,
+        "vol_21": 0.00216,
+        "vol_63": 0.00381,
+        "dd_252": -0.0011,
+        "mom_21_z": -0.12048,
+        "cdi_ann": 0.1365,
+        "cdi_chg_63": -0.005,
+        "dur": 2.70238,
+        "dur_chg_63": -0.05952
+      }
+    }
+  },
+  "IPCA credit (IDA-IPCA, hedged w/ IMA-B)": {
+    "stats": {
+      "Buy & hold cr\u00e9dito": {
+        "excess_ann_%": 0.447,
+        "vol_%": 1.943,
+        "sharpe": 0.23,
+        "max_dd_%": -10.116,
+        "hit_%": 52.682,
+        "time_in_%": 100.0,
+        "switches_per_yr": 0.0
+      },
+      "Momentum 21d > 0": {
+        "excess_ann_%": -0.989,
+        "vol_%": 1.637,
+        "sharpe": -0.604,
+        "max_dd_%": -16.349,
+        "hit_%": 32.212,
+        "time_in_%": 60.133,
+        "switches_per_yr": 16.586
+      },
+      "Logistic": {
+        "excess_ann_%": 0.86,
+        "vol_%": 1.375,
+        "sharpe": 0.625,
+        "max_dd_%": -5.458,
+        "hit_%": 36.358,
+        "time_in_%": 67.092,
+        "switches_per_yr": 1.388
+      },
+      "Gradient boosting": {
+        "excess_ann_%": -0.716,
+        "vol_%": 1.599,
+        "sharpe": -0.448,
+        "max_dd_%": -12.959,
+        "hit_%": 37.054,
+        "time_in_%": 70.948,
+        "switches_per_yr": 7.16
+      }
+    },
+    "latest": {
+      "date": "2026-09-24",
+      "prob": {
+        "Logistic": 0.4246546066469468,
+        "Gradient boosting": 0.6008065444423393
+      },
+      "position": {
+        "Buy & hold cr\u00e9dito": 1.0,
+        "Momentum 21d > 0": 0.0,
+        "Logistic": 0.0,
+        "Gradient boosting": 1.0
+      },
+      "features": {
+        "mom_5": -0.00888,
+        "mom_21": -0.01256,
+        "mom_63": -0.01215,
+        "mom_126": -0.03165,
+        "vol_21": 0.01881,
+        "vol_63": 0.01534,
+        "dd_252": -0.07195,
+        "mom_21_z": -2.83592,
+        "cdi_ann": 0.1365,
+        "cdi_chg_63": -0.005,
+        "dur": 5.20238,
+        "dur_chg_63": -0.13492
+      }
+    }
+  }
+}

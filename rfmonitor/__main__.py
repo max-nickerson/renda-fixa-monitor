@@ -33,6 +33,9 @@ def main() -> None:
     ip.add_argument("--source", default="import")
     sc = sub.add_parser("screener", help="rank the whole debenture universe (quant model)")
     sc.add_argument("--top", type=int, default=20)
+    hi = sub.add_parser("history", help="download research history once (SND trades, B3 curves, IDA) ~30 min")
+    hi.add_argument("--start-year", type=int, default=2021)
+    sub.add_parser("models", help="retrain the credit-regime and bond-selection models now")
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -104,6 +107,18 @@ def main() -> None:
             flags = f"  ⚠ {'; '.join(r['flags'])}" if r["flags"] else ""
             print(f"{r['rank']:>3} {r['codigo']:<8} {r['nome'][:34]:<34} {r['indice']:<16} dur {r['duration']:.1f}"
                   f"  spread {r['spread_bps']:.0f} (fair {r['fair_bps']:.0f})  score {r['score']:.2f}{flags}")
+    elif args.cmd == "history":
+        import runpy
+        import sys
+        from .config import ROOT
+        sys.argv = ["download_history.py", str(args.start_year)]
+        runpy.run_path(str(ROOT / "research" / "download_history.py"), run_name="__main__")
+    elif args.cmd == "models":
+        from .ml import live
+        r = live.regime(refresh=True)
+        print("regime:", {k: v["position"] for k, v in (r or {}).get("series", {}).items()})
+        s = live.selection(refresh=True)
+        print("selection: scored", (s or {}).get("n"))
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email

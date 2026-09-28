@@ -9,12 +9,13 @@ from datetime import date
 from pathlib import Path
 
 from fastapi import FastAPI, Form, HTTPException, Request
-from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from . import db, isin as isin_mod, jobs, screener, strategy
+from . import db, isin as isin_mod, jobs, portfolio, screener, strategy
+from .ml import live
 from .collect import add_manual_price
-from .config import load_watchlist, save_watchlist, settings
+from .config import ROOT, load_watchlist, save_watchlist, settings
 from .resolver import resolve
 
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -86,20 +87,10 @@ def create_app(scheduler: bool = True) -> FastAPI:
 
     @app.get("/", response_class=HTMLResponse)
     def index(request: Request):
-        rows = []
-        for e in load_watchlist():
-            try:
-                rows.append(row(e))
-            except ValueError:
-                continue
-        totals: dict[str, float] = {}
-        for r in rows:
-            p = r["position"]
-            if p and p["value"] is not None:
-                totals[p["currency"]] = totals.get(p["currency"], 0) + p["value"]
+        held, watched = portfolio.position_rows()
         return templates.TemplateResponse(request, "index.html", {
-            "tab": "carteira", "rows": rows, "totals": totals, "alerts": db.alerts(limit=15),
-            "settings": settings})
+            "tab": "carteira", "held": held, "watched": watched, "s": portfolio.summary(held),
+            "regime": live.cached_regime(), "alerts": db.alerts(limit=15), "settings": settings})
 
     @app.get("/screener", response_class=HTMLResponse)
     def screener_page(request: Request, added: str = ""):
@@ -110,6 +101,21 @@ def create_app(scheduler: bool = True) -> FastAPI:
         return templates.TemplateResponse(request, "screener.html", {
             "tab": "screener", "res": res, "mine": mine, "added": added,
             "curves_json": json.dumps(res["curves"]) if res else "{}"})
+
+    @app.get("/research", response_class=HTMLResponse)
+    def research_page(request: Request):
+        out = ROOT / "research" / "out"
+        load = lambda n: json.loads((out / n).read_text()) if (out / n).exists() else None
+        return templates.TemplateResponse(request, "research.html", {
+            "tab": "research", "timing": load("timing_results.json"), "selection": load("selection_results.json"),
+            "coefs": (live.cached_selection() or {}).get("coefs", {})})
+
+    @app.get("/research/img/{name}")
+    def research_img(name: str):
+        path = ROOT / "research" / "out" / name
+        if path.suffix != ".png" or not path.exists() or path.parent != ROOT / "research" / "out":
+            raise HTTPException(404)
+        return FileResponse(path)
 
     @app.post("/screener/run")
     def screener_run():

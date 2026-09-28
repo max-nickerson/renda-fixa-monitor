@@ -9,6 +9,7 @@ import logging
 import threading
 
 from . import alerts, db, isin as isin_mod, screener
+from .ml import live
 from .collect import collect_all, refresh_quotes
 from .config import load_watchlist, settings
 
@@ -41,6 +42,8 @@ def run_cycle(backfill_days: int | None = None) -> dict:
                 fired += alerts.evaluate(info, r["new_events"], entries.get(r["isin"], {}))
         emailed = alerts.send_pending_email()
         log.info("cycle: %d assets, %d alerts, %d e-mailed", len(results), len(fired), emailed)
+        live.regime()            # credit-timing model, recomputed once a day
+        live.selection()         # bond-selection model (SND trades), retrained once a day
         screener.ensure_fresh()  # re-rank the universe when ANBIMA publishes a new day
         return {"assets": len(results), "alerts": len(fired), "emailed": emailed,
                 "errors": [r for r in results if "error" in r]}

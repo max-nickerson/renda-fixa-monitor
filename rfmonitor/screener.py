@@ -1,7 +1,7 @@
 """Cross-sectional quant screener over the whole ANBIMA-priced debenture universe (+ CRI/CRA with API access).
 
 For every bond with an indicative rate:
-  spread_bps       vs DI / NTN-B (ANBIMA reference) / pre curve — same method as the portfolio
+  spread_bps       CDI+ equivalent spread (DI+, %DI, Pré and IPCA+ all on one yardstick; see bonds.cdi_equivalent_bps)
   fair_bps         robust spread-vs-duration curve for its peer group (indexer × Lei 12.431 tax status),
                    median per duration bucket
   resid_z          (spread − fair) / group MAD            → cheap vs peers = +      (weight 0.45)
@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from . import db
-from .collect import Market, debenture_spread
+from .collect import Market, cdi_spread, debenture_spread
 from .sources import anbima_public, cvm, snd
 
 log = logging.getLogger(__name__)
@@ -77,13 +77,16 @@ def run(history_days: int = 10) -> dict:
     last_date = deb["date"].max()
 
     # Spreads for every bond/day (history is only used for the 5-day change).
-    kinds, spreads, durs = [], [], []
+    kinds, spreads, durs, cdis = [], [], [], []
     for _, r in deb.iterrows():
         k, s, d = debenture_spread(r, mkt)
         kinds.append(k)
         spreads.append(s)
         durs.append(d)
-    deb["group"], deb["spread_bps"], deb["duration"] = kinds, spreads, durs
+        cdis.append(cdi_spread(r, mkt, k, d))
+    deb["group"], deb["duration"] = kinds, durs
+    # Everything is ranked on the CDI+ equivalent spread (common yardstick); native spread kept for reference.
+    deb["spread_native_bps"], deb["spread_bps"] = spreads, cdis
 
     today = deb[deb["date"] == last_date].copy()
     prev_dates = sorted(deb["date"].unique())
@@ -149,12 +152,27 @@ def run(history_days: int = 10) -> dict:
             fl.append(f"spread +{r['chg_5d_bps']:.0f} bps em 5d")
         u.at[i, "flags"] = fl
     u["score"] -= u["flags"].map(lambda f: sum(1.0 if x.startswith("Fato") else 0.5 for x in f))
-    u = u.sort_values("score", ascending=False)
+
+    # Validated model (research/run_selection.py): blend of this heuristic and a Ridge model trained on SND
+    # trade history; percentile 0 = best. Bonds without a recent trade have no model score.
+    from .ml import live
+    sel = (live.cached_selection() or {}).get("rows", {})
+    u["ml_pred_bps"] = u["codigo"].map(lambda c: (sel.get(c) or {}).get("ml_pred_bps"))
+    u["model_pct"] = u["codigo"].map(lambda c: (sel.get(c) or {}).get("blend_pct"))
+    u["model_pct"] = pd.to_numeric(u["model_pct"], errors="coerce")
+    u = u.sort_values(["model_pct", "score"], ascending=[True, False], na_position="last")
     u["rank"] = range(1, len(u) + 1)
+    # Fair value in price terms: converging to the peer curve moves the price by ≈ duration × residual.
+    u["upside_pct"] = u["duration"] * u["resid_bps"] / 100
+    u["fair_pu"] = u["pu"] * (1 + u["upside_pct"] / 100)
+    u["fair_cdi_bps"] = u["fair_bps"]
+    u["verdict"] = np.select([u["resid_z"] >= 1, u["resid_z"] <= -1], ["Barato", "Caro"], "Justo")
 
     cols = ["rank", "codigo", "isin", "nome", "group", "peer", "indice", "vencimento", "duration", "taxa_indicativa",
-            "spread_bps", "fair_bps", "resid_bps", "chg_5d_bps", "pct_pu_par", "pct_reune", "desvio_padrao",
-            "incentivada", "resid_z", "carry_z", "momentum_z", "quality_z", "score", "flags"]
+            "spread_bps", "spread_native_bps", "fair_bps", "fair_cdi_bps", "resid_bps", "chg_5d_bps", "pu",
+            "fair_pu", "upside_pct", "verdict", "pct_pu_par", "pct_reune", "desvio_padrao",
+            "incentivada", "resid_z", "carry_z", "momentum_z", "quality_z", "score", "flags",
+            "ml_pred_bps", "model_pct"]
     out = u[cols].copy()
     out["vencimento"] = out["vencimento"].dt.strftime("%Y-%m-%d")
     out = out.astype(object).where(out.notna(), None)

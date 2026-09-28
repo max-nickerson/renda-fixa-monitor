@@ -3,6 +3,11 @@
 Local dashboard + alerts + a quant relative-value strategy for **Brazilian fixed income** (debêntures,
 CRI/CRA, Tesouro/títulos públicos) and **eurobonds** — keyed by **ISIN**.
 
+Built for a portfolio manager: **every bond is shown as duration + CDI+ spread** (DI+, %DI, Pré and IPCA+
+on one yardstick, using B3's DI×Pré / DI×IPCA swap curves), with **rich/cheap vs its own history and vs peers**,
+**fair spread → fair price → upside**, portfolio **CS01/DV01, carry, concentration, stress**, and two
+**out-of-sample-tested models** (credit-regime timing and bond selection). See [Research](#research).
+
 Type an ISIN → the app works out what it is, who the issuer is, which stock to watch, and starts tracking:
 
 | Alert | Source |
@@ -97,6 +102,8 @@ python -m rfmonitor resolve USN15516AB8       # show what an ISIN resolves to
 python -m rfmonitor signal USN15516AB8        # current strategy signal
 python -m rfmonitor backtest USN15516AB8      # walk-forward backtest on stored history
 python -m rfmonitor import-prices <ISIN> prices.csv   # CSV: date,price  (or TradingView t,close)
+python -m rfmonitor history                   # once per machine: SND trades, B3 curves, IDA (~30 min)
+python -m rfmonitor models                    # retrain regime + selection models now (else daily)
 python -m rfmonitor test-email
 ```
 
@@ -146,6 +153,50 @@ Honest limitations:
 ANBIMA (public files / Feed API), SND – debentures.com.br, CVM dados abertos, Tesouro Transparente,
 OpenFIGI, FRED (St. Louis Fed), brapi.dev, Google News RSS (personal, non-commercial use),
 TradingView MCP (optional, per TradingView's terms). This project runs locally for personal use.
+
+## CDI+ equivalent spread
+
+| Indexer | CDI+ spread (multiplicative, like ANBIMA's DI+) |
+|---|---|
+| DI + x | x |
+| p% do DI | (p − 1) × pre(D) |
+| Pré y | (1+y) / (1+pre_DI(D)) − 1 |
+| IPCA + y | (1+y) / (1+real_DI×IPCA(D)) − 1 — the inflation breakeven cancels |
+
+`pre_DI` and `real_DI×IPCA` come from B3's daily TaxaSwap file (DI×Pré, DI×IPCA curves) at the bond's
+duration D; government curves are only a fallback. Eurobonds are shown as UST+.
+
+## Research
+
+Everything is **walk-forward out-of-sample with costs**; details and charts on the dashboard's **Pesquisa** tab
+(`research/out/`). Reproduce: `python -m rfmonitor history` (≈30 min, once), then
+`python research/run_timing.py` and `python research/run_selection.py`.
+
+**A · Credit-regime timing** (IDA-DI / IDA-IPCA vs CDI & IMA-B, 2013–2026 OOS, 15 bps per switch)
+
+| | Sharpe | Max DD | vs buy & hold |
+|---|---|---|---|
+| DI credit — 21d momentum rule | 2.16 | −3.0% | B&H 1.35 / −7.5% |
+| IPCA credit (duration-hedged) — logistic | 0.62 | −5.5% | B&H 0.23 / −10.1% |
+
+The edge comes mostly from sidestepping 2–3 credit crises → used as a **regime / risk indicator**. Gradient
+boosting overfit and is not used.
+
+**B · Bond selection** (658k SND trades 2021–2026, implied CDI+ spreads, monthly, 2023–2026 OOS)
+
+Realistic execution: enter at the first trade *after* the rebalance date (the naive version, entering at the
+signal's own trade, looked 5× better — almost all bid-ask bounce). Buy the top 20%, hold until a bond leaves the
+top 50%:
+
+| cost / turnover | Blend (heuristic + Ridge) vs universe | Max DD (universe −3.5%) |
+|---|---|---|
+| 0 bps | +1.4% a.a. | −1.6% |
+| 25 bps | +0.7% a.a. | −1.9% |
+| 50 bps | +0.1% a.a. | −2.6% |
+
+Most robust single signal: **spread above the peer curve** (IC 0.11, positive in 95% of months) — the
+dashboard's "cheap vs peers". Edge is real but small after costs; mainly lower drawdowns. Used live as the
+**Modelo** column (Oportunidades) and the **Ação** column (carteira), retrained daily.
 
 ## Development
 

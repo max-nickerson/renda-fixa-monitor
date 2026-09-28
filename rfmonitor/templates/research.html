@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Pesquisa · Renda Fixa Monitor{% endblock %}
+{% block body %}
+<div class="card">
+  <h2>Pesquisa — o que foi testado e o que está em uso</h2>
+  <p class="small">Todos os testes são <b>fora da amostra</b> (walk-forward: o modelo só vê dados anteriores a cada decisão), com custos.
+    Scripts: <code>research/run_timing.py</code> e <code>research/run_selection.py</code>. Não é recomendação de investimento.</p>
+  <table class="small">
+    <tr><th>Estudo</th><th>Pergunta</th><th>Dados</th><th>Em uso no dashboard</th></tr>
+    <tr><td><b>A · Timing</b></td><td>Quando carregar crédito vs ficar no CDI?</td><td>IDA-DI, IDA-IPCA, IMA-B, CDI · 2009–2026</td>
+      <td>Faixa “Regime de crédito” na carteira: DI+ = momentum 21d; IPCA+ = logístico</td></tr>
+    <tr><td><b>B · Seleção</b></td><td>Quais debêntures comprar/vender?</td><td>SND: 658 mil negócios, curvas B3 DI×Pré/DI×IPCA · 2021–2026</td>
+      <td>Coluna “Modelo” (Oportunidades) e “Ação” (carteira): top 20% compra, sai do top 50% vende</td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>A · Timing de crédito (2013–2026, custo 15 bps por troca)</h2>
+  <img src="/research/img/timing_equity_curves.png" style="width:100%;max-width:1100px">
+  {% if timing %}{% for name, t in timing.items() %}
+  <h3 class="small" style="margin:12px 0 4px">{{ name }}</h3>
+  <table class="small"><tr><th></th><th class="num">Excesso a.a.</th><th class="num">Vol</th><th class="num">Sharpe</th><th class="num">Max DD</th><th class="num">Tempo comprado</th><th class="num">Trocas/ano</th></tr>
+  {% for k, s in t.stats.items() %}<tr><td>{{ k }}</td><td class="num">{{ s['excess_ann_%']|fmt(2, '%') }}</td><td class="num">{{ s['vol_%']|fmt(2, '%') }}</td>
+    <td class="num"><b>{{ s.sharpe|fmt(2) }}</b></td><td class="num">{{ s['max_dd_%']|fmt(1, '%') }}</td><td class="num">{{ s['time_in_%']|fmt(0, '%') }}</td><td class="num">{{ s.switches_per_yr|fmt(1) }}</td></tr>{% endfor %}
+  </table>{% endfor %}{% endif %}
+  <p class="small" style="color:var(--warn)">Leitura honesta: o ganho vem principalmente de evitar 2–3 crises (COVID 2020, Americanas 2023, abertura 2025–26).
+    Serve como indicador de regime / controle de risco, não como motor de retorno. Gradient boosting sobreajustou e não é usado.</p>
+</div>
+
+<div class="card">
+  <h2>B · Seleção de debêntures (2023–2026 fora da amostra)</h2>
+  <img src="/research/img/selection_equity_curves.png" style="width:100%;max-width:1100px">
+  {% if selection %}
+  <table class="small"><tr><th>Custo por giro</th><th>Estratégia</th><th class="num">Excesso a.a.</th><th class="num">vs universo</th><th class="num">Sharpe</th><th class="num">Max DD</th><th class="num">IC</th><th class="num">Giro/mês</th></tr>
+  {% for cost, st in selection.items() %}{% for k, s in st.items() %}
+    <tr><td>{{ cost }} bps</td><td>{{ k }}</td><td class="num">{{ s['excess_ann_%']|fmt(2, '%') }}</td><td class="num"><b>{{ s['vs_universe_ann_%']|fmt(2, '%') }}</b></td>
+      <td class="num">{{ s.sharpe|fmt(2) }}</td><td class="num">{{ s['max_dd_%']|fmt(1, '%') }}</td><td class="num">{{ s.IC_mean|fmt(3) }}</td><td class="num">{{ s['turnover_%']|fmt(0, '%') }}</td></tr>
+  {% endfor %}{% endfor %}</table>{% endif %}
+  <p class="small">Execução realista: entra no <b>primeiro negócio após a data de rebalanceamento</b> (não no último negócio usado para calcular o sinal).
+    Com a execução ingênua o Ridge parecia render +3,5% a.a. — era quase tudo bid-ask bounce. A versão realista é a publicada acima.</p>
+  <img src="/research/img/selection_feature_ic.png" style="width:100%;max-width:900px">
+  <p class="small">O sinal mais robusto é <b>spread acima da curva de pares</b> (IC 0,11, positivo em 95% dos meses) — é exatamente o “barato vs pares” do dashboard.
+    Spread que abriu no último mês tende a devolver (reversão de curto prazo). Duration longa e muita liquidez tiveram retorno menor no período.</p>
+  {% if coefs %}<details><summary class="small">Coeficientes do Ridge em produção (bps de excesso em 1 mês por 1σ da variável)</summary>
+    <table class="small">{% for k, v in coefs|dictsort(by='value', reverse=true) %}<tr><td>{{ k }}</td><td class="num {{ 'up' if v > 0 else 'down' }}">{{ '%+.1f'|format(v) }}</td></tr>{% endfor %}</table></details>{% endif %}
+</div>
+{% endblock %}

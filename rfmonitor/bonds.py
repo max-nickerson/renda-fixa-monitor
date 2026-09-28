@@ -36,6 +36,32 @@ def interp(x: float, xs, ys) -> float | None:
     return float(np.interp(x, ax, ay))
 
 
+def cdi_equivalent_bps(kind: str, rate: float | None, pre: float | None, real: float | None) -> float | None:
+    """Express any Brazilian credit yield as a 'CDI + x' spread (bps, multiplicative like ANBIMA's DI+).
+
+    kind: DI_SPREAD (rate = x in % a.a.), DI_PCT (rate = % of CDI), PRE (nominal % a.a.), IPCA (real % a.a.)
+    pre:  pre-fixed (≈ expected CDI) rate at the bond's duration, % a.a.
+    real: real (IPCA) government rate at the bond's duration, % a.a.
+    IPCA → nominal via breakeven (1+pre)/(1+real): the inflation term cancels, so CDI+ = (1+y)/(1+real) − 1.
+    """
+    if rate is None or rate != rate:
+        return None
+    if kind == "DI_SPREAD":
+        return rate * 100
+    if kind == "DI_PCT" and pre is not None:
+        return (rate / 100 - 1) * pre * 100  # extra share of the expected CDI path
+    if kind == "PRE" and pre is not None:
+        return ((1 + rate / 100) / (1 + pre / 100) - 1) * 10000
+    if kind in ("IPCA", "IGPM") and real is not None:
+        return ((1 + rate / 100) / (1 + real / 100) - 1) * 10000
+    return None
+
+
+def price_for_spread_change(price: float, duration: float, d_spread_bps: float) -> float:
+    """First-order price after a spread change: P × (1 − D × Δs)."""
+    return price * (1 - duration * d_spread_bps / 10000)
+
+
 def _add_months(d: date, months: int) -> date:
     m = d.month - 1 + months
     y, m = d.year + m // 12, m % 12 + 1

@@ -1,43 +1,126 @@
 {% extends "base.html" %}
 {% block title %}Minha carteira · Renda Fixa Monitor{% endblock %}
+{% macro bps(v) %}{% if v is none %}—{% else %}{{ '%+.0f'|format(v) }}{% endif %}{% endmacro %}
+{% macro chg(v) %}{% if v is none %}<span class="muted">—</span>{% else %}<span class="{{ 'down' if v > 0 else 'up' if v < 0 else 'muted' }}">{{ '%+.0f'|format(v) }}</span>{% endif %}{% endmacro %}
+{% macro hbar(h) %}{% if h.pct is not none %}
+  <div class="rangebar" title="mín {{ h.min|fmt(0) }} · máx {{ h.max|fmt(0) }} · {{ h.n }} obs"><span style="left:{{ h.pct|round(0) }}%"></span></div>
+  <div class="small muted">{{ h.pct|round(0)|int }}º pct · z {{ '%+.1f'|format(h.z) if h.z is not none else '—' }}</div>
+{% else %}<span class="small muted">{{ h.n }} obs</span>{% endif %}{% endmacro %}
 {% block body %}
+<style>
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi .v{font-size:20px;font-weight:650;font-variant-numeric:tabular-nums}.kpi .l{font-size:12px;color:var(--muted)}
+.rangebar{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--up),#d0d5dd,var(--down));min-width:80px;margin:4px 0}
+.rangebar span{position:absolute;top:-3px;width:3px;height:12px;background:var(--ink);border-radius:1px;transform:translateX(-1px)}
+.bar{height:8px;background:var(--accent);border-radius:4px}
+.verdict-Barato{color:var(--up);font-weight:600}.verdict-Caro{color:var(--down);font-weight:600}
+.regime{display:flex;gap:16px;flex-wrap:wrap}.regime > div{flex:1;min-width:260px}
+td.tight{white-space:nowrap}
+</style>
+
+{% if regime %}
 <div class="card">
-  <h2>Adicionar à carteira</h2>
+  <h2>Regime de crédito (modelo de timing, fora da amostra desde 2013)</h2>
+  <div class="regime">
+  {% for name, r in regime.series.items() %}
+    <div><b>{{ name }}</b><br>
+      <span class="chip {{ 'BUY' if r.position >= 1 else 'SELL' }}">{{ 'RISK-ON: carregar crédito' if r.position >= 1 else 'DEFENSIVO: reduzir / esperar' }}</span>
+      <div class="small muted" style="margin-top:4px">{{ r.model }} · {{ r.asof }}{% if r.prob is not none %} · P(excesso&gt;0) {{ (r.prob*100)|round(0)|int }}%{% endif %}
+        · momentum 21d {{ '%+.0f'|format(r.mom_21_bps) }} bps<br>
+        Backtest: Sharpe {{ r.oos.sharpe }} vs {{ r.oos.bh_sharpe }} (buy&amp;hold) · max DD {{ r.oos.max_dd }}% vs {{ r.oos.bh_max_dd }}%</div>
+    </div>
+  {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+<div class="kpis" style="margin-bottom:16px">
+  <div class="kpi"><div class="l">Valor de mercado</div><div class="v">R$ {{ s.mv|fmt(0) }}</div><div class="small muted">{{ s.n or 0 }} posições{% if s.fx %} · USD {{ s.fx|fmt(3) }}{% endif %}</div></div>
+  <div class="kpi"><div class="l">Duration média</div><div class="v">{{ s.duration|fmt(2) }} anos</div></div>
+  <div class="kpi"><div class="l">Spread médio (BRL)</div><div class="v">CDI+ {{ s.spread|fmt(0) }} bps</div><div class="small muted">{{ s.cdi_share|fmt(0, '%') }} da carteira{% if s.spread_ust is not none %} · USD: UST+ {{ s.spread_ust|fmt(0) }}{% endif %}</div></div>
+  <div class="kpi"><div class="l">Carry de spread (anual)</div><div class="v">R$ {{ s.carry|fmt(0) }}/ano</div></div>
+  <div class="kpi"><div class="l">CS01 (spread +1 bp)</div><div class="v">R$ {{ (-(s.cs01 or 0))|fmt(0) }}</div></div>
+  <div class="kpi"><div class="l">DV01 juros (Pré/IPCA)</div><div class="v">R$ {{ (-(s.dv01 or 0))|fmt(0) }}</div></div>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <h2>Posições</h2>
+    <form method="post" action="/collect"><button class="ghost">↻ Atualizar agora</button></form>
+  </div>
+  <div class="scroll"><table>
+    <tr><th>Ativo</th><th class="num">Duration</th><th class="num">Spread</th><th class="num">Δ1d / 5d / 20d</th>
+      <th>Faixa histórica</th><th class="num">Justo (pares)</th><th class="num">Preço → justo</th><th>Veredito</th>
+      <th class="num">Valor · peso</th><th class="num">CS01 · carry/ano</th><th>Ação</th></tr>
+    {% for r in held %}
+    <tr>
+      <td><a href="/asset/{{ r.isin }}"><b>{{ r.name }}</b></a><br><span class="small muted">{{ r.index_text }} · venc. {{ r.maturity or '—' }}</span>
+        {% if r.last_alert %}<br><span class="small {{ 'sev-high' if r.last_alert.severity == 'high' }}">🔔 {{ r.last_alert.message[:70] }}</span>{% endif %}</td>
+      <td class="num">{{ r.duration|fmt(2) }}</td>
+      <td class="num tight"><b>{% if r.spread is not none %}{{ r.spread_label }} {{ r.spread|fmt(0) }}{% elif r['yield'] is not none %}taxa {{ r['yield']|fmt(2, '%') }}{% elif r.pct_par is not none %}<span style="color:var(--down)">{{ r.pct_par|fmt(1) }}% do par</span><br><span class="small muted">sem taxa ANBIMA</span>{% else %}—{% endif %}</b></td>
+      <td class="num tight">{{ chg(r.chg.d1) }} / {{ chg(r.chg.d5) }} / {{ chg(r.chg.d20) }}</td>
+      <td>{{ hbar(r.hist) }}</td>
+      <td class="num">{{ r.fair|fmt(0) }}{% if r.resid_z is not none %}<br><span class="small muted">z {{ '%+.1f'|format(r.resid_z) }}</span>{% endif %}</td>
+      <td class="num tight">{{ r.price|fmt(2) }}{% if r.fair_price %}<br><span class="small">→ {{ r.fair_price|fmt(2) }} <span class="{{ 'up' if r.upside_pct > 0 else 'down' }}">({{ '%+.1f'|format(r.upside_pct) }}%)</span></span>{% endif %}</td>
+      <td><span class="verdict-{{ r.verdict.split(' ')[0] }}">{{ r.verdict }}</span><br>{% if r.model_pct is not none %}<span class="chip {{ 'BUY' if r.model_pct <= 0.2 else 'SELL' if r.model_pct > 0.5 else '' }}" title="Modelo validado (blend)">modelo top {{ [1, (r.model_pct*100)|round|int]|max }}%</span>{% if r.ml_pred_bps is not none %} <span class="small muted">prev. 1m {{ '%+.0f'|format(r.ml_pred_bps) }} bps</span>{% endif %}{% else %}<span class="chip {{ r.signal.label }}">{{ r.signal.label }}</span>{% endif %}</td>
+      <td class="num">R$ {{ r.mv_brl|fmt(0) }}<br><span class="small muted">{{ r.weight|fmt(1, '%') }}{% if r.pnl_pct is not none %} · <span class="{{ 'up' if r.pnl_pct >= 0 else 'down' }}">{{ '%+.1f'|format(r.pnl_pct) }}%</span>{% endif %}</span></td>
+      <td class="num">{{ (-(r.cs01 or 0))|fmt(0) }}<br><span class="small muted">R$ {{ r.carry_brl|fmt(0) }}</span></td>
+      <td><b>{{ r.action }}</b>{% if r.signal.blocked_by %}<br><span class="small" style="color:var(--warn)">{{ r.signal.blocked_by|join('; ') }}</span>{% endif %}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="11" class="muted">Nenhuma posição com quantidade. Abra um ativo → “Minha posição” para informar quantidade e PU médio.</td></tr>
+    {% endfor %}
+  </table></div>
+  <p class="small muted">Spread = CDI+ equivalente (DI+, %DI, Pré e IPCA+ na mesma régua; eurobonds vs Treasuries). Faixa histórica: onde o spread está no
+    próprio histórico (verde = spread baixo/preço alto, vermelho = spread alto/preço baixo). Justo = curva de pares (indexador × isenção) do dia.
+    Preço justo = preço se o spread convergir ao justo (≈ duration × diferença). CS01 = perda em R$ se o spread abrir 1 bp.</p>
+</div>
+
+{% if s.mv %}
+<div class="grid">
+  <div class="card"><h2>Concentração por emissor</h2>
+    <table>{% for k, w in s.by_issuer[:8] %}<tr><td>{{ k }}</td><td style="width:45%"><div class="bar" style="width:{{ w|round(1) }}%"></div></td><td class="num">{{ w|fmt(1, '%') }}</td></tr>{% endfor %}</table>
+    {% if s.top_issuer > 20 %}<p class="small" style="color:var(--warn)">⚠ Maior emissor com {{ s.top_issuer|fmt(0, '%') }} da carteira.</p>{% endif %}</div>
+  <div class="card"><h2>Por indexador · escada de duration</h2>
+    <table>{% for k, w in s.by_index %}<tr><td>{{ k }}</td><td style="width:45%"><div class="bar" style="width:{{ w|round(1) }}%"></div></td><td class="num">{{ w|fmt(1, '%') }}</td></tr>{% endfor %}</table>
+    <table style="margin-top:8px">{% for k, w in s.ladder %}<tr><td>{{ k }}</td><td style="width:45%"><div class="bar" style="width:{{ w|round(1) }}%;background:var(--warn)"></div></td><td class="num">{{ w|fmt(1, '%') }}</td></tr>{% endfor %}</table></div>
+  <div class="card"><h2>Stress</h2>
+    <table>{% for k, v in s.stress %}<tr><td>{{ k }}</td><td class="num {{ 'up' if v >= 0 else 'down' }}">R$ {{ v|fmt(0) }}</td><td class="num small muted">{{ (v / s.mv * 100)|fmt(2, '%') }}</td></tr>{% endfor %}</table>
+    <p class="small muted">Aproximação de 1ª ordem (duration × choque). Pós-fixados (DI+) quase não têm risco de juros.</p></div>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Monitorados (sem posição) · {{ watched|length }}</h2>
+  <div class="scroll"><table>
+    <tr><th>Ativo</th><th class="num">Duration</th><th class="num">Spread</th><th class="num">Δ1d / 5d / 20d</th><th>Faixa histórica</th>
+      <th class="num">Justo</th><th class="num">Preço → justo</th><th>Veredito</th><th>Ação emissor</th><th>Último alerta</th></tr>
+    {% for r in watched %}
+    <tr>
+      <td><a href="/asset/{{ r.isin }}"><b>{{ r.name }}</b></a><br><span class="small muted">{{ r.index_text }} · venc. {{ r.maturity or '—' }}</span></td>
+      <td class="num">{{ r.duration|fmt(2) }}</td>
+      <td class="num tight"><b>{% if r.spread is not none %}{{ r.spread_label }} {{ r.spread|fmt(0) }}{% elif r['yield'] is not none %}taxa {{ r['yield']|fmt(2, '%') }}{% elif r.pct_par is not none %}<span style="color:var(--down)">{{ r.pct_par|fmt(1) }}% do par</span><br><span class="small muted">sem taxa ANBIMA</span>{% else %}—{% endif %}</b></td>
+      <td class="num tight">{{ chg(r.chg.d1) }} / {{ chg(r.chg.d5) }} / {{ chg(r.chg.d20) }}</td>
+      <td>{{ hbar(r.hist) }}</td>
+      <td class="num">{{ r.fair|fmt(0) }}</td>
+      <td class="num tight">{{ r.price|fmt(2) }}{% if r.fair_price %}<br><span class="small">→ {{ r.fair_price|fmt(2) }} <span class="{{ 'up' if r.upside_pct > 0 else 'down' }}">({{ '%+.1f'|format(r.upside_pct) }}%)</span></span>{% endif %}</td>
+      <td><span class="verdict-{{ r.verdict.split(' ')[0] }}">{{ r.verdict }}</span><br>{% if r.model_pct is not none %}<span class="chip {{ 'BUY' if r.model_pct <= 0.2 else 'SELL' if r.model_pct > 0.5 else '' }}" title="Modelo validado (blend)">modelo top {{ [1, (r.model_pct*100)|round|int]|max }}%</span>{% if r.ml_pred_bps is not none %} <span class="small muted">prev. 1m {{ '%+.0f'|format(r.ml_pred_bps) }} bps</span>{% endif %}{% else %}<span class="chip {{ r.signal.label }}">{{ r.signal.label }}</span>{% endif %}</td>
+      <td class="small">{% if r.stock %}{{ r.stock }} {{ r.stock_close|fmt(2) }}{% else %}—{% endif %}</td>
+      <td class="small">{% if r.last_alert %}<span class="{{ 'sev-high' if r.last_alert.severity == 'high' }}">{{ r.last_alert.message[:80] }}</span>{% else %}—{% endif %}</td>
+    </tr>
+    {% else %}<tr><td colspan="10" class="muted">—</td></tr>{% endfor %}
+  </table></div>
+</div>
+
+<div class="card">
+  <h2>Adicionar ativo</h2>
   <form class="inline" method="post" action="/add">
     <input name="isin" placeholder="ISIN (ex.: BRBRKMDBS0A1, USN15516AB8)" required size="34">
     <input name="stock_ticker" placeholder="Ação do emissor (opcional)" size="20">
     <input name="cetip_code" placeholder="Código CETIP (CRI/CRA)" size="20">
     <button>Adicionar</button>
   </form>
-  <p class="muted small">Debêntures, CRI/CRA, Tesouro e eurobonds. Os ativos ficam salvos em <code>watchlist.yaml</code>.
-    Quantidade e preço médio: abra o ativo → “Minha posição”. Procurando ideias? Veja <a href="/screener">Oportunidades</a>.</p>
-</div>
-
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
-    <h2>Minha carteira ({{ rows|length }})</h2>
-    <div class="small">{% for cur, v in totals.items() %}<b>{{ cur }} {{ v|fmt(2) }}</b>{% if not loop.last %} · {% endif %}{% endfor %}</div>
-    <form method="post" action="/collect"><button class="ghost">↻ Atualizar agora</button></form>
-  </div>
-  <div class="scroll"><table>
-    <tr><th>Ativo</th><th>Tipo</th><th class="num">Preço</th><th class="num">Taxa</th><th class="num">Spread</th>
-      <th class="num">Ação emissor</th><th class="num">Posição</th><th>Sinal</th><th>Último alerta</th></tr>
-    {% for r in rows %}{% set i = r.info %}{% set l = r.last %}{% set p = r.position %}
-    <tr>
-      <td><a href="/asset/{{ i.isin }}"><b>{{ i.name }}</b></a><br><span class="muted small">{{ i.isin }}{% if i.cetip_code %} · {{ i.cetip_code }}{% endif %}{% if i.maturity %} · venc. {{ i.maturity }}{% endif %}</span></td>
-      <td><span class="chip">{{ i.kind }}</span><br><span class="small muted">{{ i.index_text or i.tpf_titulo or '' }}</span></td>
-      <td class="num">{{ l.price|fmt(2) }}<br><span class="small muted">{{ l.price_date or '' }}</span></td>
-      <td class="num">{{ l['yield']|fmt(2, '%') }}{% if l.yield_chg %}<br><span class="small {{ 'down' if l.yield_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.yield_chg*100) }} bps</span>{% endif %}</td>
-      <td class="num">{{ l.spread_bps|fmt(0, ' bps') }}{% if l.spread_bps_chg %}<br><span class="small {{ 'down' if l.spread_bps_chg > 0 else 'up' }}">{{ '%+.0f'|format(l.spread_bps_chg) }}</span>{% endif %}</td>
-      <td class="num">{% if i.stock_ticker %}{{ i.stock_ticker }} {{ l.stock_close|fmt(2) }}{% if l.stock_pct is not none %}<br><span class="small {{ 'up' if l.stock_pct >= 0 else 'down' }}">{{ '%+.1f'|format(l.stock_pct) }}%</span>{% endif %}{% if i.stock_last %}<br><span class="small muted">{{ i.stock_last.time }}</span>{% endif %}{% else %}—{% endif %}</td>
-      <td class="num">{% if p %}{{ p.quantity|fmt(0) }} × <br><b>{{ p.currency }} {{ p.value|fmt(0) }}</b>{% if p.pnl_pct is not none %}<br><span class="small {{ 'up' if p.pnl_pct >= 0 else 'down' }}">{{ '%+.1f'|format(p.pnl_pct) }}%</span>{% endif %}{% else %}<span class="muted small">—</span>{% endif %}</td>
-      <td><span class="chip {{ r.signal.label }}">{{ r.signal.label }}</span>{% if r.signal.score is not none %}<br><span class="small muted">score {{ r.signal.score }}</span>{% endif %}</td>
-      <td class="small">{% if r.last_alert %}<span class="{{ 'sev-high' if r.last_alert.severity == 'high' }}">{{ r.last_alert.message[:90] }}</span><br><span class="muted">{{ r.last_alert.ts[:16] }}</span>{% else %}—{% endif %}</td>
-    </tr>
-    {% else %}
-    <tr><td colspan="9" class="muted">Nenhum ativo ainda — adicione um ISIN acima ou escolha em <a href="/screener">Oportunidades</a>.</td></tr>
-    {% endfor %}
-  </table></div>
 </div>
 
 <div class="card">
@@ -46,11 +129,9 @@
     <tr><td class="small muted" style="width:140px">{{ a.ts[:16] }}</td><td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td></tr>
   {% else %}<tr><td class="muted">Sem alertas.</td></tr>{% endfor %}</table>
   <p class="small muted">E-mail: {{ 'ativo → ' ~ settings.alert_email_to if settings.email_enabled else 'desativado (configure SMTP_* no .env)' }}
-   · Ações a cada {{ settings.quotes_every_seconds }}s no pregão · coleta completa a cada {{ settings.collect_every_minutes }} min
-   · página atualiza sozinha a cada 60s</p>
+   · Ações a cada {{ settings.quotes_every_seconds }}s no pregão · coleta completa a cada {{ settings.collect_every_minutes }} min</p>
 </div>
 <script>
-// Auto-refresh unless the user is typing in the add form.
 setInterval(() => { if (!document.activeElement || document.activeElement.tagName !== 'INPUT') location.reload(); }, 60000);
 </script>
 {% endblock %}

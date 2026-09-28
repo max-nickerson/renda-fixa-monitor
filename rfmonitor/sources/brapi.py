@@ -79,6 +79,15 @@ def fundamentals(ticker: str) -> dict:
     }
 
 
+def usdbrl() -> float | None:
+    try:
+        res = _get("/v2/currency", currency="USD-BRL")
+        c = (res.get("currency") or [{}])[0]
+        return (float(c["bidPrice"]) + float(c["askPrice"])) / 2
+    except Exception:
+        return None
+
+
 def selic_series(historical: bool = True) -> list[tuple[str, float]]:
     res = _get("/v2/prime-rate", country="brazil", historical=str(historical).lower())
     return [(datetime.strptime(x["date"], "%d/%m/%Y").strftime("%Y-%m-%d"), x["value"])

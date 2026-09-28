@@ -10,7 +10,10 @@
 <div class="card">
   <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
     <div>
-      <h2 style="margin-bottom:4px">Oportunidades — modelo quant de valor relativo</h2>
+      <h2 style="margin-bottom:4px">Oportunidades — modelo quant validado (blend heurística + Ridge)</h2>
+      <div class="small" style="margin-bottom:4px">Regra testada: <b>comprar o top 20%</b>, <b>manter até sair do top 50%</b>.
+        Fora da amostra 2023–26, após 25 bps de custo: +0,7% a.a. vs universo, drawdown −1,9% vs −3,5%.
+        <a href="/research">ver pesquisa →</a></div>
       <div class="muted small">ANBIMA {{ res.date }} · {{ res.universe }} debêntures precificadas · {{ res.ranked }} ranqueadas
         (exclui sem taxa, &lt; 6 meses, PU &lt; 90% do par e o 1% de spreads mais altos de cada grupo)</div>
     </div>
@@ -48,16 +51,21 @@
 <div class="card">
   <div class="scroll"><table id="tbl">
     <thead><tr>
-      <th class="sort num" data-k="rank">#</th><th>Ativo</th><th>Grupo</th>
-      <th class="sort num" data-k="duration">Dur.</th><th class="sort num" data-k="taxa_indicativa">Taxa</th>
-      <th class="sort num" data-k="spread_bps">Spread</th><th class="sort num" data-k="resid_bps">vs justo</th>
-      <th class="sort num" data-k="chg_5d_bps">Δ5d</th><th class="sort num" data-k="pct_pu_par">%PU par</th>
-      <th class="sort num" data-k="pct_reune">REUNE</th><th class="sort num" data-k="score">Score</th><th></th>
+      <th class="sort num" data-k="rank">#</th><th>Ativo</th><th>Indexador · taxa</th>
+      <th class="sort num" data-k="duration">Duration</th>
+      <th class="sort num" data-k="spread_bps">CDI+</th><th class="sort num" data-k="fair_bps">Justo</th>
+      <th class="sort num" data-k="resid_bps">vs justo</th>
+      <th class="sort num" data-k="chg_5d_bps">Δ5d</th>
+      <th class="sort num" data-k="upside_pct">PU → justo</th><th>Veredito</th>
+      <th class="sort num" data-k="model_pct" title="Percentil no modelo validado (blend heurística + Ridge). Top 20% = comprar; fora do top 50% = vender">Modelo</th>
+      <th class="sort num" data-k="ml_pred_bps" title="Excesso sobre CDI previsto p/ o próximo mês (Ridge)">Prev. 1m</th>
+      <th class="sort num" data-k="score">Heur.</th><th></th>
     </tr></thead><tbody></tbody>
   </table></div>
   <p class="small muted" id="count"></p>
 </div>
 
+<style>.verdict-Barato{color:var(--up);font-weight:600}.verdict-Caro{color:var(--down);font-weight:600}</style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const ROWS = {{ res.rows|tojson }};
@@ -68,6 +76,7 @@ const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).
 const f = (v, d = 0) => v === null || v === undefined ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: d, maximumFractionDigits: d});
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let sortKey = 'rank', sortDir = 1, chart;
+const ASC_KEYS = new Set(['rank', 'model_pct']);
 
 const peers = [...new Set(ROWS.map(r => r.peer))].sort();
 peers.forEach(p => $('f_peer').add(new Option(`${p} (${ROWS.filter(r => r.peer === p).length})`, p)));
@@ -92,13 +101,18 @@ function render() {
       <td class="num">${r.rank}</td>
       <td><b>${esc(r.codigo)}</b> <span class="small muted">${esc(r.isin || '')}</span><br><span class="small">${esc(r.nome.replace(/\s*\(\*+\)/g, ''))}</span>
         <br><span class="small muted">venc. ${esc(r.vencimento)}</span>${flags}</td>
-      <td class="small">${esc(r.indice)}<br><span class="muted">${esc(r.peer)}</span></td>
-      <td class="num">${f(r.duration, 1)}</td><td class="num">${f(r.taxa_indicativa, 2)}${r.group === 'DI_SPREAD' ? '' : '%'}</td>
-      <td class="num">${f(r.spread_bps)}</td>
+      <td class="small">${esc(r.indice)} · ${f(r.taxa_indicativa, 2)}${r.group === 'DI_SPREAD' ? '' : '%'}<br><span class="muted">${esc(r.peer)}${r.pct_pu_par ? ' · ' + f(r.pct_pu_par, 1) + '% par' : ''}</span></td>
+      <td class="num">${f(r.duration, 2)}</td>
+      <td class="num"><b>${f(r.spread_bps)}</b></td>
+      <td class="num">${f(r.fair_bps)}</td>
       <td class="num ${r.resid_bps > 0 ? 'up' : 'down'}">${r.resid_bps > 0 ? '+' : ''}${f(r.resid_bps)}</td>
       <td class="num ${r.chg_5d_bps > 0 ? 'down' : 'up'}">${r.chg_5d_bps === null ? '—' : (r.chg_5d_bps > 0 ? '+' : '') + f(r.chg_5d_bps)}</td>
-      <td class="num">${f(r.pct_pu_par, 1)}</td><td class="num">${f(r.pct_reune)}</td>
-      <td class="num"><b>${f(r.score, 2)}</b></td><td>${btn}</td></tr>`;
+      <td class="num">${f(r.pu, 2)}<br><span class="small">→ ${f(r.fair_pu, 2)} <span class="${r.upside_pct > 0 ? 'up' : 'down'}">(${r.upside_pct > 0 ? '+' : ''}${f(r.upside_pct, 1)}%)</span></span></td>
+      <td><span class="verdict-${r.verdict}">${r.verdict === 'Barato' ? 'Barato · spread alto' : r.verdict === 'Caro' ? 'Caro · spread baixo' : 'Justo'}</span></td>
+      <td class="num">${r.model_pct === null || r.model_pct === undefined ? '<span class="muted small">sem negócio</span>'
+        : `<span class="chip ${r.model_pct <= 0.2 ? 'BUY' : r.model_pct > 0.5 ? 'SELL' : ''}">top ${Math.max(1, Math.round(r.model_pct * 100))}%</span>`}</td>
+      <td class="num ${r.ml_pred_bps > 0 ? 'up' : 'down'}">${r.ml_pred_bps === null || r.ml_pred_bps === undefined ? '—' : (r.ml_pred_bps > 0 ? '+' : '') + f(r.ml_pred_bps)}</td>
+      <td class="num">${f(r.score, 2)}</td><td>${btn}</td></tr>`;
   }).join('');
   $('count').textContent = `${rows.length} ativos no filtro (mostrando até 150). Clique nos cabeçalhos para ordenar.`;
   drawCurve();
@@ -122,7 +136,7 @@ function drawCurve() {
 }
 
 document.querySelectorAll('th.sort').forEach(th => th.onclick = () => {
-  const k = th.dataset.k; sortDir = sortKey === k ? -sortDir : (k === 'rank' ? 1 : -1); sortKey = k; render();
+  const k = th.dataset.k; sortDir = sortKey === k ? -sortDir : (ASC_KEYS.has(k) ? 1 : -1); sortKey = k; render();
 });
 ['f_peer', 'f_dmin', 'f_dmax', 'f_isenta', 'f_noflag', 'f_q'].forEach(id => $(id).addEventListener('input', render));
 Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--line');

@@ -15,10 +15,11 @@ import logging
 from datetime import date, datetime, timezone
 from zoneinfo import ZoneInfo
 
+import numpy as np
 import pandas as pd
 
-from . import db, isin as isin_mod
-from .bonds import interp, mod_duration, ytm
+from . import db, history, isin as isin_mod
+from .bonds import cdi_equivalent_bps, interp, mod_duration, ytm
 from .config import load_watchlist, settings
 from .resolver import resolve
 from .sources import anbima_api, anbima_public, brapi, cvm, fred, news, tesouro_direto, tradingview_mcp
@@ -97,6 +98,26 @@ class Market:
                 self._cdi = pd.Series(dtype=float)
         return self._cdi
 
+    def b3_rate(self, d: pd.Timestamp, curve: str, years: float) -> float | None:
+        """B3 TaxaSwap curve (PRE = DI x pré, DIC = DI x IPCA) at `years`, using the latest file ≤ d."""
+        key = ("b3", d)
+        if key not in self._day_cache:
+            df = None
+            for back in range(6):
+                day = (d - pd.offsets.BDay(back)).date()
+                try:
+                    df = history.b3_curves_day(day)
+                except Exception as e:
+                    log.debug("B3 curve %s: %s", day, e)
+                if df is not None:
+                    break
+            self._day_cache[key] = df
+        df = self._day_cache[key]
+        if df is None:
+            return None
+        g = df[df["curve"] == curve].sort_values("du")
+        return float(np.interp(years * 252, g["du"], g["rate"])) if len(g) > 2 else None
+
     def cdi_at(self, d: pd.Timestamp) -> float | None:
         s = self.cdi
         if s.empty:
@@ -122,8 +143,25 @@ class Market:
 
 
 # ---------------------------------------------------------------- bond metrics
+def cdi_spread(r, mkt: Market, kind: str, dur: float | None) -> float | None:
+    """CDI+ equivalent spread (bps) for any indexer — the common yardstick across DI+, %DI, Pré and IPCA+.
+    Benchmarks: B3 DI x Pré and DI x IPCA swap curves (same as the research history); government curves
+    (LTN/NTN-F, NTN-B) only as fallback when the B3 file isn't available."""
+    tx = r.get("taxa_indicativa")
+    if tx is None or tx != tx:
+        return None
+    d: pd.Timestamp = r["date"]
+    yrs = dur or 3
+    pre = real = None
+    if kind in ("DI_PCT", "PRE"):
+        pre = mkt.b3_rate(d, "PRE", yrs) or mkt.govt_rate(d, ("LTN", "NTN-F"), yrs)
+    if kind in ("IPCA", "IGPM"):
+        real = mkt.b3_rate(d, "DIC", yrs) or mkt.govt_rate(d, ("NTN-B",), yrs)
+    return cdi_equivalent_bps(kind, tx, pre, real)
+
+
 def debenture_spread(r, mkt: Market, fallback_indice: str = "") -> tuple[str, float | None, float | None]:
-    """(indexer kind, spread in bps, duration in years) for one ANBIMA debenture/CRI row."""
+    """(indexer kind, spread in bps vs its natural benchmark, duration in years) for one ANBIMA row."""
     d: pd.Timestamp = r["date"]
     tx = r.get("taxa_indicativa")
     dur = r["duration_du"] / 252 if pd.notna(r.get("duration_du")) else None
@@ -153,12 +191,34 @@ def _debenture_rows(info: dict, mkt: Market, rows: pd.DataFrame) -> list[tuple]:
         kind, spread, dur = debenture_spread(r, mkt, info.get("index_text") or "")
         info["index"] = kind
         out += [(ds, "price", r.get("pu")), (ds, "pct_par", r.get("pct_pu_par")),
-                (ds, "yield", r.get("taxa_indicativa")), (ds, "duration", dur), (ds, "spread_bps", spread)]
+                (ds, "yield", r.get("taxa_indicativa")), (ds, "duration", dur), (ds, "spread_bps", spread),
+                (ds, "cdi_spread_bps", cdi_spread(r, mkt, kind, dur))]
     return out
+
+
+def seed_trade_history(info: dict) -> int:
+    """Years of CDI+ spread history from SND trades (implied from PU vs par curve), stored as
+    `cdi_spread_bps` (source 'snd_trades') on dates that ANBIMA doesn't cover. Runs once per asset."""
+    code = (info.get("cetip_code") or "").strip()
+    if not code or info.get("trade_history_seeded"):
+        return 0
+    try:
+        from .ml.selection import build_panel
+        p = build_panel(codes={code})
+    except Exception as e:
+        log.warning("trade history for %s failed: %s", code, e)
+        return 0
+    have = set(db.series(info["isin"], ["cdi_spread_bps"]).index.strftime("%Y-%m-%d"))
+    rows = [(d.strftime("%Y-%m-%d"), "cdi_spread_bps", v) for d, v in zip(p["date"], p["cdi_bps"])
+            if d.strftime("%Y-%m-%d") not in have]
+    rows += [(d.strftime("%Y-%m-%d"), "pct_curve_trade", v) for d, v in zip(p["date"], p["pct_curve"])]
+    info["trade_history_seeded"] = True
+    return db.put_observations(info["isin"], rows, "snd_trades")
 
 
 def collect_debenture(info: dict, mkt: Market) -> int:
     code = info.get("cetip_code")
+    seed_trade_history(info)
     if not code or mkt.deb.empty:
         return 0
     rows = mkt.deb[mkt.deb["codigo"] == code]
