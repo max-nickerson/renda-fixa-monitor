@@ -64,6 +64,13 @@
     <table>{% for a in alerts %}
       <tr><td class="small muted" style="width:120px">{{ a.ts[:16] }}</td><td class="{{ 'sev-high' if a.severity == 'high' }}">{{ a.message }}</td></tr>
     {% else %}<tr><td class="muted">Sem alertas.</td></tr>{% endfor %}</table>
+    <h2 style="margin-top:18px">Minha posição</h2>
+    <form class="inline" method="post" action="/asset/{{ info.isin }}/position">
+      <input name="quantity" placeholder="{{ 'nominal (USD)' if info.currency == 'USD' else 'quantidade' }}" size="12" value="{{ position.quantity or '' }}">
+      <input name="avg_price" placeholder="{{ 'preço médio (% par)' if info.currency == 'USD' else 'PU médio' }}" size="14" value="{{ position.avg_price or '' }}">
+      <button>Salvar</button>
+    </form>
+    <p class="small muted">Deixe a quantidade vazia para só acompanhar (sem posição).</p>
     <h2 style="margin-top:18px">Inserir preço manual</h2>
     <form class="inline" method="post" action="/asset/{{ info.isin }}/price">
       <input type="date" name="d" value="{{ today }}"><input name="price" placeholder="preço (ex.: 54.45)" size="12" required>

@@ -22,7 +22,8 @@ def _access_token() -> str:
     if _token.get("value") and _token["exp"] > time.time() + 60:
         return _token["value"]
     basic = base64.b64encode(f"{settings.anbima_client_id}:{settings.anbima_client_secret}".encode()).decode()
-    r = client().post(f"{_base()}/oauth/access-token", json={"grant_type": "client_credentials"},
+    # The token endpoint lives on the production host for both environments.
+    r = client().post("https://api.anbima.com.br/oauth/access-token", json={"grant_type": "client_credentials"},
                       headers={"Authorization": f"Basic {basic}", "Content-Type": "application/json"})
     r.raise_for_status()
     body = r.json()
@@ -39,8 +40,13 @@ def feed(path: str, **params) -> list[dict]:
         cache = CACHE_DIR / f"anbima_api_{path.replace('/', '_')}_{params['data']}.json"
         if cache.exists():
             return json.loads(cache.read_text(encoding="utf-8"))
+    if _token.get("denied_until", 0) > time.time():
+        raise RuntimeError("ANBIMA API access denied (403) — app not yet approved for production data")
     r = client().get(f"{_base()}/feed/precos-indices/v1/{path}", params=params,
                      headers={"client_id": settings.anbima_client_id, "access_token": _access_token()})
+    if r.status_code == 403:
+        _token["denied_until"] = time.time() + 6 * 3600  # don't hammer the API; retry in 6 h
+        raise RuntimeError("ANBIMA API access denied (403) — app not yet approved for production data")
     if r.status_code == 404:
         rows: list = []
     else:
@@ -74,11 +80,15 @@ def debentures(d: date) -> pd.DataFrame | None:
         "codigo": df.get("codigo_ativo", pd.Series(dtype=str)).astype(str).str.strip(),
         "nome": df.get("emissor"),
         "vencimento": pd.to_datetime(df.get("data_vencimento"), errors="coerce"),
-        "indice": df.get("grupo", pd.Series("", index=df.index)).map(_grupo_to_indice),
+        # 'percentual_taxa' is the same text as the public file's índice ('DI + 1,6%', '114,5% do DI')
+        "indice": df["percentual_taxa"] if "percentual_taxa" in df
+        else df.get("grupo", pd.Series("", index=df.index)).map(_grupo_to_indice),
         "taxa_indicativa": pd.to_numeric(df.get("taxa_indicativa"), errors="coerce"),
         "pu": pd.to_numeric(df.get("pu"), errors="coerce"),
-        "pct_pu_par": pd.to_numeric(df.get("percentual_pu_par"), errors="coerce") if "percentual_pu_par" in df else None,
+        "pct_pu_par": pd.to_numeric(df.get("percent_pu_par"), errors="coerce") if "percent_pu_par" in df else None,
         "duration_du": pd.to_numeric(df.get("duration"), errors="coerce"),
+        "pct_reune": pd.to_numeric(df.get("percent_reune"), errors="coerce") if "percent_reune" in df else None,
+        "desvio_padrao": pd.to_numeric(df.get("desvio_padrao"), errors="coerce"),
         "ref_ntnb": pd.to_datetime(df.get("referencia_ntnb"), errors="coerce") if "referencia_ntnb" in df else pd.NaT,
     })
     out["date"] = pd.Timestamp(d)

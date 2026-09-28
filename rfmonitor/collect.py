@@ -36,6 +36,7 @@ class Market:
         self.days = days
         self._deb = self._tpf = None
         self._cdi: pd.Series | None = None
+        self._day_cache: dict = {}
 
     def _combine(self, public_fetch, api_fetch, key: str) -> pd.DataFrame:
         """ANBIMA public files cover ~10 business days; older dates come from the ANBIMA API (if configured)."""
@@ -105,10 +106,11 @@ class Market:
 
     def govt_rate(self, d: pd.Timestamp, titulos: tuple[str, ...], years: float,
                   exact_maturity: pd.Timestamp | None = None) -> float | None:
-        t = self.tpf
-        if t.empty:
-            return None
-        day = t[(t["date"] == d) & (t["titulo"].isin(titulos))]
+        key = (d, titulos)
+        if key not in self._day_cache:
+            t = self.tpf
+            self._day_cache[key] = pd.DataFrame() if t.empty else t[(t["date"] == d) & (t["titulo"].isin(titulos))]
+        day = self._day_cache[key]
         if day.empty:
             return None
         if exact_maturity is not None and not pd.isna(exact_maturity):
@@ -120,32 +122,38 @@ class Market:
 
 
 # ---------------------------------------------------------------- bond metrics
+def debenture_spread(r, mkt: Market, fallback_indice: str = "") -> tuple[str, float | None, float | None]:
+    """(indexer kind, spread in bps, duration in years) for one ANBIMA debenture/CRI row."""
+    d: pd.Timestamp = r["date"]
+    tx = r.get("taxa_indicativa")
+    dur = r["duration_du"] / 252 if pd.notna(r.get("duration_du")) else None
+    kind, _ = anbima_public.parse_indexer(r.get("indice") or fallback_indice or "")
+    if tx is None or tx != tx:
+        return kind, None, dur
+    yrs = dur or ((r["vencimento"] - d).days / 365.25 if pd.notna(r.get("vencimento")) else 3)
+    spread = None
+    if kind == "DI_SPREAD":
+        spread = tx * 100
+    elif kind == "DI_PCT":
+        cdi = mkt.cdi_at(d)
+        spread = (tx / 100 - 1) * cdi * 100 if cdi else None
+    elif kind == "IPCA":
+        ntnb = mkt.govt_rate(d, ("NTN-B",), yrs, r.get("ref_ntnb"))
+        spread = (tx - ntnb) * 100 if ntnb is not None else None
+    elif kind == "PRE":
+        pre = mkt.govt_rate(d, ("LTN", "NTN-F"), yrs)
+        spread = (tx - pre) * 100 if pre is not None else None
+    return kind, spread, dur
+
+
 def _debenture_rows(info: dict, mkt: Market, rows: pd.DataFrame) -> list[tuple]:
     out = []
     for _, r in rows.iterrows():
-        d: pd.Timestamp = r["date"]
-        ds = d.strftime("%Y-%m-%d")
-        tx = r.get("taxa_indicativa")
-        dur = r["duration_du"] / 252 if pd.notna(r.get("duration_du")) else None
-        out += [(ds, "price", r.get("pu")), (ds, "pct_par", r.get("pct_pu_par")), (ds, "yield", tx),
-                (ds, "duration", dur)]
-        kind, _ = anbima_public.parse_indexer(r.get("indice") or info.get("index_text") or "")
+        ds = r["date"].strftime("%Y-%m-%d")
+        kind, spread, dur = debenture_spread(r, mkt, info.get("index_text") or "")
         info["index"] = kind
-        spread = None
-        if tx is not None and tx == tx:
-            yrs = dur or ((r["vencimento"] - d).days / 365.25 if pd.notna(r.get("vencimento")) else 3)
-            if kind == "DI_SPREAD":
-                spread = tx * 100
-            elif kind == "DI_PCT":
-                cdi = mkt.cdi_at(d)
-                spread = (tx / 100 - 1) * cdi * 100 if cdi else None
-            elif kind == "IPCA":
-                ntnb = mkt.govt_rate(d, ("NTN-B",), yrs, r.get("ref_ntnb"))
-                spread = (tx - ntnb) * 100 if ntnb is not None else None
-            elif kind == "PRE":
-                pre = mkt.govt_rate(d, ("LTN", "NTN-F"), yrs)
-                spread = (tx - pre) * 100 if pre is not None else None
-        out.append((ds, "spread_bps", spread))
+        out += [(ds, "price", r.get("pu")), (ds, "pct_par", r.get("pct_pu_par")),
+                (ds, "yield", r.get("taxa_indicativa")), (ds, "duration", dur), (ds, "spread_bps", spread)]
     return out
 
 

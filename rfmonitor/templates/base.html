@@ -12,7 +12,9 @@
 *{box-sizing:border-box}body{margin:0;font:14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 background:var(--bg);color:var(--ink)}a{color:var(--accent);text-decoration:none}
 header{display:flex;gap:16px;align-items:center;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--card)}
-header b{font-size:16px}header nav{display:flex;gap:14px;margin-left:auto}
+header b{font-size:16px}header nav{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+header nav a{padding:6px 12px;border-radius:8px}header nav a.active{background:var(--chip);font-weight:600}
+th.sort{cursor:pointer;user-select:none}th.sort:hover{color:var(--ink)}
 main{max-width:1280px;margin:0 auto;padding:20px 16px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
 h2{font-size:15px;margin:0 0 12px}table{width:100%;border-collapse:collapse}
@@ -36,7 +38,12 @@ canvas{max-height:260px}
 </head>
 <body>
 <header><b>📈 Renda Fixa Monitor</b>
-<nav><a href="/">Dashboard</a><a href="/alerts">Alertas</a><a href="/docs">API</a></nav></header>
+<nav>
+  <a href="/" class="{{ 'active' if tab == 'carteira' }}">Minha carteira</a>
+  <a href="/screener" class="{{ 'active' if tab == 'screener' }}">Oportunidades (quant)</a>
+  <a href="/alerts" class="{{ 'active' if tab == 'alerts' }}">Alertas</a>
+  <a href="/docs">API</a>
+</nav></header>
 <main>{% block body %}{% endblock %}</main>
 </body>
 </html>

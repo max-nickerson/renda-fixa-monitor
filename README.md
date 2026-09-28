@@ -35,6 +35,28 @@ The dashboard reloads itself every 60 s.
 
 > ⚠️ Research tool, **not investment advice**. Indicative prices are not executable quotes.
 
+## Two tabs
+
+**Minha carteira** — the ISINs you hold or follow (saved in `watchlist.yaml`), with optional quantity and
+average price per asset (value and P&L per currency), every alert above, charts, events and the
+per-asset strategy signal/backtest.
+
+**Oportunidades (quant)** — ranks the **whole ANBIMA-priced debenture universe** (~1,200 bonds, CRI/CRA too
+once the ANBIMA API is enabled) every day and lets you add any bond to your portfolio with one click:
+
+| Factor | Weight | Idea |
+|---|---|---|
+| Value | 45% | spread above the peer "fair" curve (median spread by duration bucket), robust z-score |
+| Carry | 20% | spread per year of duration (how much widening the carry absorbs) |
+| Momentum | 15% | 5-day spread change (tightening +, widening −) |
+| Quality | 20% | more REUNE trades +, higher dealer dispersion − |
+| Penalties | | material fact at CVM in the last 15 days (−1), spread +50 bps in 5 days (−0.5) |
+
+Peers = same indexer **and** same tax status (Lei 12.431 tax-exempt bonds trade structurally tighter).
+Excluded: no indicative rate, < 6 months, price < 90% of par, top 1% spreads per group (credit events).
+Free data has no ratings — "cheap vs peers" is often "riskier than peers". Use it as a research shortlist.
+CLI: `python -m rfmonitor screener --top 20`.
+
 ---
 
 ## Quick start (any machine with Python 3.10+)

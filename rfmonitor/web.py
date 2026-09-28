@@ -1,6 +1,7 @@
 """Local dashboard (FastAPI + Jinja2). Binds to 127.0.0.1 by default."""
 from __future__ import annotations
 
+import json
 import math
 import threading
 from contextlib import asynccontextmanager
@@ -11,7 +12,7 @@ from fastapi import FastAPI, Form, HTTPException, Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
-from . import db, isin as isin_mod, jobs, strategy
+from . import db, isin as isin_mod, jobs, screener, strategy
 from .collect import add_manual_price
 from .config import load_watchlist, save_watchlist, settings
 from .resolver import resolve
@@ -26,6 +27,19 @@ def _fmt(v, nd=2, suffix=""):
 
 
 templates.env.filters["fmt"] = _fmt
+
+
+def _num(s: str) -> float | None:
+    """Accepts '1.234,56' or '1234.56'."""
+    s = (s or "").strip()
+    if not s:
+        return None
+    if "," in s:
+        s = s.replace(".", "").replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        return None
 
 
 @asynccontextmanager
@@ -53,12 +67,22 @@ def create_app(scheduler: bool = True) -> FastAPI:
                 last[m + "_chg"] = float(s.iloc[-1] - s.iloc[-2]) if len(s) > 1 else None
                 last[m + "_date"] = s.index[-1].strftime("%d/%m")
         last["stock_pct"] = None
-        if "stock_close" in last and last.get("stock_close_chg") is not None:
+        if last.get("stock_close") is not None and last.get("stock_close_chg") is not None:
             prev = last["stock_close"] - last["stock_close_chg"]
             last["stock_pct"] = last["stock_close_chg"] / prev * 100 if prev else None
+        pos = entry.get("position") or {}
+        qty, cost, px = pos.get("quantity"), pos.get("avg_price"), last.get("price")
+        scale = 0.01 if info.get("currency") == "USD" else 1  # eurobond prices are % of par; qty = nominal
+        position = None
+        if qty:
+            position = {"quantity": qty, "avg_price": cost,
+                        "value": qty * px * scale if px is not None else None,
+                        "pnl_pct": (px / cost - 1) * 100 if px and cost else None,
+                        "currency": info.get("currency", "BRL")}
         sig = strategy.current(code)
         al = db.alerts(code, limit=1)
-        return {"info": info, "last": last, "signal": sig, "last_alert": al[0] if al else None}
+        return {"info": info, "last": last, "signal": sig, "last_alert": al[0] if al else None,
+                "position": position}
 
     @app.get("/", response_class=HTMLResponse)
     def index(request: Request):
@@ -68,11 +92,50 @@ def create_app(scheduler: bool = True) -> FastAPI:
                 rows.append(row(e))
             except ValueError:
                 continue
+        totals: dict[str, float] = {}
+        for r in rows:
+            p = r["position"]
+            if p and p["value"] is not None:
+                totals[p["currency"]] = totals.get(p["currency"], 0) + p["value"]
         return templates.TemplateResponse(request, "index.html", {
-            "rows": rows, "alerts": db.alerts(limit=15), "settings": settings})
+            "tab": "carteira", "rows": rows, "totals": totals, "alerts": db.alerts(limit=15),
+            "settings": settings})
+
+    @app.get("/screener", response_class=HTMLResponse)
+    def screener_page(request: Request, added: str = ""):
+        res = screener.latest()
+        if res is None:
+            threading.Thread(target=screener.run, daemon=True).start()
+        mine = {isin_mod.normalize(e["isin"]) for e in load_watchlist()}
+        return templates.TemplateResponse(request, "screener.html", {
+            "tab": "screener", "res": res, "mine": mine, "added": added,
+            "curves_json": json.dumps(res["curves"]) if res else "{}"})
+
+    @app.post("/screener/run")
+    def screener_run():
+        threading.Thread(target=screener.run, daemon=True).start()
+        return RedirectResponse("/screener", status_code=303)
+
+    @app.get("/api/screener")
+    def api_screener():
+        return screener.latest() or {"rows": []}
+
+    @app.post("/asset/{isin}/position")
+    def set_position(isin: str, quantity: str = Form(""), avg_price: str = Form("")):
+        wl = load_watchlist()
+        for e in wl:
+            if isin_mod.normalize(e["isin"]) == isin:
+                q, c = _num(quantity), _num(avg_price)
+                if q:
+                    e["position"] = {"quantity": q, **({"avg_price": c} if c else {})}
+                else:
+                    e.pop("position", None)
+        save_watchlist(wl)
+        return RedirectResponse(f"/asset/{isin}", status_code=303)
 
     @app.post("/add")
-    def add(isin: str = Form(...), stock_ticker: str = Form(""), cetip_code: str = Form("")):
+    def add(isin: str = Form(...), stock_ticker: str = Form(""), cetip_code: str = Form(""),
+            next: str = Form("")):
         try:
             code = isin_mod.normalize(isin)
         except ValueError as e:
@@ -88,6 +151,8 @@ def create_app(scheduler: bool = True) -> FastAPI:
             save_watchlist(wl)
             resolve(code, entry, refresh=True)
             threading.Thread(target=jobs.run_cycle, daemon=True).start()
+        if next == "screener":
+            return RedirectResponse(f"/screener?added={code}", status_code=303)
         return RedirectResponse(f"/asset/{code}", status_code=303)
 
     @app.post("/remove/{isin}")
@@ -106,9 +171,11 @@ def create_app(scheduler: bool = True) -> FastAPI:
         info = db.get_asset(isin)
         if not info:
             raise HTTPException(404, "Unknown ISIN — add it on the dashboard first")
+        entry = next((e for e in load_watchlist() if isin_mod.normalize(e["isin"]) == isin), {})
         return templates.TemplateResponse(request, "asset.html", {
-            "info": info, "signal": strategy.current(isin), "events": db.events(isin, limit=60),
-            "alerts": db.alerts(isin, limit=40), "today": date.today().isoformat()})
+            "tab": "carteira", "info": info, "signal": strategy.current(isin), "events": db.events(isin, limit=60),
+            "alerts": db.alerts(isin, limit=40), "today": date.today().isoformat(),
+            "position": entry.get("position") or {}})
 
     @app.post("/asset/{isin}/price")
     def manual_price(isin: str, d: str = Form(...), price: float = Form(...)):
@@ -118,7 +185,7 @@ def create_app(scheduler: bool = True) -> FastAPI:
 
     @app.get("/alerts", response_class=HTMLResponse)
     def alerts_page(request: Request):
-        return templates.TemplateResponse(request, "alerts.html", {"alerts": db.alerts(limit=500)})
+        return templates.TemplateResponse(request, "alerts.html", {"tab": "alerts", "alerts": db.alerts(limit=500)})
 
     # ---------------- JSON API
     @app.get("/api/assets")

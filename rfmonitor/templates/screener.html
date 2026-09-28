@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Oportunidades · Renda Fixa Monitor{% endblock %}
+{% block body %}
+{% if not res %}
+<div class="card"><h2>Calculando o ranking…</h2>
+  <p class="muted">Lendo o arquivo diário da ANBIMA e calculando spreads de todo o universo (≈10 s). Esta página recarrega sozinha.</p>
+  <script>setTimeout(() => location.reload(), 8000)</script></div>
+{% else %}
+{% if added %}<div class="card" style="border-color:var(--up)">✓ {{ added }} adicionado à <a href="/">sua carteira</a> — a coleta completa roda em segundo plano.</div>{% endif %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+    <div>
+      <h2 style="margin-bottom:4px">Oportunidades — modelo quant de valor relativo</h2>
+      <div class="muted small">ANBIMA {{ res.date }} · {{ res.universe }} debêntures precificadas · {{ res.ranked }} ranqueadas
+        (exclui sem taxa, &lt; 6 meses, PU &lt; 90% do par e o 1% de spreads mais altos de cada grupo)</div>
+    </div>
+    <form method="post" action="/screener/run"><button class="ghost">↻ Recalcular</button></form>
+  </div>
+  <details style="margin-top:10px"><summary class="small" style="cursor:pointer">Como o score funciona</summary>
+    <p class="small">Cada debênture é comparada a pares do mesmo <b>indexador</b> e <b>tratamento tributário</b>
+      (isentas Lei 12.431 negociam mais fechadas que as tributadas):</p>
+    <ul class="small">
+      <li><b>Valor (45%)</b> — spread acima da curva justa do grupo (mediana por faixa de duration), em desvios robustos.</li>
+      <li><b>Carry (20%)</b> — spread por ano de duration: quanto o spread pode abrir antes de zerar o ganho de um ano.</li>
+      <li><b>Momento (15%)</b> — variação do spread em 5 dias: fechando = +, abrindo = −.</li>
+      <li><b>Qualidade (20%)</b> — mais negócios no REUNE = +, maior dispersão entre as casas (desvio padrão) = −.</li>
+      <li><b>Penalidades</b> — fato relevante na CVM nos últimos 15 dias (−1), spread abriu &gt; 50 bps em 5 dias (−0,5).</li>
+    </ul>
+    <p class="small" style="color:var(--warn)">Sem rating nos dados gratuitos: spread “barato” vs pares muitas vezes é risco de crédito maior.
+      Use como lista para pesquisar — abra o ativo, veja notícias/fatos e a ação do emissor. Não é recomendação de investimento.</p>
+  </details>
+</div>
+
+<div class="card">
+  <form class="inline" id="filters" onsubmit="return false">
+    <select id="f_peer"><option value="">Todos os grupos</option></select>
+    <label class="small">duration <input id="f_dmin" size="3" value="0.5"> a <input id="f_dmax" size="3" value="15"> anos</label>
+    <label class="small"><input type="checkbox" id="f_isenta"> só isentas (12.431)</label>
+    <label class="small"><input type="checkbox" id="f_noflag" checked> esconder com alerta</label>
+    <input id="f_q" placeholder="buscar emissor / código" size="22">
+  </form>
+  <div class="grid" style="margin-top:12px">
+    <div><canvas id="curve"></canvas>
+      <p class="small muted">Spread × duration do grupo selecionado. Linha = curva justa. Pontos acima dela = mais baratos que os pares.</p></div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="scroll"><table id="tbl">
+    <thead><tr>
+      <th class="sort num" data-k="rank">#</th><th>Ativo</th><th>Grupo</th>
+      <th class="sort num" data-k="duration">Dur.</th><th class="sort num" data-k="taxa_indicativa">Taxa</th>
+      <th class="sort num" data-k="spread_bps">Spread</th><th class="sort num" data-k="resid_bps">vs justo</th>
+      <th class="sort num" data-k="chg_5d_bps">Δ5d</th><th class="sort num" data-k="pct_pu_par">%PU par</th>
+      <th class="sort num" data-k="pct_reune">REUNE</th><th class="sort num" data-k="score">Score</th><th></th>
+    </tr></thead><tbody></tbody>
+  </table></div>
+  <p class="small muted" id="count"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const ROWS = {{ res.rows|tojson }};
+const CURVES = {{ curves_json|safe }};
+const MINE = new Set({{ mine|list|tojson }});
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const f = (v, d = 0) => v === null || v === undefined ? '—' : Number(v).toLocaleString('pt-BR', {minimumFractionDigits: d, maximumFractionDigits: d});
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let sortKey = 'rank', sortDir = 1, chart;
+
+const peers = [...new Set(ROWS.map(r => r.peer))].sort();
+peers.forEach(p => $('f_peer').add(new Option(`${p} (${ROWS.filter(r => r.peer === p).length})`, p)));
+
+function filtered() {
+  const peer = $('f_peer').value, dmin = +$('f_dmin').value || 0, dmax = +$('f_dmax').value || 99;
+  const q = $('f_q').value.trim().toUpperCase();
+  return ROWS.filter(r => (!peer || r.peer === peer) && r.duration >= dmin && r.duration <= dmax
+    && (!$('f_isenta').checked || r.incentivada) && (!$('f_noflag').checked || !r.flags.length)
+    && (!q || (r.nome + ' ' + r.codigo).toUpperCase().includes(q)));
+}
+
+function render() {
+  const rows = filtered().sort((a, b) => ((a[sortKey] ?? -1e9) > (b[sortKey] ?? -1e9) ? 1 : -1) * sortDir);
+  $('tbl').tBodies[0].innerHTML = rows.slice(0, 150).map(r => {
+    const owned = r.isin && MINE.has(r.isin);
+    const btn = !r.isin ? '<span class="small muted">sem ISIN</span>' : owned ? '<span class="chip BUY">na carteira</span>'
+      : `<form method="post" action="/add" style="margin:0"><input type="hidden" name="isin" value="${esc(r.isin)}">
+         <input type="hidden" name="next" value="screener"><button class="ghost" style="padding:4px 10px">+ carteira</button></form>`;
+    const flags = r.flags.length ? `<br><span class="small" style="color:var(--warn)">⚠ ${esc(r.flags.join(' · '))}</span>` : '';
+    return `<tr>
+      <td class="num">${r.rank}</td>
+      <td><b>${esc(r.codigo)}</b> <span class="small muted">${esc(r.isin || '')}</span><br><span class="small">${esc(r.nome.replace(/\s*\(\*+\)/g, ''))}</span>
+        <br><span class="small muted">venc. ${esc(r.vencimento)}</span>${flags}</td>
+      <td class="small">${esc(r.indice)}<br><span class="muted">${esc(r.peer)}</span></td>
+      <td class="num">${f(r.duration, 1)}</td><td class="num">${f(r.taxa_indicativa, 2)}${r.group === 'DI_SPREAD' ? '' : '%'}</td>
+      <td class="num">${f(r.spread_bps)}</td>
+      <td class="num ${r.resid_bps > 0 ? 'up' : 'down'}">${r.resid_bps > 0 ? '+' : ''}${f(r.resid_bps)}</td>
+      <td class="num ${r.chg_5d_bps > 0 ? 'down' : 'up'}">${r.chg_5d_bps === null ? '—' : (r.chg_5d_bps > 0 ? '+' : '') + f(r.chg_5d_bps)}</td>
+      <td class="num">${f(r.pct_pu_par, 1)}</td><td class="num">${f(r.pct_reune)}</td>
+      <td class="num"><b>${f(r.score, 2)}</b></td><td>${btn}</td></tr>`;
+  }).join('');
+  $('count').textContent = `${rows.length} ativos no filtro (mostrando até 150). Clique nos cabeçalhos para ordenar.`;
+  drawCurve();
+}
+
+function drawCurve() {
+  const peer = $('f_peer').value || peers.find(p => p.startsWith('DI +')) || peers[0];
+  const c = CURVES[peer];
+  if (!c) return;
+  const pts = c.x.map((x, i) => ({x, y: c.y[i], code: c.code[i]}));
+  const fair = c.x.map((x, i) => ({x, y: c.fair[i]}));
+  chart && chart.destroy();
+  chart = new Chart($('curve'), {
+    data: {datasets: [
+      {type: 'scatter', label: peer, data: pts, backgroundColor: css('--accent') + '99', pointRadius: 3},
+      {type: 'line', label: 'curva justa', data: fair, borderColor: css('--warn'), pointRadius: 0, borderWidth: 2}]},
+    options: {animation: false, scales: {x: {type: 'linear', title: {display: true, text: 'duration (anos)'}},
+      y: {title: {display: true, text: 'spread (bps)'}}},
+      plugins: {tooltip: {callbacks: {label: ctx => `${ctx.raw.code || ''} ${ctx.raw.x}a · ${Math.round(ctx.raw.y)} bps`}}}}
+  });
+}
+
+document.querySelectorAll('th.sort').forEach(th => th.onclick = () => {
+  const k = th.dataset.k; sortDir = sortKey === k ? -sortDir : (k === 'rank' ? 1 : -1); sortKey = k; render();
+});
+['f_peer', 'f_dmin', 'f_dmax', 'f_isenta', 'f_noflag', 'f_q'].forEach(id => $(id).addEventListener('input', render));
+Chart.defaults.color = css('--muted'); Chart.defaults.borderColor = css('--line');
+render();
+</script>
+{% endif %}
+{% endblock %}

@@ -31,6 +31,8 @@ def main() -> None:
     ip.add_argument("isin")
     ip.add_argument("csv")
     ip.add_argument("--source", default="import")
+    sc = sub.add_parser("screener", help="rank the whole debenture universe (quant model)")
+    sc.add_argument("--top", type=int, default=20)
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -92,6 +94,16 @@ def main() -> None:
         px_col = next((c for c in ("close", "price", "preco", "c") if c in cols), cols[1])
         rows = [(d.strftime("%Y-%m-%d"), "price", float(p)) for d, p in zip(dates, df[px_col])]
         print(f"imported {db.put_observations(normalize(args.isin), rows, args.source)} prices")
+    elif args.cmd == "screener":
+        from . import screener
+        res = screener.run()
+        if "error" in res:
+            raise SystemExit(res["error"])
+        print(f"ANBIMA {res['date']}: {res['ranked']} of {res['universe']} ranked")
+        for r in res["rows"][: args.top]:
+            flags = f"  ⚠ {'; '.join(r['flags'])}" if r["flags"] else ""
+            print(f"{r['rank']:>3} {r['codigo']:<8} {r['nome'][:34]:<34} {r['indice']:<16} dur {r['duration']:.1f}"
+                  f"  spread {r['spread_bps']:.0f} (fair {r['fair_bps']:.0f})  score {r['score']:.2f}{flags}")
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email

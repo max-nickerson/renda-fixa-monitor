@@ -70,6 +70,19 @@ def test_signal_components_no_lookahead():
     pd.testing.assert_frame_equal(full.iloc[:200], part, check_freq=False)
 
 
+def test_screener_fair_curve_and_residuals():
+    from rfmonitor import screener
+    rng = np.random.default_rng(1)
+    dur = rng.uniform(0.5, 8, 200)
+    spread = 80 + 10 * dur + rng.normal(0, 5, 200)
+    g = pd.DataFrame({"duration": dur, "spread_bps": spread})
+    g.loc[0, "spread_bps"] += 150  # one obviously cheap bond
+    fair = screener._fair_curve(g)
+    resid_z = screener._robust_z(g["spread_bps"] - fair)
+    assert resid_z.idxmax() == 0 and resid_z.iloc[0] > 5
+    assert abs((g["spread_bps"] - fair).iloc[1:].median()) < 5  # curve tracks the peer group
+
+
 def test_composite_labels():
     comp = pd.DataFrame({"value": [3.0, -3.0, 0.0], "momentum": [0, 0, 0]})
     labels = [strategy.label_for(s) for s in strategy.composite(comp)]

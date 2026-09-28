@@ -46,6 +46,11 @@ CREATE TABLE IF NOT EXISTS alerts (
     dedup_key TEXT NOT NULL UNIQUE,
     emailed INTEGER DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS screener (
+    date TEXT PRIMARY KEY,
+    payload TEXT NOT NULL,
+    created_at TEXT NOT NULL
+);
 CREATE INDEX IF NOT EXISTS idx_obs_isin_metric ON observations (isin, metric, date);
 CREATE INDEX IF NOT EXISTS idx_events_isin ON events (isin, ts);
 """
@@ -164,6 +169,18 @@ def alerts(isin: str | None = None, limit: int = 200, unsent_only: bool = False)
     params.append(limit)
     with connect() as con:
         return [dict(r) for r in con.execute(q, params)]
+
+
+def save_screener(result: dict) -> None:
+    with connect() as con:
+        con.execute("INSERT OR REPLACE INTO screener (date, payload, created_at) VALUES (?, ?, ?)",
+                    (result["date"], json.dumps(result, default=str), now_iso()))
+
+
+def load_screener() -> dict | None:
+    with connect() as con:
+        row = con.execute("SELECT payload FROM screener ORDER BY date DESC LIMIT 1").fetchone()
+    return json.loads(row["payload"]) if row else None
 
 
 def mark_emailed(ids: list[int]) -> None:

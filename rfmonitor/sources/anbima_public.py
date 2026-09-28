@@ -47,7 +47,8 @@ def debentures(d: date) -> pd.DataFrame | None:
     df = _read(url, f"anbima_db_{d:%Y%m%d}.txt", "@Nome@", DEB_COLS, d >= date.today() - timedelta(days=1))
     if df is None:
         return None
-    for c in ["taxa_compra", "taxa_venda", "taxa_indicativa", "desvio_padrao", "pu", "pct_pu_par", "duration_du"]:
+    for c in ["taxa_compra", "taxa_venda", "taxa_indicativa", "desvio_padrao", "pu", "pct_pu_par", "duration_du",
+              "pct_reune"]:
         df[c] = df[c].map(br_float)
     df["codigo"] = df["codigo"].str.strip()
     df["vencimento"] = pd.to_datetime(df["vencimento"], format="%d/%m/%Y", errors="coerce")
