@@ -36,6 +36,7 @@ def main() -> None:
     hi = sub.add_parser("history", help="download research history once (SND trades, B3 curves, IDA) ~30 min")
     hi.add_argument("--start-year", type=int, default=2021)
     sub.add_parser("models", help="retrain the credit-regime and bond-selection models now")
+    sub.add_parser("export", help="write a read-only HTML snapshot of the dashboard (data/export/)")
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -119,6 +120,9 @@ def main() -> None:
         print("regime:", {k: v["position"] for k, v in (r or {}).get("series", {}).items()})
         s = live.selection(refresh=True)
         print("selection: scored", (s or {}).get("n"))
+    elif args.cmd == "export":
+        from .export import export
+        print(export())
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email
