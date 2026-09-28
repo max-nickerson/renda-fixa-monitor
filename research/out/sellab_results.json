@@ -1,0 +1,3518 @@
+{
+ "survivorship": {
+  "bonds_stop_trading_before_maturity": 1403,
+  "of_which_last_ratio_below_0.8": 28,
+  "of_which_last_ratio_below_0.9": 55,
+  "note": "After a bond's last grid day its return is 0 (cash at CDI): losses up to the last trade are kept, anything after it (e.g. a default with no further prints) is unobserved.",
+  "n_spikes_removed": 810,
+  "n_gap_segments": 18450,
+  "gap_segments_below_-10%": 125,
+  "rows_ret_nan_but_contiguous": 654,
+  "rows_|r_patch|>20%": 511,
+  "corr_ret_vs_patch_contiguous": 0.93768,
+  "sum_log_ret_orig": 50.40909,
+  "sum_log_ret_patch": 95.76229
+ },
+ "design": {
+  "decision_dates": "first grid day of each month, 2022-01-03..2026-09-01",
+  "horizons_bdays": [
+   63,
+   126,
+   252
+  ],
+  "entry": "first trade dated after decision day, >=1 bday later, within 20 bdays; otherwise the weight stays in cash (0 excess)",
+  "target": "compounded rate-hedged excess return over CDI (patched daily chain incl. gap moves), from entry",
+  "issuer_cap": 0.1,
+  "fund_stale_days": 460,
+  "kappa_convergence_per_6m": 0.25
+ },
+ "main_strict": {
+  "coverage": {
+   "share_rows_covered": 0.83425,
+   "share_rows_covered_by_year": {
+    "2022": 0.829,
+    "2023": 0.826,
+    "2024": 0.836,
+    "2025": 0.84,
+    "2026": 0.837
+   }
+  },
+  "ic": {
+   "63": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.20196,
+      "t_nw": 3.87179,
+      "t_nonoverlap": 3.34143,
+      "n_dates": 54
+     },
+     "resid_bps": {
+      "mean": 0.18506,
+      "t_nw": 12.43271,
+      "t_nonoverlap": 12.16113,
+      "n_dates": 54
+     },
+     "resid_z": {
+      "mean": 0.18503,
+      "t_nw": 12.43236,
+      "t_nonoverlap": 12.15811,
+      "n_dates": 54
+     },
+     "dur": {
+      "mean": 0.02254,
+      "t_nw": 0.39056,
+      "t_nonoverlap": 0.35541,
+      "n_dates": 54
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.19063,
+      "t_nw": 3.41351,
+      "t_nonoverlap": 2.83581,
+      "n_dates": 54
+     },
+     "resid_bps": {
+      "mean": 0.17139,
+      "t_nw": 10.04403,
+      "t_nonoverlap": 8.57924,
+      "n_dates": 54
+     },
+     "resid_z": {
+      "mean": 0.17139,
+      "t_nw": 10.0443,
+      "t_nonoverlap": 8.57839,
+      "n_dates": 54
+     },
+     "dur": {
+      "mean": 0.02083,
+      "t_nw": 0.37396,
+      "t_nonoverlap": 0.30642,
+      "n_dates": 54
+     },
+     "f_lev": {
+      "mean": 0.00377,
+      "t_nw": 0.2127,
+      "t_nonoverlap": 0.16705,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": -0.02453,
+      "t_nw": -1.20572,
+      "t_nonoverlap": -1.11838,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": 0.01965,
+      "t_nw": 1.28241,
+      "t_nonoverlap": 0.92832,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": 0.0033,
+      "t_nw": 0.32249,
+      "t_nonoverlap": 0.75867,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": -0.00089,
+      "t_nw": -0.09194,
+      "t_nonoverlap": -0.53938,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": -0.00926,
+      "t_nw": -0.52424,
+      "t_nonoverlap": -0.37496,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.04577,
+      "t_nw": 2.77014,
+      "t_nonoverlap": 2.2515,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.03102,
+      "t_nw": -2.95919,
+      "t_nonoverlap": -1.46935,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.01223,
+      "t_nw": 1.24725,
+      "t_nonoverlap": 0.37837,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.04868,
+      "t_nw": -3.43724,
+      "t_nonoverlap": -2.40773,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.01329,
+      "t_nw": 1.04832,
+      "t_nonoverlap": 0.49409,
+      "n_dates": 54
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.03039,
+      "t_nw": -2.42558,
+      "t_nonoverlap": -1.36984,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": 0.0383,
+      "t_nw": 2.81536,
+      "t_nonoverlap": 1.87022,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": -0.01873,
+      "t_nw": -2.27181,
+      "t_nonoverlap": -1.56685,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": 0.03596,
+      "t_nw": 3.77077,
+      "t_nonoverlap": 2.74304,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": -0.03575,
+      "t_nw": -3.92785,
+      "t_nonoverlap": -2.68818,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": 0.02437,
+      "t_nw": 2.00091,
+      "t_nonoverlap": 1.36953,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.00201,
+      "t_nw": 0.22268,
+      "t_nonoverlap": -0.02873,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.0369,
+      "t_nw": -3.85904,
+      "t_nonoverlap": -2.04887,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.02441,
+      "t_nw": 2.58937,
+      "t_nonoverlap": 1.81538,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.0041,
+      "t_nw": -0.29304,
+      "t_nonoverlap": -0.16341,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.04249,
+      "t_nw": 4.23514,
+      "t_nonoverlap": 1.98927,
+      "n_dates": 54
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.0137,
+      "t_nw": 0.79506,
+      "t_nonoverlap": 0.40988,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": -0.02504,
+      "t_nw": -1.24938,
+      "t_nonoverlap": -0.97049,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": 0.00816,
+      "t_nw": 0.60563,
+      "t_nonoverlap": 0.42303,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": -0.00445,
+      "t_nw": -0.42326,
+      "t_nonoverlap": 0.18253,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": 0.01056,
+      "t_nw": 0.98535,
+      "t_nonoverlap": 0.21214,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": 0.00464,
+      "t_nw": 0.34299,
+      "t_nonoverlap": 0.2878,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.0407,
+      "t_nw": 3.55853,
+      "t_nonoverlap": 2.26636,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.05187,
+      "t_nw": -5.09928,
+      "t_nonoverlap": -3.05741,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.02272,
+      "t_nw": 2.85774,
+      "t_nonoverlap": 1.40973,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.05462,
+      "t_nw": -3.1631,
+      "t_nonoverlap": -2.15511,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.00944,
+      "t_nw": 0.77161,
+      "t_nonoverlap": 0.3922,
+      "n_dates": 54
+     }
+    }
+   },
+   "126": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.28302,
+      "t_nw": 4.6628,
+      "t_nonoverlap": 2.34929,
+      "n_dates": 51
+     },
+     "resid_bps": {
+      "mean": 0.22002,
+      "t_nw": 13.55869,
+      "t_nonoverlap": 11.04136,
+      "n_dates": 51
+     },
+     "resid_z": {
+      "mean": 0.21998,
+      "t_nw": 13.56179,
+      "t_nonoverlap": 11.0378,
+      "n_dates": 51
+     },
+     "dur": {
+      "mean": 0.00796,
+      "t_nw": 0.07697,
+      "t_nonoverlap": 0.28834,
+      "n_dates": 51
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.27114,
+      "t_nw": 4.28448,
+      "t_nonoverlap": 2.05407,
+      "n_dates": 51
+     },
+     "resid_bps": {
+      "mean": 0.19973,
+      "t_nw": 10.03124,
+      "t_nonoverlap": 8.30196,
+      "n_dates": 51
+     },
+     "resid_z": {
+      "mean": 0.19973,
+      "t_nw": 10.03311,
+      "t_nonoverlap": 8.30153,
+      "n_dates": 51
+     },
+     "dur": {
+      "mean": 0.00496,
+      "t_nw": 0.04968,
+      "t_nonoverlap": 0.23773,
+      "n_dates": 51
+     },
+     "f_lev": {
+      "mean": 0.00034,
+      "t_nw": 0.01466,
+      "t_nonoverlap": 0.03765,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": -0.01863,
+      "t_nw": -0.71496,
+      "t_nonoverlap": -0.51917,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": 0.02755,
+      "t_nw": 1.25715,
+      "t_nonoverlap": 0.86674,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": -0.00021,
+      "t_nw": -0.01479,
+      "t_nonoverlap": 0.64612,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": -0.00113,
+      "t_nw": -0.08958,
+      "t_nonoverlap": -0.97069,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": -0.01657,
+      "t_nw": -0.89543,
+      "t_nonoverlap": -0.35718,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.05425,
+      "t_nw": 2.61893,
+      "t_nonoverlap": 1.53678,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.04179,
+      "t_nw": -3.06336,
+      "t_nonoverlap": -0.86743,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.01449,
+      "t_nw": 0.9552,
+      "t_nonoverlap": -0.01795,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.0673,
+      "t_nw": -3.97588,
+      "t_nonoverlap": -1.64229,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.02517,
+      "t_nw": 1.62924,
+      "t_nonoverlap": 0.75293,
+      "n_dates": 51
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.03411,
+      "t_nw": -2.61727,
+      "t_nonoverlap": -1.52565,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": 0.05581,
+      "t_nw": 2.8149,
+      "t_nonoverlap": 1.22314,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": -0.03739,
+      "t_nw": -2.86333,
+      "t_nonoverlap": -0.88206,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": 0.03743,
+      "t_nw": 2.53723,
+      "t_nonoverlap": 2.05803,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": -0.0375,
+      "t_nw": -2.737,
+      "t_nonoverlap": -2.38681,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": 0.03759,
+      "t_nw": 2.13598,
+      "t_nonoverlap": 0.83791,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.00279,
+      "t_nw": 0.22856,
+      "t_nonoverlap": 0.22718,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.04722,
+      "t_nw": -3.26715,
+      "t_nonoverlap": -2.36366,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.02773,
+      "t_nw": 1.93611,
+      "t_nonoverlap": 0.37477,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.01984,
+      "t_nw": -1.16058,
+      "t_nonoverlap": -0.37956,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.05013,
+      "t_nw": 3.65245,
+      "t_nonoverlap": 2.41925,
+      "n_dates": 51
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.01872,
+      "t_nw": 0.83941,
+      "t_nonoverlap": 0.4694,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": -0.02345,
+      "t_nw": -0.78267,
+      "t_nonoverlap": -0.5594,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": -0.00122,
+      "t_nw": -0.05943,
+      "t_nonoverlap": 0.12286,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": -0.01155,
+      "t_nw": -0.82177,
+      "t_nonoverlap": -0.10512,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": 0.01467,
+      "t_nw": 1.08894,
+      "t_nonoverlap": -0.15229,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": 0.00746,
+      "t_nw": 0.37402,
+      "t_nonoverlap": -0.14802,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.04506,
+      "t_nw": 2.4505,
+      "t_nonoverlap": 1.2866,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.05906,
+      "t_nw": -4.42973,
+      "t_nonoverlap": -2.3259,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.02067,
+      "t_nw": 1.95404,
+      "t_nonoverlap": 0.45793,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.0737,
+      "t_nw": -3.3896,
+      "t_nonoverlap": -1.58481,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.00789,
+      "t_nw": 0.47673,
+      "t_nonoverlap": 0.5264,
+      "n_dates": 51
+     }
+    }
+   },
+   "252": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.35103,
+      "t_nw": 3.79691,
+      "t_nonoverlap": 2.91867,
+      "n_dates": 45
+     },
+     "resid_bps": {
+      "mean": 0.25968,
+      "t_nw": 16.83933,
+      "t_nonoverlap": 9.2313,
+      "n_dates": 45
+     },
+     "resid_z": {
+      "mean": 0.25961,
+      "t_nw": 16.82906,
+      "t_nonoverlap": 9.2056,
+      "n_dates": 45
+     },
+     "dur": {
+      "mean": 0.04763,
+      "t_nw": 0.27907,
+      "t_nonoverlap": -0.08632,
+      "n_dates": 45
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.34757,
+      "t_nw": 3.71091,
+      "t_nonoverlap": 2.86033,
+      "n_dates": 45
+     },
+     "resid_bps": {
+      "mean": 0.24111,
+      "t_nw": 17.49915,
+      "t_nonoverlap": 14.94485,
+      "n_dates": 45
+     },
+     "resid_z": {
+      "mean": 0.24109,
+      "t_nw": 17.49625,
+      "t_nonoverlap": 14.98441,
+      "n_dates": 45
+     },
+     "dur": {
+      "mean": 0.04533,
+      "t_nw": 0.28565,
+      "t_nonoverlap": 0.00023,
+      "n_dates": 45
+     },
+     "f_lev": {
+      "mean": 0.0095,
+      "t_nw": 0.31344,
+      "t_nonoverlap": 0.03875,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": -0.02569,
+      "t_nw": -0.82631,
+      "t_nonoverlap": -0.17936,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": 0.04771,
+      "t_nw": 1.6803,
+      "t_nonoverlap": 0.97787,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": -0.00168,
+      "t_nw": -0.15409,
+      "t_nonoverlap": 4.69539,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": 0.00412,
+      "t_nw": 0.39967,
+      "t_nonoverlap": -6.53269,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": -0.01242,
+      "t_nw": -1.15702,
+      "t_nonoverlap": -0.48803,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.0795,
+      "t_nw": 2.99062,
+      "t_nonoverlap": 0.53937,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.07274,
+      "t_nw": -3.45834,
+      "t_nonoverlap": -1.05933,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.03437,
+      "t_nw": 1.52409,
+      "t_nonoverlap": 1.24654,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.09429,
+      "t_nw": -6.84069,
+      "t_nonoverlap": -2.86051,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.03853,
+      "t_nw": 1.47951,
+      "t_nonoverlap": 1.54768,
+      "n_dates": 45
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.04562,
+      "t_nw": -4.77863,
+      "t_nonoverlap": -0.81582,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": 0.07294,
+      "t_nw": 3.25295,
+      "t_nonoverlap": 0.76143,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": -0.04335,
+      "t_nw": -2.64879,
+      "t_nonoverlap": -1.53893,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": 0.05304,
+      "t_nw": 3.41441,
+      "t_nonoverlap": 3.42899,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": -0.04795,
+      "t_nw": -2.61026,
+      "t_nonoverlap": -4.34923,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": 0.0738,
+      "t_nw": 2.77466,
+      "t_nonoverlap": 0.73598,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.0187,
+      "t_nw": 1.46572,
+      "t_nonoverlap": 0.11133,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.08949,
+      "t_nw": -5.57611,
+      "t_nonoverlap": -1.05519,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.05605,
+      "t_nw": 2.35551,
+      "t_nonoverlap": 2.65726,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.04259,
+      "t_nw": -2.84328,
+      "t_nonoverlap": -0.62081,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.08074,
+      "t_nw": 6.45573,
+      "t_nonoverlap": 1.86611,
+      "n_dates": 45
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.01391,
+      "t_nw": 0.50834,
+      "t_nonoverlap": -0.00619,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": -0.02186,
+      "t_nw": -0.49969,
+      "t_nonoverlap": -0.15599,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": 0.00267,
+      "t_nw": 0.10735,
+      "t_nonoverlap": -0.22504,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": -0.01398,
+      "t_nw": -1.34349,
+      "t_nonoverlap": 1.92497,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": 0.01886,
+      "t_nw": 1.74553,
+      "t_nonoverlap": -5.11663,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": 0.02197,
+      "t_nw": 0.88604,
+      "t_nonoverlap": 0.26571,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.07136,
+      "t_nw": 2.78178,
+      "t_nonoverlap": 0.90935,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.08993,
+      "t_nw": -4.35846,
+      "t_nonoverlap": -0.72732,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.03195,
+      "t_nw": 1.77886,
+      "t_nonoverlap": 2.39918,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.09822,
+      "t_nw": -4.94307,
+      "t_nonoverlap": -3.65027,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.02497,
+      "t_nw": 1.14903,
+      "t_nonoverlap": 0.8162,
+      "n_dates": 45
+     }
+    }
+   }
+  },
+  "portfolios": {
+   "63": {
+    "U  universo": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 735.90741,
+     "gross_ann_%": 1.2172,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.29013,
+     "book_cost_ann_%_50": 0.58025,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 131.7037,
+     "gross_ann_%": 2.44464,
+     "excess_vs_U_ann_%_gross": 1.22744,
+     "t_nw": 2.79251,
+     "t_nonoverlap": 2.95652,
+     "book_cost_ann_%_25": 0.54596,
+     "book_cost_ann_%_50": 1.09192,
+     "excess_vs_U_ann_%_net25": 0.97161,
+     "excess_vs_U_ann_%_net50": 0.71577,
+     "hit_rate_vs_U": 0.72222,
+     "excess_2022_23_ann_%": 1.61439,
+     "excess_2024_26_ann_%": 0.91788
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 104.31481,
+     "gross_ann_%": 2.77387,
+     "excess_vs_U_ann_%_gross": 1.55667,
+     "t_nw": 3.43586,
+     "t_nonoverlap": 3.25999,
+     "book_cost_ann_%_25": 0.58728,
+     "book_cost_ann_%_50": 1.17456,
+     "excess_vs_U_ann_%_net25": 1.25952,
+     "excess_vs_U_ann_%_net50": 0.96236,
+     "hit_rate_vs_U": 0.7037,
+     "excess_2022_23_ann_%": 1.83646,
+     "excess_2024_26_ann_%": 1.33284
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 104.98148,
+     "gross_ann_%": 2.93331,
+     "excess_vs_U_ann_%_gross": 1.71611,
+     "t_nw": 3.90275,
+     "t_nonoverlap": 3.93102,
+     "book_cost_ann_%_25": 0.58742,
+     "book_cost_ann_%_50": 1.17484,
+     "excess_vs_U_ann_%_net25": 1.41881,
+     "excess_vs_U_ann_%_net50": 1.12152,
+     "hit_rate_vs_U": 0.83333,
+     "excess_2022_23_ann_%": 2.2127,
+     "excess_2024_26_ann_%": 1.31884
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 113.55556,
+     "gross_ann_%": 2.77593,
+     "excess_vs_U_ann_%_gross": 1.55872,
+     "t_nw": 3.61892,
+     "t_nonoverlap": 3.50021,
+     "book_cost_ann_%_25": 0.57434,
+     "book_cost_ann_%_50": 1.14868,
+     "excess_vs_U_ann_%_net25": 1.27451,
+     "excess_vs_U_ann_%_net50": 0.99029,
+     "hit_rate_vs_U": 0.7963,
+     "excess_2022_23_ann_%": 2.00612,
+     "excess_2024_26_ann_%": 1.20081
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 106.07407,
+     "gross_ann_%": 2.82872,
+     "excess_vs_U_ann_%_gross": 1.61152,
+     "t_nw": 3.63306,
+     "t_nonoverlap": 3.68538,
+     "book_cost_ann_%_25": 0.59399,
+     "book_cost_ann_%_50": 1.18799,
+     "excess_vs_U_ann_%_net25": 1.30765,
+     "excess_vs_U_ann_%_net50": 1.00378,
+     "hit_rate_vs_U": 0.77778,
+     "excess_2022_23_ann_%": 1.91189,
+     "excess_2024_26_ann_%": 1.37122
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 66.66667,
+     "gross_ann_%": 2.05253,
+     "excess_vs_U_ann_%_gross": 0.83532,
+     "t_nw": 1.42323,
+     "t_nonoverlap": 0.8711,
+     "book_cost_ann_%_25": 0.59136,
+     "book_cost_ann_%_50": 1.18273,
+     "excess_vs_U_ann_%_net25": 0.53409,
+     "excess_vs_U_ann_%_net50": 0.23285,
+     "hit_rate_vs_U": 0.61111,
+     "excess_2022_23_ann_%": 1.67685,
+     "excess_2024_26_ann_%": 0.1621
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 92.2963,
+     "gross_ann_%": 1.74077,
+     "excess_vs_U_ann_%_gross": 0.52357,
+     "t_nw": 0.98129,
+     "t_nonoverlap": 0.76692,
+     "book_cost_ann_%_25": 0.53409,
+     "book_cost_ann_%_50": 1.06819,
+     "excess_vs_U_ann_%_net25": 0.2796,
+     "excess_vs_U_ann_%_net50": 0.03564,
+     "hit_rate_vs_U": 0.59259,
+     "excess_2022_23_ann_%": 1.33229,
+     "excess_2024_26_ann_%": -0.12341
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 40,
+     "first": "2023-03-01",
+     "avg_bonds": 164.675,
+     "gross_ann_%": 2.9847,
+     "excess_vs_U_ann_%_gross": 0.91951,
+     "t_nw": 2.56355,
+     "t_nonoverlap": 1.65599,
+     "book_cost_ann_%_25": 0.4364,
+     "book_cost_ann_%_50": 0.8728,
+     "excess_vs_U_ann_%_net25": 0.77324,
+     "excess_vs_U_ann_%_net50": 0.62696,
+     "hit_rate_vs_U": 0.725,
+     "excess_2022_23_ann_%": 1.62078,
+     "excess_2024_26_ann_%": 0.68575
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 40,
+     "first": "2023-03-01",
+     "avg_bonds": 164.675,
+     "gross_ann_%": 2.93617,
+     "excess_vs_U_ann_%_gross": 0.87099,
+     "t_nw": 2.36254,
+     "t_nonoverlap": 1.5097,
+     "book_cost_ann_%_25": 0.42797,
+     "book_cost_ann_%_50": 0.85594,
+     "excess_vs_U_ann_%_net25": 0.73314,
+     "excess_vs_U_ann_%_net50": 0.59529,
+     "hit_rate_vs_U": 0.725,
+     "excess_2022_23_ann_%": 1.6333,
+     "excess_2024_26_ann_%": 0.61688
+    },
+    "Ridge carry+RV (sem fund.)": {
+     "n_cohorts": 46,
+     "first": "2022-09-01",
+     "avg_bonds": 157.23913,
+     "gross_ann_%": 1.65537,
+     "excess_vs_U_ann_%_gross": 0.35899,
+     "t_nw": 0.87574,
+     "t_nonoverlap": 0.44606,
+     "book_cost_ann_%_25": 0.44702,
+     "book_cost_ann_%_50": 0.89403,
+     "excess_vs_U_ann_%_net25": 0.2021,
+     "excess_vs_U_ann_%_net50": 0.04521,
+     "hit_rate_vs_U": 0.54348,
+     "excess_2022_23_ann_%": 1.35907,
+     "excess_2024_26_ann_%": -0.17438
+    },
+    "Ridge carry+RV+fund.": {
+     "n_cohorts": 46,
+     "first": "2022-09-01",
+     "avg_bonds": 157.23913,
+     "gross_ann_%": 1.91464,
+     "excess_vs_U_ann_%_gross": 0.61826,
+     "t_nw": 1.74624,
+     "t_nonoverlap": 0.93659,
+     "book_cost_ann_%_25": 0.4622,
+     "book_cost_ann_%_50": 0.9244,
+     "excess_vs_U_ann_%_net25": 0.44618,
+     "excess_vs_U_ann_%_net50": 0.27411,
+     "hit_rate_vs_U": 0.65217,
+     "excess_2022_23_ann_%": 1.44098,
+     "excess_2024_26_ann_%": 0.17947
+    },
+    "GBM carry+RV (sem fund.)": {
+     "n_cohorts": 46,
+     "first": "2022-09-01",
+     "avg_bonds": 157.3913,
+     "gross_ann_%": 2.16161,
+     "excess_vs_U_ann_%_gross": 0.86523,
+     "t_nw": 2.52564,
+     "t_nonoverlap": 1.83878,
+     "book_cost_ann_%_25": 0.53569,
+     "book_cost_ann_%_50": 1.07137,
+     "excess_vs_U_ann_%_net25": 0.61967,
+     "excess_vs_U_ann_%_net50": 0.37411,
+     "hit_rate_vs_U": 0.67391,
+     "excess_2022_23_ann_%": 1.39127,
+     "excess_2024_26_ann_%": 0.58468
+    },
+    "GBM carry+RV+fund.": {
+     "n_cohorts": 46,
+     "first": "2022-09-01",
+     "avg_bonds": 157.28261,
+     "gross_ann_%": 2.51281,
+     "excess_vs_U_ann_%_gross": 1.21642,
+     "t_nw": 4.26683,
+     "t_nonoverlap": 3.61661,
+     "book_cost_ann_%_25": 0.54734,
+     "book_cost_ann_%_50": 1.09468,
+     "excess_vs_U_ann_%_net25": 0.95921,
+     "excess_vs_U_ann_%_net50": 0.702,
+     "hit_rate_vs_U": 0.78261,
+     "excess_2022_23_ann_%": 1.64379,
+     "excess_2024_26_ann_%": 0.9885
+    }
+   },
+   "126": {
+    "U  universo": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 715.13725,
+     "gross_ann_%": 0.8187,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.18604,
+     "book_cost_ann_%_50": 0.37209,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 130.29412,
+     "gross_ann_%": 1.91735,
+     "excess_vs_U_ann_%_gross": 1.09865,
+     "t_nw": 2.5895,
+     "t_nonoverlap": 1.316,
+     "book_cost_ann_%_25": 0.30496,
+     "book_cost_ann_%_50": 0.60991,
+     "excess_vs_U_ann_%_net25": 0.97973,
+     "excess_vs_U_ann_%_net50": 0.86082,
+     "hit_rate_vs_U": 0.78431,
+     "excess_2022_23_ann_%": 1.63834,
+     "excess_2024_26_ann_%": 0.61892
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 102.92157,
+     "gross_ann_%": 2.25881,
+     "excess_vs_U_ann_%_gross": 1.4401,
+     "t_nw": 3.555,
+     "t_nonoverlap": 1.92779,
+     "book_cost_ann_%_25": 0.32316,
+     "book_cost_ann_%_50": 0.64632,
+     "excess_vs_U_ann_%_net25": 1.30299,
+     "excess_vs_U_ann_%_net50": 1.16587,
+     "hit_rate_vs_U": 0.86275,
+     "excess_2022_23_ann_%": 1.79212,
+     "excess_2024_26_ann_%": 1.1272
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 103.60784,
+     "gross_ann_%": 2.40297,
+     "excess_vs_U_ann_%_gross": 1.58427,
+     "t_nw": 3.81807,
+     "t_nonoverlap": 1.91179,
+     "book_cost_ann_%_25": 0.32519,
+     "book_cost_ann_%_50": 0.65038,
+     "excess_vs_U_ann_%_net25": 1.44512,
+     "excess_vs_U_ann_%_net50": 1.30597,
+     "hit_rate_vs_U": 0.88235,
+     "excess_2022_23_ann_%": 2.16062,
+     "excess_2024_26_ann_%": 1.07195
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 112.01961,
+     "gross_ann_%": 2.1953,
+     "excess_vs_U_ann_%_gross": 1.3766,
+     "t_nw": 3.47464,
+     "t_nonoverlap": 1.86649,
+     "book_cost_ann_%_25": 0.31671,
+     "book_cost_ann_%_50": 0.63342,
+     "excess_vs_U_ann_%_net25": 1.24594,
+     "excess_vs_U_ann_%_net50": 1.11527,
+     "hit_rate_vs_U": 0.88235,
+     "excess_2022_23_ann_%": 1.83888,
+     "excess_2024_26_ann_%": 0.96569
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 104.4902,
+     "gross_ann_%": 2.36164,
+     "excess_vs_U_ann_%_gross": 1.54294,
+     "t_nw": 3.94686,
+     "t_nonoverlap": 2.48484,
+     "book_cost_ann_%_25": 0.32768,
+     "book_cost_ann_%_50": 0.65536,
+     "excess_vs_U_ann_%_net25": 1.4013,
+     "excess_vs_U_ann_%_net50": 1.25966,
+     "hit_rate_vs_U": 0.90196,
+     "excess_2022_23_ann_%": 1.94659,
+     "excess_2024_26_ann_%": 1.18414
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 66.47059,
+     "gross_ann_%": 1.74378,
+     "excess_vs_U_ann_%_gross": 0.92507,
+     "t_nw": 1.98728,
+     "t_nonoverlap": 1.08239,
+     "book_cost_ann_%_25": 0.32763,
+     "book_cost_ann_%_50": 0.65525,
+     "excess_vs_U_ann_%_net25": 0.78349,
+     "excess_vs_U_ann_%_net50": 0.6419,
+     "hit_rate_vs_U": 0.66667,
+     "excess_2022_23_ann_%": 1.67523,
+     "excess_2024_26_ann_%": 0.25826
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 92.27451,
+     "gross_ann_%": 1.30137,
+     "excess_vs_U_ann_%_gross": 0.48267,
+     "t_nw": 0.95764,
+     "t_nonoverlap": 0.24542,
+     "book_cost_ann_%_25": 0.30008,
+     "book_cost_ann_%_50": 0.60017,
+     "excess_vs_U_ann_%_net25": 0.36863,
+     "excess_vs_U_ann_%_net50": 0.25459,
+     "hit_rate_vs_U": 0.58824,
+     "excess_2022_23_ann_%": 1.33739,
+     "excess_2024_26_ann_%": -0.27708
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 37,
+     "first": "2023-03-01",
+     "avg_bonds": 160.35135,
+     "gross_ann_%": 2.43244,
+     "excess_vs_U_ann_%_gross": 0.61489,
+     "t_nw": 1.61437,
+     "t_nonoverlap": 1.20637,
+     "book_cost_ann_%_25": 0.25796,
+     "book_cost_ann_%_50": 0.51592,
+     "excess_vs_U_ann_%_net25": 0.54297,
+     "excess_vs_U_ann_%_net50": 0.47106,
+     "hit_rate_vs_U": 0.64865,
+     "excess_2022_23_ann_%": 1.66154,
+     "excess_2024_26_ann_%": 0.22724
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 37,
+     "first": "2023-03-01",
+     "avg_bonds": 160.35135,
+     "gross_ann_%": 2.42504,
+     "excess_vs_U_ann_%_gross": 0.60749,
+     "t_nw": 1.51505,
+     "t_nonoverlap": 1.16112,
+     "book_cost_ann_%_25": 0.25276,
+     "book_cost_ann_%_50": 0.50552,
+     "excess_vs_U_ann_%_net25": 0.54077,
+     "excess_vs_U_ann_%_net50": 0.47406,
+     "hit_rate_vs_U": 0.62162,
+     "excess_2022_23_ann_%": 1.7429,
+     "excess_2024_26_ann_%": 0.18696
+    },
+    "Ridge carry+RV (sem fund.)": {
+     "n_cohorts": 40,
+     "first": "2022-12-01",
+     "avg_bonds": 156.35,
+     "gross_ann_%": 1.52562,
+     "excess_vs_U_ann_%_gross": 0.05645,
+     "t_nw": 0.12804,
+     "t_nonoverlap": 0.24512,
+     "book_cost_ann_%_25": 0.26956,
+     "book_cost_ann_%_50": 0.53911,
+     "excess_vs_U_ann_%_net25": -0.02706,
+     "excess_vs_U_ann_%_net50": -0.11057,
+     "hit_rate_vs_U": 0.5,
+     "excess_2022_23_ann_%": 1.21431,
+     "excess_2024_26_ann_%": -0.50104
+    },
+    "Ridge carry+RV+fund.": {
+     "n_cohorts": 40,
+     "first": "2022-12-01",
+     "avg_bonds": 156.35,
+     "gross_ann_%": 1.7335,
+     "excess_vs_U_ann_%_gross": 0.26433,
+     "t_nw": 0.61486,
+     "t_nonoverlap": 0.30952,
+     "book_cost_ann_%_25": 0.2837,
+     "book_cost_ann_%_50": 0.5674,
+     "excess_vs_U_ann_%_net25": 0.16668,
+     "excess_vs_U_ann_%_net50": 0.06902,
+     "hit_rate_vs_U": 0.6,
+     "excess_2022_23_ann_%": 1.14548,
+     "excess_2024_26_ann_%": -0.15992
+    },
+    "GBM carry+RV (sem fund.)": {
+     "n_cohorts": 40,
+     "first": "2022-12-01",
+     "avg_bonds": 156.4,
+     "gross_ann_%": 1.81669,
+     "excess_vs_U_ann_%_gross": 0.34753,
+     "t_nw": 1.05929,
+     "t_nonoverlap": 0.56694,
+     "book_cost_ann_%_25": 0.29723,
+     "book_cost_ann_%_50": 0.59447,
+     "excess_vs_U_ann_%_net25": 0.23634,
+     "excess_vs_U_ann_%_net50": 0.12515,
+     "hit_rate_vs_U": 0.575,
+     "excess_2022_23_ann_%": 1.22288,
+     "excess_2024_26_ann_%": -0.07394
+    },
+    "GBM carry+RV+fund.": {
+     "n_cohorts": 40,
+     "first": "2022-12-01",
+     "avg_bonds": 156.425,
+     "gross_ann_%": 2.20834,
+     "excess_vs_U_ann_%_gross": 0.73918,
+     "t_nw": 2.05398,
+     "t_nonoverlap": 1.88325,
+     "book_cost_ann_%_25": 0.30873,
+     "book_cost_ann_%_50": 0.61746,
+     "excess_vs_U_ann_%_net25": 0.61649,
+     "excess_vs_U_ann_%_net50": 0.49381,
+     "hit_rate_vs_U": 0.75,
+     "excess_2022_23_ann_%": 1.45983,
+     "excess_2024_26_ann_%": 0.3922
+    }
+   },
+   "252": {
+    "U  universo": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 676.42222,
+     "gross_ann_%": 0.9952,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.12114,
+     "book_cost_ann_%_50": 0.24229,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 127.62222,
+     "gross_ann_%": 2.06158,
+     "excess_vs_U_ann_%_gross": 1.06638,
+     "t_nw": 2.42656,
+     "t_nonoverlap": 2.31276,
+     "book_cost_ann_%_25": 0.16595,
+     "book_cost_ann_%_50": 0.33189,
+     "excess_vs_U_ann_%_net25": 1.02158,
+     "excess_vs_U_ann_%_net50": 0.97678,
+     "hit_rate_vs_U": 0.8,
+     "excess_2022_23_ann_%": 1.56353,
+     "excess_2024_26_ann_%": 0.49821
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 99.64444,
+     "gross_ann_%": 2.25471,
+     "excess_vs_U_ann_%_gross": 1.25951,
+     "t_nw": 3.13106,
+     "t_nonoverlap": 2.16934,
+     "book_cost_ann_%_25": 0.17274,
+     "book_cost_ann_%_50": 0.34549,
+     "excess_vs_U_ann_%_net25": 1.20791,
+     "excess_vs_U_ann_%_net50": 1.15631,
+     "hit_rate_vs_U": 0.93333,
+     "excess_2022_23_ann_%": 1.71705,
+     "excess_2024_26_ann_%": 0.7366
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 100.37778,
+     "gross_ann_%": 2.34781,
+     "excess_vs_U_ann_%_gross": 1.35261,
+     "t_nw": 2.95778,
+     "t_nonoverlap": 4.48833,
+     "book_cost_ann_%_25": 0.17481,
+     "book_cost_ann_%_50": 0.34962,
+     "excess_vs_U_ann_%_net25": 1.29895,
+     "excess_vs_U_ann_%_net50": 1.24528,
+     "hit_rate_vs_U": 0.88889,
+     "excess_2022_23_ann_%": 2.01005,
+     "excess_2024_26_ann_%": 0.60126
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 108.62222,
+     "gross_ann_%": 2.25351,
+     "excess_vs_U_ann_%_gross": 1.25831,
+     "t_nw": 3.02199,
+     "t_nonoverlap": 2.38116,
+     "book_cost_ann_%_25": 0.17289,
+     "book_cost_ann_%_50": 0.34578,
+     "excess_vs_U_ann_%_net25": 1.20656,
+     "excess_vs_U_ann_%_net50": 1.15482,
+     "hit_rate_vs_U": 0.86667,
+     "excess_2022_23_ann_%": 1.72798,
+     "excess_2024_26_ann_%": 0.72154
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 101.4,
+     "gross_ann_%": 2.29942,
+     "excess_vs_U_ann_%_gross": 1.30422,
+     "t_nw": 3.28919,
+     "t_nonoverlap": 2.69804,
+     "book_cost_ann_%_25": 0.17555,
+     "book_cost_ann_%_50": 0.3511,
+     "excess_vs_U_ann_%_net25": 1.24981,
+     "excess_vs_U_ann_%_net50": 1.19541,
+     "hit_rate_vs_U": 0.91111,
+     "excess_2022_23_ann_%": 1.80589,
+     "excess_2024_26_ann_%": 0.73088
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 65.66667,
+     "gross_ann_%": 1.8034,
+     "excess_vs_U_ann_%_gross": 0.8082,
+     "t_nw": 1.79229,
+     "t_nonoverlap": 0.58237,
+     "book_cost_ann_%_25": 0.17616,
+     "book_cost_ann_%_50": 0.35232,
+     "excess_vs_U_ann_%_net25": 0.75318,
+     "excess_vs_U_ann_%_net50": 0.69817,
+     "hit_rate_vs_U": 0.75556,
+     "excess_2022_23_ann_%": 1.39502,
+     "excess_2024_26_ann_%": 0.13755
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 91.88889,
+     "gross_ann_%": 1.63432,
+     "excess_vs_U_ann_%_gross": 0.63912,
+     "t_nw": 1.31039,
+     "t_nonoverlap": 0.65723,
+     "book_cost_ann_%_25": 0.16552,
+     "book_cost_ann_%_50": 0.33104,
+     "excess_vs_U_ann_%_net25": 0.59475,
+     "excess_vs_U_ann_%_net50": 0.55038,
+     "hit_rate_vs_U": 0.71111,
+     "excess_2022_23_ann_%": 1.17835,
+     "excess_2024_26_ann_%": 0.02286
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 31,
+     "first": "2023-03-01",
+     "avg_bonds": 152.41935,
+     "gross_ann_%": 2.85867,
+     "excess_vs_U_ann_%_gross": 0.73961,
+     "t_nw": 1.77084,
+     "t_nonoverlap": 1.59852,
+     "book_cost_ann_%_25": 0.14597,
+     "book_cost_ann_%_50": 0.29195,
+     "excess_vs_U_ann_%_net25": 0.71478,
+     "excess_vs_U_ann_%_net50": 0.68995,
+     "hit_rate_vs_U": 0.74194,
+     "excess_2022_23_ann_%": 1.59744,
+     "excess_2024_26_ann_%": 0.33112
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 31,
+     "first": "2023-03-01",
+     "avg_bonds": 152.41935,
+     "gross_ann_%": 2.81198,
+     "excess_vs_U_ann_%_gross": 0.69291,
+     "t_nw": 1.69174,
+     "t_nonoverlap": 1.60402,
+     "book_cost_ann_%_25": 0.14502,
+     "book_cost_ann_%_50": 0.29004,
+     "excess_vs_U_ann_%_net25": 0.66904,
+     "excess_vs_U_ann_%_net50": 0.64516,
+     "hit_rate_vs_U": 0.74194,
+     "excess_2022_23_ann_%": 1.52788,
+     "excess_2024_26_ann_%": 0.29531
+    },
+    "Ridge carry+RV (sem fund.)": {
+     "n_cohorts": 28,
+     "first": "2023-06-01",
+     "avg_bonds": 156.85714,
+     "gross_ann_%": 1.72027,
+     "excess_vs_U_ann_%_gross": -0.2936,
+     "t_nw": -0.98802,
+     "t_nonoverlap": -0.19335,
+     "book_cost_ann_%_25": 0.15945,
+     "book_cost_ann_%_50": 0.31889,
+     "excess_vs_U_ann_%_net25": -0.3319,
+     "excess_vs_U_ann_%_net50": -0.3702,
+     "hit_rate_vs_U": 0.35714,
+     "excess_2022_23_ann_%": 0.12006,
+     "excess_2024_26_ann_%": -0.43148
+    },
+    "Ridge carry+RV+fund.": {
+     "n_cohorts": 28,
+     "first": "2023-06-01",
+     "avg_bonds": 156.85714,
+     "gross_ann_%": 1.97507,
+     "excess_vs_U_ann_%_gross": -0.0388,
+     "t_nw": -0.12366,
+     "t_nonoverlap": 0.6321,
+     "book_cost_ann_%_25": 0.16295,
+     "book_cost_ann_%_50": 0.32589,
+     "excess_vs_U_ann_%_net25": -0.0806,
+     "excess_vs_U_ann_%_net50": -0.1224,
+     "hit_rate_vs_U": 0.42857,
+     "excess_2022_23_ann_%": 0.0656,
+     "excess_2024_26_ann_%": -0.0736
+    },
+    "GBM carry+RV (sem fund.)": {
+     "n_cohorts": 28,
+     "first": "2023-06-01",
+     "avg_bonds": 156.96429,
+     "gross_ann_%": 1.75782,
+     "excess_vs_U_ann_%_gross": -0.25604,
+     "t_nw": -0.93819,
+     "t_nonoverlap": 0.06093,
+     "book_cost_ann_%_25": 0.16029,
+     "book_cost_ann_%_50": 0.32058,
+     "excess_vs_U_ann_%_net25": -0.29519,
+     "excess_vs_U_ann_%_net50": -0.33433,
+     "hit_rate_vs_U": 0.39286,
+     "excess_2022_23_ann_%": 0.28352,
+     "excess_2024_26_ann_%": -0.4359
+    },
+    "GBM carry+RV+fund.": {
+     "n_cohorts": 28,
+     "first": "2023-06-01",
+     "avg_bonds": 156.85714,
+     "gross_ann_%": 2.17357,
+     "excess_vs_U_ann_%_gross": 0.15971,
+     "t_nw": 0.42333,
+     "t_nonoverlap": 0.856,
+     "book_cost_ann_%_25": 0.16567,
+     "book_cost_ann_%_50": 0.33134,
+     "excess_vs_U_ann_%_net25": 0.11518,
+     "excess_vs_U_ann_%_net50": 0.07065,
+     "hit_rate_vs_U": 0.5,
+     "excess_2022_23_ann_%": 0.22444,
+     "excess_2024_26_ann_%": 0.13813
+    }
+   }
+  },
+  "incremental": {
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=63": {
+    "diff_ann_%_gross": 0.32923,
+    "t_nw": 3.37538,
+    "p_two_sided": 0.00074,
+    "diff_ann_%_net25": 0.28791,
+    "diff_2022_23": 0.22207,
+    "diff_2024_26": 0.41496,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.01253
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=63": {
+    "diff_ann_%_gross": 0.48867,
+    "t_nw": 3.6695,
+    "p_two_sided": 0.00024,
+    "diff_ann_%_net25": 0.44721,
+    "diff_2022_23": 0.59831,
+    "diff_2024_26": 0.40096,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.00462
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=63": {
+    "diff_ann_%_gross": 0.33128,
+    "t_nw": 2.89267,
+    "p_two_sided": 0.00382,
+    "diff_ann_%_net25": 0.3029,
+    "diff_2022_23": 0.39173,
+    "diff_2024_26": 0.28293,
+    "n": 54,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.04966
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=63": {
+    "diff_ann_%_gross": 0.38408,
+    "t_nw": 3.54997,
+    "p_two_sided": 0.00039,
+    "diff_ann_%_net25": 0.33604,
+    "diff_2022_23": 0.2975,
+    "diff_2024_26": 0.45334,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.00693
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=63": {
+    "diff_ann_%_gross": 0.31176,
+    "t_nw": 1.80485,
+    "p_two_sided": 0.0711,
+    "diff_ann_%_net25": 0.25448,
+    "diff_2022_23": 0.34456,
+    "diff_2024_26": 0.28551,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 63,
+    "p_holm": 0.35765
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=63": {
+    "diff_ann_%_gross": 0.04852,
+    "t_nw": 1.70218,
+    "p_two_sided": 0.08872,
+    "diff_ann_%_net25": 0.0401,
+    "diff_2022_23": -0.01252,
+    "diff_2024_26": 0.06887,
+    "n": 40,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 63,
+    "p_holm": 0.35765
+   },
+   "Ridge carry+RV+fund. vs Ridge carry+RV (sem fund.) | H=63": {
+    "diff_ann_%_gross": 0.25926,
+    "t_nw": 1.77009,
+    "p_two_sided": 0.07671,
+    "diff_ann_%_net25": 0.24408,
+    "diff_2022_23": 0.08191,
+    "diff_2024_26": 0.35385,
+    "n": 46,
+    "variant": "Ridge carry+RV+fund.",
+    "base": "Ridge carry+RV (sem fund.)",
+    "H": 63,
+    "p_holm": 0.35765
+   },
+   "GBM carry+RV+fund. vs GBM carry+RV (sem fund.) | H=63": {
+    "diff_ann_%_gross": 0.35119,
+    "t_nw": 2.1447,
+    "p_two_sided": 0.03198,
+    "diff_ann_%_net25": 0.33954,
+    "diff_2022_23": 0.25251,
+    "diff_2024_26": 0.40382,
+    "n": 46,
+    "variant": "GBM carry+RV+fund.",
+    "base": "GBM carry+RV (sem fund.)",
+    "H": 63,
+    "p_holm": 0.24121
+   },
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=126": {
+    "diff_ann_%_gross": 0.34146,
+    "t_nw": 2.95444,
+    "p_two_sided": 0.00313,
+    "diff_ann_%_net25": 0.32325,
+    "diff_2022_23": 0.15378,
+    "diff_2024_26": 0.50828,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.04385
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=126": {
+    "diff_ann_%_gross": 0.48562,
+    "t_nw": 4.05499,
+    "p_two_sided": 5e-05,
+    "diff_ann_%_net25": 0.46538,
+    "diff_2022_23": 0.52228,
+    "diff_2024_26": 0.45303,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.0011
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=126": {
+    "diff_ann_%_gross": 0.27796,
+    "t_nw": 3.72966,
+    "p_two_sided": 0.00019,
+    "diff_ann_%_net25": 0.2662,
+    "diff_2022_23": 0.20054,
+    "diff_2024_26": 0.34677,
+    "n": 51,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.00383
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=126": {
+    "diff_ann_%_gross": 0.44429,
+    "t_nw": 3.15327,
+    "p_two_sided": 0.00161,
+    "diff_ann_%_net25": 0.42157,
+    "diff_2022_23": 0.30825,
+    "diff_2024_26": 0.56522,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.02422
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=126": {
+    "diff_ann_%_gross": 0.4424,
+    "t_nw": 2.46,
+    "p_two_sided": 0.01389,
+    "diff_ann_%_net25": 0.41486,
+    "diff_2022_23": 0.33784,
+    "diff_2024_26": 0.53535,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 126,
+    "p_holm": 0.16672
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=126": {
+    "diff_ann_%_gross": 0.0074,
+    "t_nw": 0.21441,
+    "p_two_sided": 0.83023,
+    "diff_ann_%_net25": 0.0022,
+    "diff_2022_23": -0.08136,
+    "diff_2024_26": 0.04028,
+    "n": 37,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 126,
+    "p_holm": 0.83023
+   },
+   "Ridge carry+RV+fund. vs Ridge carry+RV (sem fund.) | H=126": {
+    "diff_ann_%_gross": 0.20788,
+    "t_nw": 1.60596,
+    "p_two_sided": 0.10828,
+    "diff_ann_%_net25": 0.19374,
+    "diff_2022_23": -0.06883,
+    "diff_2024_26": 0.34112,
+    "n": 40,
+    "variant": "Ridge carry+RV+fund.",
+    "base": "Ridge carry+RV (sem fund.)",
+    "H": 126,
+    "p_holm": 0.35765
+   },
+   "GBM carry+RV+fund. vs GBM carry+RV (sem fund.) | H=126": {
+    "diff_ann_%_gross": 0.39165,
+    "t_nw": 2.24841,
+    "p_two_sided": 0.02455,
+    "diff_ann_%_net25": 0.38016,
+    "diff_2022_23": 0.23695,
+    "diff_2024_26": 0.46613,
+    "n": 40,
+    "variant": "GBM carry+RV+fund.",
+    "base": "GBM carry+RV (sem fund.)",
+    "H": 126,
+    "p_holm": 0.22095
+   },
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=252": {
+    "diff_ann_%_gross": 0.19313,
+    "t_nw": 4.21133,
+    "p_two_sided": 3e-05,
+    "diff_ann_%_net25": 0.18633,
+    "diff_2022_23": 0.15352,
+    "diff_2024_26": 0.23839,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.00058
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=252": {
+    "diff_ann_%_gross": 0.28623,
+    "t_nw": 2.30712,
+    "p_two_sided": 0.02105,
+    "diff_ann_%_net25": 0.27737,
+    "diff_2022_23": 0.44652,
+    "diff_2024_26": 0.10305,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.21048
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=252": {
+    "diff_ann_%_gross": 0.19193,
+    "t_nw": 5.19381,
+    "p_two_sided": 0.0,
+    "diff_ann_%_net25": 0.18498,
+    "diff_2022_23": 0.16445,
+    "diff_2024_26": 0.22333,
+    "n": 45,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.0
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=252": {
+    "diff_ann_%_gross": 0.23783,
+    "t_nw": 3.21055,
+    "p_two_sided": 0.00132,
+    "diff_ann_%_net25": 0.22823,
+    "diff_2022_23": 0.24235,
+    "diff_2024_26": 0.23267,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.0212
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=252": {
+    "diff_ann_%_gross": 0.16907,
+    "t_nw": 1.88368,
+    "p_two_sided": 0.05961,
+    "diff_ann_%_net25": 0.15843,
+    "diff_2022_23": 0.21666,
+    "diff_2024_26": 0.11469,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 252,
+    "p_holm": 0.35765
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=252": {
+    "diff_ann_%_gross": 0.0467,
+    "t_nw": 3.82587,
+    "p_two_sided": 0.00013,
+    "diff_ann_%_net25": 0.04574,
+    "diff_2022_23": 0.06955,
+    "diff_2024_26": 0.03581,
+    "n": 31,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 252,
+    "p_holm": 0.00274
+   },
+   "Ridge carry+RV+fund. vs Ridge carry+RV (sem fund.) | H=252": {
+    "diff_ann_%_gross": 0.2548,
+    "t_nw": 2.42182,
+    "p_two_sided": 0.01544,
+    "diff_ann_%_net25": 0.2513,
+    "diff_2022_23": -0.05445,
+    "diff_2024_26": 0.35789,
+    "n": 28,
+    "variant": "Ridge carry+RV+fund.",
+    "base": "Ridge carry+RV (sem fund.)",
+    "H": 252,
+    "p_holm": 0.16987
+   },
+   "GBM carry+RV+fund. vs GBM carry+RV (sem fund.) | H=252": {
+    "diff_ann_%_gross": 0.41575,
+    "t_nw": 2.1681,
+    "p_two_sided": 0.03015,
+    "diff_ann_%_net25": 0.41037,
+    "diff_2022_23": -0.05908,
+    "diff_2024_26": 0.57403,
+    "n": 28,
+    "variant": "GBM carry+RV+fund.",
+    "base": "GBM carry+RV (sem fund.)",
+    "H": 252,
+    "p_holm": 0.24121
+   }
+  },
+  "covered_vs_uncovered": {
+   "63": {
+    "uncovered_minus_covered_ann_%": 1.68347,
+    "t_nw": 2.83737,
+    "uncovered_rank_coef_after_controls": {
+     "mean": 0.02791,
+     "t_nw": 2.01162,
+     "t_nonoverlap": 1.95625,
+     "n_dates": 54
+    },
+    "share_uncovered_in_P4": 0.30538,
+    "share_uncovered_in_universe": 0.16575,
+    "mean_cdi_bps_uncovered": 116.43705,
+    "mean_cdi_bps_covered": 100.81597
+   },
+   "126": {
+    "uncovered_minus_covered_ann_%": 1.46162,
+    "t_nw": 3.14707,
+    "uncovered_rank_coef_after_controls": {
+     "mean": 0.05178,
+     "t_nw": 3.13026,
+     "t_nonoverlap": 1.87358,
+     "n_dates": 52
+    },
+    "share_uncovered_in_P4": 0.30538,
+    "share_uncovered_in_universe": 0.16575,
+    "mean_cdi_bps_uncovered": 116.43705,
+    "mean_cdi_bps_covered": 100.81597
+   },
+   "252": {
+    "uncovered_minus_covered_ann_%": 1.5024,
+    "t_nw": 3.75634,
+    "uncovered_rank_coef_after_controls": {
+     "mean": 0.05773,
+     "t_nw": 6.34595,
+     "t_nonoverlap": 2.55912,
+     "n_dates": 46
+    },
+    "share_uncovered_in_P4": 0.30538,
+    "share_uncovered_in_universe": 0.16575,
+    "mean_cdi_bps_uncovered": 116.43705,
+    "mean_cdi_bps_covered": 100.81597
+   }
+  },
+  "indexer": {
+   "63": {
+    "DI_SPREAD": {
+     "mean": 0.00111,
+     "t_nw": 0.65604,
+     "t_nonoverlap": 0.5409,
+     "n_dates": 54,
+     "ann_%": 0.44468
+    },
+    "IPCA": {
+     "mean": -0.00117,
+     "t_nw": -0.67951,
+     "t_nonoverlap": -0.71131,
+     "n_dates": 54,
+     "ann_%": -0.46605
+    },
+    "PRE": {
+     "mean": 0.00531,
+     "t_nw": 1.43146,
+     "t_nonoverlap": 1.14548,
+     "n_dates": 42,
+     "ann_%": 2.12578
+    },
+    "P4 carry rankeado dentro do indexador vs P4": {
+     "diff_ann_%": 0.17703,
+     "t_nw": 0.43758
+    },
+    "share_kind_in_P4": {
+     "DI_SPREAD": 0.785,
+     "IPCA": 0.204,
+     "PRE": 0.012
+    },
+    "share_kind_in_universe": {
+     "DI_SPREAD": 0.516,
+     "IPCA": 0.467,
+     "PRE": 0.017
+    }
+   },
+   "126": {
+    "DI_SPREAD": {
+     "mean": 0.00433,
+     "t_nw": 1.21908,
+     "t_nonoverlap": 0.56999,
+     "n_dates": 52,
+     "ann_%": 0.86645
+    },
+    "IPCA": {
+     "mean": -0.00394,
+     "t_nw": -1.10859,
+     "t_nonoverlap": -0.60679,
+     "n_dates": 52,
+     "ann_%": -0.78744
+    },
+    "PRE": {
+     "mean": 0.00792,
+     "t_nw": 1.19702,
+     "t_nonoverlap": -0.02288,
+     "n_dates": 40,
+     "ann_%": 1.58443
+    },
+    "P4 carry rankeado dentro do indexador vs P4": {
+     "diff_ann_%": -0.1674,
+     "t_nw": -0.47053
+    },
+    "share_kind_in_P4": {
+     "DI_SPREAD": 0.785,
+     "IPCA": 0.204,
+     "PRE": 0.012
+    },
+    "share_kind_in_universe": {
+     "DI_SPREAD": 0.516,
+     "IPCA": 0.467,
+     "PRE": 0.017
+    }
+   },
+   "252": {
+    "DI_SPREAD": {
+     "mean": 0.00642,
+     "t_nw": 0.82662,
+     "t_nonoverlap": 0.35006,
+     "n_dates": 46,
+     "ann_%": 0.64221
+    },
+    "IPCA": {
+     "mean": -0.00554,
+     "t_nw": -0.72071,
+     "t_nonoverlap": -0.46994,
+     "n_dates": 46,
+     "ann_%": -0.55396
+    },
+    "PRE": {
+     "mean": 0.01375,
+     "t_nw": 1.18458,
+     "t_nonoverlap": -0.29175,
+     "n_dates": 34,
+     "ann_%": 1.37494
+    },
+    "P4 carry rankeado dentro do indexador vs P4": {
+     "diff_ann_%": -0.12573,
+     "t_nw": -0.34327
+    },
+    "share_kind_in_P4": {
+     "DI_SPREAD": 0.785,
+     "IPCA": 0.204,
+     "PRE": 0.012
+    },
+    "share_kind_in_universe": {
+     "DI_SPREAD": 0.516,
+     "IPCA": 0.467,
+     "PRE": 0.017
+    }
+   }
+  }
+ },
+ "check_nonstrict": {
+  "ic": {
+   "63": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.20196,
+      "t_nw": 3.87179,
+      "t_nonoverlap": 3.34143,
+      "n_dates": 54
+     },
+     "resid_bps": {
+      "mean": 0.18506,
+      "t_nw": 12.43271,
+      "t_nonoverlap": 12.16113,
+      "n_dates": 54
+     },
+     "resid_z": {
+      "mean": 0.18503,
+      "t_nw": 12.43236,
+      "t_nonoverlap": 12.15811,
+      "n_dates": 54
+     },
+     "dur": {
+      "mean": 0.02254,
+      "t_nw": 0.39056,
+      "t_nonoverlap": 0.35541,
+      "n_dates": 54
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.19121,
+      "t_nw": 3.42058,
+      "t_nonoverlap": 2.85246,
+      "n_dates": 54
+     },
+     "resid_bps": {
+      "mean": 0.17273,
+      "t_nw": 10.17079,
+      "t_nonoverlap": 8.62843,
+      "n_dates": 54
+     },
+     "resid_z": {
+      "mean": 0.17273,
+      "t_nw": 10.17099,
+      "t_nonoverlap": 8.6275,
+      "n_dates": 54
+     },
+     "dur": {
+      "mean": 0.02192,
+      "t_nw": 0.39346,
+      "t_nonoverlap": 0.32239,
+      "n_dates": 54
+     },
+     "f_lev": {
+      "mean": 0.0033,
+      "t_nw": 0.19343,
+      "t_nonoverlap": 0.14384,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": -0.02535,
+      "t_nw": -1.24638,
+      "t_nonoverlap": -1.14603,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": 0.01964,
+      "t_nw": 1.28986,
+      "t_nonoverlap": 0.99163,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": 0.00203,
+      "t_nw": 0.19468,
+      "t_nonoverlap": 0.70126,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": 0.0008,
+      "t_nw": 0.08136,
+      "t_nonoverlap": -0.45674,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": -0.00933,
+      "t_nw": -0.52341,
+      "t_nonoverlap": -0.34399,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.04815,
+      "t_nw": 2.95342,
+      "t_nonoverlap": 2.63325,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.03389,
+      "t_nw": -3.35094,
+      "t_nonoverlap": -1.68687,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.01177,
+      "t_nw": 1.26379,
+      "t_nonoverlap": 0.32243,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.0478,
+      "t_nw": -3.37517,
+      "t_nonoverlap": -2.46747,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.01255,
+      "t_nw": 1.03822,
+      "t_nonoverlap": 0.489,
+      "n_dates": 54
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.0303,
+      "t_nw": -2.50645,
+      "t_nonoverlap": -1.35909,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": 0.03769,
+      "t_nw": 2.83227,
+      "t_nonoverlap": 1.84272,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": -0.01927,
+      "t_nw": -2.359,
+      "t_nonoverlap": -1.49247,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": 0.03516,
+      "t_nw": 3.66911,
+      "t_nonoverlap": 2.72097,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": -0.03507,
+      "t_nw": -4.05388,
+      "t_nonoverlap": -2.66796,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": 0.02407,
+      "t_nw": 2.03516,
+      "t_nonoverlap": 1.40784,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.00395,
+      "t_nw": 0.48851,
+      "t_nonoverlap": 0.31512,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.03933,
+      "t_nw": -4.08334,
+      "t_nonoverlap": -2.12577,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.0237,
+      "t_nw": 2.51708,
+      "t_nonoverlap": 1.80495,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.00316,
+      "t_nw": -0.22422,
+      "t_nonoverlap": -0.10715,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.04158,
+      "t_nw": 4.1821,
+      "t_nonoverlap": 1.95269,
+      "n_dates": 54
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.01405,
+      "t_nw": 0.84596,
+      "t_nonoverlap": 0.44968,
+      "n_dates": 54
+     },
+     "f_cov": {
+      "mean": -0.02631,
+      "t_nw": -1.32564,
+      "t_nonoverlap": -1.04057,
+      "n_dates": 54
+     },
+     "f_cash_st": {
+      "mean": 0.00829,
+      "t_nw": 0.60422,
+      "t_nonoverlap": 0.40968,
+      "n_dates": 54
+     },
+     "f_eq_ratio": {
+      "mean": -0.00595,
+      "t_nw": -0.55586,
+      "t_nonoverlap": 0.0921,
+      "n_dates": 54
+     },
+     "f_gde": {
+      "mean": 0.01216,
+      "t_nw": 1.14386,
+      "t_nonoverlap": 0.27467,
+      "n_dates": 54
+     },
+     "f_margin": {
+      "mean": 0.00422,
+      "t_nw": 0.31105,
+      "t_nonoverlap": 0.27836,
+      "n_dates": 54
+     },
+     "f_rev_g": {
+      "mean": 0.04483,
+      "t_nw": 3.99535,
+      "t_nonoverlap": 2.90487,
+      "n_dates": 54
+     },
+     "f_d_lev": {
+      "mean": -0.05651,
+      "t_nw": -5.75431,
+      "t_nonoverlap": -3.30657,
+      "n_dates": 54
+     },
+     "f_d_cov": {
+      "mean": 0.02352,
+      "t_nw": 2.7314,
+      "t_nonoverlap": 1.52052,
+      "n_dates": 54
+     },
+     "f_size": {
+      "mean": -0.05349,
+      "t_nw": -3.16582,
+      "t_nonoverlap": -2.24503,
+      "n_dates": 54
+     },
+     "f_quality": {
+      "mean": 0.00937,
+      "t_nw": 0.80129,
+      "t_nonoverlap": 0.37269,
+      "n_dates": 54
+     }
+    }
+   },
+   "126": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.28302,
+      "t_nw": 4.6628,
+      "t_nonoverlap": 2.34929,
+      "n_dates": 51
+     },
+     "resid_bps": {
+      "mean": 0.22002,
+      "t_nw": 13.55869,
+      "t_nonoverlap": 11.04136,
+      "n_dates": 51
+     },
+     "resid_z": {
+      "mean": 0.21998,
+      "t_nw": 13.56179,
+      "t_nonoverlap": 11.0378,
+      "n_dates": 51
+     },
+     "dur": {
+      "mean": 0.00796,
+      "t_nw": 0.07697,
+      "t_nonoverlap": 0.28834,
+      "n_dates": 51
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.27199,
+      "t_nw": 4.31,
+      "t_nonoverlap": 2.06676,
+      "n_dates": 51
+     },
+     "resid_bps": {
+      "mean": 0.20091,
+      "t_nw": 10.12676,
+      "t_nonoverlap": 8.35759,
+      "n_dates": 51
+     },
+     "resid_z": {
+      "mean": 0.20091,
+      "t_nw": 10.12877,
+      "t_nonoverlap": 8.35754,
+      "n_dates": 51
+     },
+     "dur": {
+      "mean": 0.00581,
+      "t_nw": 0.05827,
+      "t_nonoverlap": 0.25313,
+      "n_dates": 51
+     },
+     "f_lev": {
+      "mean": 4e-05,
+      "t_nw": 0.00204,
+      "t_nonoverlap": -0.06018,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": -0.02009,
+      "t_nw": -0.78595,
+      "t_nonoverlap": -0.57066,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": 0.02861,
+      "t_nw": 1.29816,
+      "t_nonoverlap": 0.9568,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": -0.0014,
+      "t_nw": -0.10243,
+      "t_nonoverlap": 0.59265,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": 0.00182,
+      "t_nw": 0.14265,
+      "t_nonoverlap": -0.75295,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": -0.01591,
+      "t_nw": -0.84029,
+      "t_nonoverlap": -0.30101,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.05737,
+      "t_nw": 2.7972,
+      "t_nonoverlap": 1.79765,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.0439,
+      "t_nw": -3.306,
+      "t_nonoverlap": -0.99579,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.0136,
+      "t_nw": 0.91991,
+      "t_nonoverlap": -0.03507,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.06624,
+      "t_nw": -3.89316,
+      "t_nonoverlap": -1.70937,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.02368,
+      "t_nw": 1.68687,
+      "t_nonoverlap": 0.79239,
+      "n_dates": 51
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.03316,
+      "t_nw": -2.73272,
+      "t_nonoverlap": -1.67759,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": 0.05439,
+      "t_nw": 2.8376,
+      "t_nonoverlap": 1.22454,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": -0.03763,
+      "t_nw": -2.73378,
+      "t_nonoverlap": -0.86284,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": 0.03682,
+      "t_nw": 2.51498,
+      "t_nonoverlap": 2.11743,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": -0.03621,
+      "t_nw": -2.80613,
+      "t_nonoverlap": -2.41677,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": 0.03687,
+      "t_nw": 2.16432,
+      "t_nonoverlap": 0.83739,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.00444,
+      "t_nw": 0.358,
+      "t_nonoverlap": 0.47942,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.04785,
+      "t_nw": -3.05029,
+      "t_nonoverlap": -2.30226,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.02538,
+      "t_nw": 1.74114,
+      "t_nonoverlap": 0.38195,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.01863,
+      "t_nw": -1.07758,
+      "t_nonoverlap": -0.41269,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.04761,
+      "t_nw": 3.54574,
+      "t_nonoverlap": 2.52274,
+      "n_dates": 51
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.01918,
+      "t_nw": 0.91991,
+      "t_nonoverlap": 0.38853,
+      "n_dates": 51
+     },
+     "f_cov": {
+      "mean": -0.02544,
+      "t_nw": -0.86801,
+      "t_nonoverlap": -0.58427,
+      "n_dates": 51
+     },
+     "f_cash_st": {
+      "mean": -0.00035,
+      "t_nw": -0.01607,
+      "t_nonoverlap": 0.17957,
+      "n_dates": 51
+     },
+     "f_eq_ratio": {
+      "mean": -0.01254,
+      "t_nw": -0.91489,
+      "t_nonoverlap": -0.15579,
+      "n_dates": 51
+     },
+     "f_gde": {
+      "mean": 0.01712,
+      "t_nw": 1.29675,
+      "t_nonoverlap": 0.00374,
+      "n_dates": 51
+     },
+     "f_margin": {
+      "mean": 0.00687,
+      "t_nw": 0.33971,
+      "t_nonoverlap": -0.08958,
+      "n_dates": 51
+     },
+     "f_rev_g": {
+      "mean": 0.05032,
+      "t_nw": 2.59337,
+      "t_nonoverlap": 1.62972,
+      "n_dates": 51
+     },
+     "f_d_lev": {
+      "mean": -0.06279,
+      "t_nw": -4.37289,
+      "t_nonoverlap": -2.57947,
+      "n_dates": 51
+     },
+     "f_d_cov": {
+      "mean": 0.02013,
+      "t_nw": 1.87961,
+      "t_nonoverlap": 0.58882,
+      "n_dates": 51
+     },
+     "f_size": {
+      "mean": -0.07237,
+      "t_nw": -3.36032,
+      "t_nonoverlap": -1.64567,
+      "n_dates": 51
+     },
+     "f_quality": {
+      "mean": 0.00673,
+      "t_nw": 0.44182,
+      "t_nonoverlap": 0.55329,
+      "n_dates": 51
+     }
+    }
+   },
+   "252": {
+    "signals_full_universe": {
+     "cdi_bps": {
+      "mean": 0.35103,
+      "t_nw": 3.79691,
+      "t_nonoverlap": 2.91867,
+      "n_dates": 45
+     },
+     "resid_bps": {
+      "mean": 0.25968,
+      "t_nw": 16.83933,
+      "t_nonoverlap": 9.2313,
+      "n_dates": 45
+     },
+     "resid_z": {
+      "mean": 0.25961,
+      "t_nw": 16.82906,
+      "t_nonoverlap": 9.2056,
+      "n_dates": 45
+     },
+     "dur": {
+      "mean": 0.04763,
+      "t_nw": 0.27907,
+      "t_nonoverlap": -0.08632,
+      "n_dates": 45
+     }
+    },
+    "raw_covered": {
+     "cdi_bps": {
+      "mean": 0.34683,
+      "t_nw": 3.72492,
+      "t_nonoverlap": 2.88181,
+      "n_dates": 45
+     },
+     "resid_bps": {
+      "mean": 0.24119,
+      "t_nw": 17.04095,
+      "t_nonoverlap": 13.9101,
+      "n_dates": 45
+     },
+     "resid_z": {
+      "mean": 0.24117,
+      "t_nw": 17.03864,
+      "t_nonoverlap": 13.94753,
+      "n_dates": 45
+     },
+     "dur": {
+      "mean": 0.04633,
+      "t_nw": 0.29168,
+      "t_nonoverlap": 0.01481,
+      "n_dates": 45
+     },
+     "f_lev": {
+      "mean": 0.00978,
+      "t_nw": 0.33583,
+      "t_nonoverlap": 0.06444,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": -0.02717,
+      "t_nw": -0.88659,
+      "t_nonoverlap": -0.52234,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": 0.0476,
+      "t_nw": 1.80622,
+      "t_nonoverlap": 1.4372,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": -0.00271,
+      "t_nw": -0.25347,
+      "t_nonoverlap": 3.45343,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": 0.00689,
+      "t_nw": 0.67188,
+      "t_nonoverlap": -6.63378,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": -0.01223,
+      "t_nw": -1.12243,
+      "t_nonoverlap": -0.42265,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.08511,
+      "t_nw": 3.16103,
+      "t_nonoverlap": 0.71389,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.07324,
+      "t_nw": -3.47043,
+      "t_nonoverlap": -0.87915,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.03526,
+      "t_nw": 1.61167,
+      "t_nonoverlap": 1.27998,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.09357,
+      "t_nw": -6.83053,
+      "t_nonoverlap": -2.90215,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.03638,
+      "t_nw": 1.49334,
+      "t_nonoverlap": 1.69116,
+      "n_dates": 45
+     }
+    },
+    "partial_vs_carry_rv_peer": {
+     "f_lev": {
+      "mean": -0.04429,
+      "t_nw": -5.60652,
+      "t_nonoverlap": -0.82864,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": 0.07224,
+      "t_nw": 3.53312,
+      "t_nonoverlap": 0.73143,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": -0.04367,
+      "t_nw": -2.76229,
+      "t_nonoverlap": -1.26871,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": 0.05314,
+      "t_nw": 3.46108,
+      "t_nonoverlap": 3.5779,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": -0.04779,
+      "t_nw": -2.72006,
+      "t_nonoverlap": -4.26819,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": 0.07144,
+      "t_nw": 2.79172,
+      "t_nonoverlap": 0.79728,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.01842,
+      "t_nw": 1.19981,
+      "t_nonoverlap": 0.32896,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.08941,
+      "t_nw": -5.55798,
+      "t_nonoverlap": -0.88338,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.05272,
+      "t_nw": 2.19625,
+      "t_nonoverlap": 2.31004,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.04247,
+      "t_nw": -2.66045,
+      "t_nonoverlap": -0.61869,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.07863,
+      "t_nw": 7.87159,
+      "t_nonoverlap": 2.05684,
+      "n_dates": 45
+     }
+    },
+    "within_peer": {
+     "f_lev": {
+      "mean": 0.0143,
+      "t_nw": 0.56652,
+      "t_nonoverlap": 0.01068,
+      "n_dates": 45
+     },
+     "f_cov": {
+      "mean": -0.02345,
+      "t_nw": -0.55662,
+      "t_nonoverlap": -0.28459,
+      "n_dates": 45
+     },
+     "f_cash_st": {
+      "mean": 0.00273,
+      "t_nw": 0.10451,
+      "t_nonoverlap": -0.08634,
+      "n_dates": 45
+     },
+     "f_eq_ratio": {
+      "mean": -0.01419,
+      "t_nw": -1.36786,
+      "t_nonoverlap": 2.12734,
+      "n_dates": 45
+     },
+     "f_gde": {
+      "mean": 0.02064,
+      "t_nw": 1.89035,
+      "t_nonoverlap": -4.01689,
+      "n_dates": 45
+     },
+     "f_margin": {
+      "mean": 0.02034,
+      "t_nw": 0.84259,
+      "t_nonoverlap": 0.3825,
+      "n_dates": 45
+     },
+     "f_rev_g": {
+      "mean": 0.07501,
+      "t_nw": 2.493,
+      "t_nonoverlap": 1.12201,
+      "n_dates": 45
+     },
+     "f_d_lev": {
+      "mean": -0.0923,
+      "t_nw": -4.59968,
+      "t_nonoverlap": -0.58844,
+      "n_dates": 45
+     },
+     "f_d_cov": {
+      "mean": 0.03244,
+      "t_nw": 1.88169,
+      "t_nonoverlap": 2.11542,
+      "n_dates": 45
+     },
+     "f_size": {
+      "mean": -0.09746,
+      "t_nw": -4.88774,
+      "t_nonoverlap": -3.98666,
+      "n_dates": 45
+     },
+     "f_quality": {
+      "mean": 0.02312,
+      "t_nw": 1.31034,
+      "t_nonoverlap": 0.85919,
+      "n_dates": 45
+     }
+    }
+   }
+  },
+  "incremental": {
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=63": {
+    "diff_ann_%_gross": 0.31373,
+    "t_nw": 3.33481,
+    "p_two_sided": 0.00085,
+    "diff_ann_%_net25": 0.27333,
+    "diff_2022_23": 0.16751,
+    "diff_2024_26": 0.43071,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.00939
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=63": {
+    "diff_ann_%_gross": 0.48554,
+    "t_nw": 3.8298,
+    "p_two_sided": 0.00013,
+    "diff_ann_%_net25": 0.44525,
+    "diff_2022_23": 0.55335,
+    "diff_2024_26": 0.43129,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.00192
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=63": {
+    "diff_ann_%_gross": 0.33784,
+    "t_nw": 3.00912,
+    "p_two_sided": 0.00262,
+    "diff_ann_%_net25": 0.30881,
+    "diff_2022_23": 0.38164,
+    "diff_2024_26": 0.3028,
+    "n": 54,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.02096
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=63": {
+    "diff_ann_%_gross": 0.34221,
+    "t_nw": 3.40985,
+    "p_two_sided": 0.00065,
+    "diff_ann_%_net25": 0.29988,
+    "diff_2022_23": 0.25951,
+    "diff_2024_26": 0.40837,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 63,
+    "p_holm": 0.0078
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=63": {
+    "diff_ann_%_gross": 0.28209,
+    "t_nw": 1.79967,
+    "p_two_sided": 0.07191,
+    "diff_ann_%_net25": 0.22841,
+    "diff_2022_23": 0.3039,
+    "diff_2024_26": 0.26464,
+    "n": 54,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 63,
+    "p_holm": 0.21574
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=63": {
+    "diff_ann_%_gross": 0.04075,
+    "t_nw": 1.7083,
+    "p_two_sided": 0.08758,
+    "diff_ann_%_net25": 0.03327,
+    "diff_2022_23": 0.0052,
+    "diff_2024_26": 0.05259,
+    "n": 40,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 63,
+    "p_holm": 0.21574
+   },
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=126": {
+    "diff_ann_%_gross": 0.32651,
+    "t_nw": 2.78535,
+    "p_two_sided": 0.00535,
+    "diff_ann_%_net25": 0.3085,
+    "diff_2022_23": 0.12192,
+    "diff_2024_26": 0.50836,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.03743
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=126": {
+    "diff_ann_%_gross": 0.48499,
+    "t_nw": 4.26157,
+    "p_two_sided": 2e-05,
+    "diff_ann_%_net25": 0.46475,
+    "diff_2022_23": 0.50118,
+    "diff_2024_26": 0.4706,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.00035
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=126": {
+    "diff_ann_%_gross": 0.27154,
+    "t_nw": 3.61236,
+    "p_two_sided": 0.0003,
+    "diff_ann_%_net25": 0.25978,
+    "diff_2022_23": 0.17923,
+    "diff_2024_26": 0.3536,
+    "n": 51,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.00425
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=126": {
+    "diff_ann_%_gross": 0.43777,
+    "t_nw": 3.14763,
+    "p_two_sided": 0.00165,
+    "diff_ann_%_net25": 0.41299,
+    "diff_2022_23": 0.29549,
+    "diff_2024_26": 0.56425,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 126,
+    "p_holm": 0.01549
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=126": {
+    "diff_ann_%_gross": 0.45261,
+    "t_nw": 2.61903,
+    "p_two_sided": 0.00882,
+    "diff_ann_%_net25": 0.4219,
+    "diff_2022_23": 0.3321,
+    "diff_2024_26": 0.55972,
+    "n": 51,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 126,
+    "p_holm": 0.04409
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=126": {
+    "diff_ann_%_gross": 0.01852,
+    "t_nw": 0.70553,
+    "p_two_sided": 0.48048,
+    "diff_ann_%_net25": 0.01311,
+    "diff_2022_23": -0.01649,
+    "diff_2024_26": 0.03149,
+    "n": 37,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 126,
+    "p_holm": 0.48048
+   },
+   "P4 + excl. pior quintil ND/EBITDA vs P4 | H=252": {
+    "diff_ann_%_gross": 0.20751,
+    "t_nw": 4.19973,
+    "p_two_sided": 3e-05,
+    "diff_ann_%_net25": 0.20051,
+    "diff_2022_23": 0.14083,
+    "diff_2024_26": 0.28371,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil ND/EBITDA",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.00043
+   },
+   "P4 + excl. pior quintil cobertura vs P4 | H=252": {
+    "diff_ann_%_gross": 0.30199,
+    "t_nw": 2.7009,
+    "p_two_sided": 0.00692,
+    "diff_ann_%_net25": 0.29295,
+    "diff_2022_23": 0.43683,
+    "diff_2024_26": 0.1479,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil cobertura",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.04149
+   },
+   "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=252": {
+    "diff_ann_%_gross": 0.19384,
+    "t_nw": 4.9198,
+    "p_two_sided": 0.0,
+    "diff_ann_%_net25": 0.18697,
+    "diff_2022_23": 0.15107,
+    "diff_2024_26": 0.24273,
+    "n": 45,
+    "variant": "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 2e-05
+   },
+   "P4 + excl. pior quintil qualidade composta vs P4 | H=252": {
+    "diff_ann_%_gross": 0.25242,
+    "t_nw": 3.45147,
+    "p_two_sided": 0.00056,
+    "diff_ann_%_net25": 0.24237,
+    "diff_2022_23": 0.25457,
+    "diff_2024_26": 0.24996,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil qualidade composta",
+    "base": "P4",
+    "H": 252,
+    "p_holm": 0.00725
+   },
+   "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=252": {
+    "diff_ann_%_gross": 0.20282,
+    "t_nw": 2.39136,
+    "p_two_sided": 0.01679,
+    "diff_ann_%_net25": 0.19103,
+    "diff_2022_23": 0.24137,
+    "diff_2024_26": 0.15878,
+    "n": 45,
+    "variant": "P4 + excl. pior quintil qualidade, exclui não cobertos",
+    "base": "P4 só cobertos (controle)",
+    "H": 252,
+    "p_holm": 0.06714
+   },
+   "Score ER: carry - EL + convergência vs Score ER sem EL (ablação) | H=252": {
+    "diff_ann_%_gross": 0.04205,
+    "t_nw": 3.16543,
+    "p_two_sided": 0.00155,
+    "diff_ann_%_net25": 0.04084,
+    "diff_2022_23": 0.07847,
+    "diff_2024_26": 0.0247,
+    "n": 31,
+    "variant": "Score ER: carry - EL + convergência",
+    "base": "Score ER sem EL (ablação)",
+    "H": 252,
+    "p_holm": 0.01549
+   }
+  },
+  "portfolios": {
+   "63": {
+    "U  universo": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 735.90741,
+     "gross_ann_%": 1.2172,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.29013,
+     "book_cost_ann_%_50": 0.58025,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 131.7037,
+     "gross_ann_%": 2.44464,
+     "excess_vs_U_ann_%_gross": 1.22744,
+     "t_nw": 2.79251,
+     "t_nonoverlap": 2.95652,
+     "book_cost_ann_%_25": 0.54596,
+     "book_cost_ann_%_50": 1.09192,
+     "excess_vs_U_ann_%_net25": 0.97161,
+     "excess_vs_U_ann_%_net50": 0.71577,
+     "hit_rate_vs_U": 0.72222,
+     "excess_2022_23_ann_%": 1.61439,
+     "excess_2024_26_ann_%": 0.91788
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 104.11111,
+     "gross_ann_%": 2.75837,
+     "excess_vs_U_ann_%_gross": 1.54117,
+     "t_nw": 3.41975,
+     "t_nonoverlap": 3.23691,
+     "book_cost_ann_%_25": 0.58636,
+     "book_cost_ann_%_50": 1.17272,
+     "excess_vs_U_ann_%_net25": 1.24494,
+     "excess_vs_U_ann_%_net50": 0.9487,
+     "hit_rate_vs_U": 0.7037,
+     "excess_2022_23_ann_%": 1.7819,
+     "excess_2024_26_ann_%": 1.34859
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 104.59259,
+     "gross_ann_%": 2.93018,
+     "excess_vs_U_ann_%_gross": 1.71298,
+     "t_nw": 3.92427,
+     "t_nonoverlap": 3.88667,
+     "book_cost_ann_%_25": 0.58625,
+     "book_cost_ann_%_50": 1.1725,
+     "excess_vs_U_ann_%_net25": 1.41686,
+     "excess_vs_U_ann_%_net50": 1.12074,
+     "hit_rate_vs_U": 0.81481,
+     "excess_2022_23_ann_%": 2.16774,
+     "excess_2024_26_ann_%": 1.34918
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 113.74074,
+     "gross_ann_%": 2.78249,
+     "excess_vs_U_ann_%_gross": 1.56528,
+     "t_nw": 3.65997,
+     "t_nonoverlap": 3.50929,
+     "book_cost_ann_%_25": 0.57499,
+     "book_cost_ann_%_50": 1.14999,
+     "excess_vs_U_ann_%_net25": 1.28042,
+     "excess_vs_U_ann_%_net50": 0.99555,
+     "hit_rate_vs_U": 0.7963,
+     "excess_2022_23_ann_%": 1.99603,
+     "excess_2024_26_ann_%": 1.22068
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 106.7963,
+     "gross_ann_%": 2.78685,
+     "excess_vs_U_ann_%_gross": 1.56965,
+     "t_nw": 3.5363,
+     "t_nonoverlap": 3.3254,
+     "book_cost_ann_%_25": 0.58829,
+     "book_cost_ann_%_50": 1.17658,
+     "excess_vs_U_ann_%_net25": 1.27148,
+     "excess_vs_U_ann_%_net50": 0.97332,
+     "hit_rate_vs_U": 0.7963,
+     "excess_2022_23_ann_%": 1.8739,
+     "excess_2024_26_ann_%": 1.32625
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 68.68519,
+     "gross_ann_%": 2.0664,
+     "excess_vs_U_ann_%_gross": 0.84919,
+     "t_nw": 1.5023,
+     "t_nonoverlap": 0.82629,
+     "book_cost_ann_%_25": 0.58595,
+     "book_cost_ann_%_50": 1.1719,
+     "excess_vs_U_ann_%_net25": 0.55337,
+     "excess_vs_U_ann_%_net50": 0.25754,
+     "hit_rate_vs_U": 0.61111,
+     "excess_2022_23_ann_%": 1.68131,
+     "excess_2024_26_ann_%": 0.1835
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 54,
+     "first": "2022-01-03",
+     "avg_bonds": 93.59259,
+     "gross_ann_%": 1.78431,
+     "excess_vs_U_ann_%_gross": 0.5671,
+     "t_nw": 1.08039,
+     "t_nonoverlap": 0.8674,
+     "book_cost_ann_%_25": 0.53227,
+     "book_cost_ann_%_50": 1.06454,
+     "excess_vs_U_ann_%_net25": 0.32496,
+     "excess_vs_U_ann_%_net50": 0.08282,
+     "hit_rate_vs_U": 0.61111,
+     "excess_2022_23_ann_%": 1.37741,
+     "excess_2024_26_ann_%": -0.08114
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 40,
+     "first": "2023-03-01",
+     "avg_bonds": 164.675,
+     "gross_ann_%": 2.97692,
+     "excess_vs_U_ann_%_gross": 0.91173,
+     "t_nw": 2.54164,
+     "t_nonoverlap": 1.63758,
+     "book_cost_ann_%_25": 0.43544,
+     "book_cost_ann_%_50": 0.87088,
+     "excess_vs_U_ann_%_net25": 0.76641,
+     "excess_vs_U_ann_%_net50": 0.6211,
+     "hit_rate_vs_U": 0.725,
+     "excess_2022_23_ann_%": 1.6385,
+     "excess_2024_26_ann_%": 0.66947
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 40,
+     "first": "2023-03-01",
+     "avg_bonds": 164.675,
+     "gross_ann_%": 2.93617,
+     "excess_vs_U_ann_%_gross": 0.87099,
+     "t_nw": 2.36254,
+     "t_nonoverlap": 1.5097,
+     "book_cost_ann_%_25": 0.42797,
+     "book_cost_ann_%_50": 0.85594,
+     "excess_vs_U_ann_%_net25": 0.73314,
+     "excess_vs_U_ann_%_net50": 0.59529,
+     "hit_rate_vs_U": 0.725,
+     "excess_2022_23_ann_%": 1.6333,
+     "excess_2024_26_ann_%": 0.61688
+    }
+   },
+   "126": {
+    "U  universo": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 715.13725,
+     "gross_ann_%": 0.8187,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.18604,
+     "book_cost_ann_%_50": 0.37209,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 130.29412,
+     "gross_ann_%": 1.91735,
+     "excess_vs_U_ann_%_gross": 1.09865,
+     "t_nw": 2.5895,
+     "t_nonoverlap": 1.316,
+     "book_cost_ann_%_25": 0.30496,
+     "book_cost_ann_%_50": 0.60991,
+     "excess_vs_U_ann_%_net25": 0.97973,
+     "excess_vs_U_ann_%_net50": 0.86082,
+     "hit_rate_vs_U": 0.78431,
+     "excess_2022_23_ann_%": 1.63834,
+     "excess_2024_26_ann_%": 0.61892
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 102.70588,
+     "gross_ann_%": 2.24386,
+     "excess_vs_U_ann_%_gross": 1.42515,
+     "t_nw": 3.50834,
+     "t_nonoverlap": 1.8725,
+     "book_cost_ann_%_25": 0.32297,
+     "book_cost_ann_%_50": 0.64593,
+     "excess_vs_U_ann_%_net25": 1.28823,
+     "excess_vs_U_ann_%_net50": 1.15131,
+     "hit_rate_vs_U": 0.86275,
+     "excess_2022_23_ann_%": 1.76027,
+     "excess_2024_26_ann_%": 1.12728
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 103.19608,
+     "gross_ann_%": 2.40234,
+     "excess_vs_U_ann_%_gross": 1.58363,
+     "t_nw": 3.85057,
+     "t_nonoverlap": 1.92491,
+     "book_cost_ann_%_25": 0.32519,
+     "book_cost_ann_%_50": 0.65039,
+     "excess_vs_U_ann_%_net25": 1.44448,
+     "excess_vs_U_ann_%_net50": 1.30533,
+     "hit_rate_vs_U": 0.88235,
+     "excess_2022_23_ann_%": 2.13952,
+     "excess_2024_26_ann_%": 1.08951
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 112.21569,
+     "gross_ann_%": 2.18889,
+     "excess_vs_U_ann_%_gross": 1.37019,
+     "t_nw": 3.477,
+     "t_nonoverlap": 1.86095,
+     "book_cost_ann_%_25": 0.31672,
+     "book_cost_ann_%_50": 0.63344,
+     "excess_vs_U_ann_%_net25": 1.23951,
+     "excess_vs_U_ann_%_net50": 1.10884,
+     "hit_rate_vs_U": 0.88235,
+     "excess_2022_23_ann_%": 1.81757,
+     "excess_2024_26_ann_%": 0.97252
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 105.2549,
+     "gross_ann_%": 2.35512,
+     "excess_vs_U_ann_%_gross": 1.53642,
+     "t_nw": 3.96492,
+     "t_nonoverlap": 2.36536,
+     "book_cost_ann_%_25": 0.32974,
+     "book_cost_ann_%_50": 0.65948,
+     "excess_vs_U_ann_%_net25": 1.39272,
+     "excess_vs_U_ann_%_net50": 1.24902,
+     "hit_rate_vs_U": 0.88235,
+     "excess_2022_23_ann_%": 1.93383,
+     "excess_2024_26_ann_%": 1.18316
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 68.60784,
+     "gross_ann_%": 1.78991,
+     "excess_vs_U_ann_%_gross": 0.97121,
+     "t_nw": 2.15526,
+     "t_nonoverlap": 1.09574,
+     "book_cost_ann_%_25": 0.3294,
+     "book_cost_ann_%_50": 0.65879,
+     "excess_vs_U_ann_%_net25": 0.82786,
+     "excess_vs_U_ann_%_net50": 0.6845,
+     "hit_rate_vs_U": 0.70588,
+     "excess_2022_23_ann_%": 1.69254,
+     "excess_2024_26_ann_%": 0.33003
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 51,
+     "first": "2022-01-03",
+     "avg_bonds": 93.64706,
+     "gross_ann_%": 1.33731,
+     "excess_vs_U_ann_%_gross": 0.51861,
+     "t_nw": 1.03728,
+     "t_nonoverlap": 0.31116,
+     "book_cost_ann_%_25": 0.29869,
+     "book_cost_ann_%_50": 0.59739,
+     "excess_vs_U_ann_%_net25": 0.40596,
+     "excess_vs_U_ann_%_net50": 0.2933,
+     "hit_rate_vs_U": 0.58824,
+     "excess_2022_23_ann_%": 1.36044,
+     "excess_2024_26_ann_%": -0.22969
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 37,
+     "first": "2023-03-01",
+     "avg_bonds": 160.35135,
+     "gross_ann_%": 2.44356,
+     "excess_vs_U_ann_%_gross": 0.62601,
+     "t_nw": 1.59944,
+     "t_nonoverlap": 1.21235,
+     "book_cost_ann_%_25": 0.25817,
+     "book_cost_ann_%_50": 0.51633,
+     "excess_vs_U_ann_%_net25": 0.55388,
+     "excess_vs_U_ann_%_net50": 0.48176,
+     "hit_rate_vs_U": 0.64865,
+     "excess_2022_23_ann_%": 1.72641,
+     "excess_2024_26_ann_%": 0.21845
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 37,
+     "first": "2023-03-01",
+     "avg_bonds": 160.35135,
+     "gross_ann_%": 2.42504,
+     "excess_vs_U_ann_%_gross": 0.60749,
+     "t_nw": 1.51505,
+     "t_nonoverlap": 1.16112,
+     "book_cost_ann_%_25": 0.25276,
+     "book_cost_ann_%_50": 0.50552,
+     "excess_vs_U_ann_%_net25": 0.54077,
+     "excess_vs_U_ann_%_net50": 0.47406,
+     "hit_rate_vs_U": 0.62162,
+     "excess_2022_23_ann_%": 1.7429,
+     "excess_2024_26_ann_%": 0.18696
+    }
+   },
+   "252": {
+    "U  universo": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 676.42222,
+     "gross_ann_%": 0.9952,
+     "excess_vs_U_ann_%_gross": 0.0,
+     "t_nw": null,
+     "t_nonoverlap": null,
+     "book_cost_ann_%_25": 0.12114,
+     "book_cost_ann_%_50": 0.24229,
+     "excess_vs_U_ann_%_net25": 0.0,
+     "excess_vs_U_ann_%_net50": 0.0,
+     "hit_rate_vs_U": 0.0,
+     "excess_2022_23_ann_%": 0.0,
+     "excess_2024_26_ann_%": 0.0
+    },
+    "P4": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 127.62222,
+     "gross_ann_%": 2.06158,
+     "excess_vs_U_ann_%_gross": 1.06638,
+     "t_nw": 2.42656,
+     "t_nonoverlap": 2.31276,
+     "book_cost_ann_%_25": 0.16595,
+     "book_cost_ann_%_50": 0.33189,
+     "excess_vs_U_ann_%_net25": 1.02158,
+     "excess_vs_U_ann_%_net50": 0.97678,
+     "hit_rate_vs_U": 0.8,
+     "excess_2022_23_ann_%": 1.56353,
+     "excess_2024_26_ann_%": 0.49821
+    },
+    "P4 + excl. pior quintil ND/EBITDA": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 99.44444,
+     "gross_ann_%": 2.26909,
+     "excess_vs_U_ann_%_gross": 1.27389,
+     "t_nw": 3.21116,
+     "t_nonoverlap": 2.14537,
+     "book_cost_ann_%_25": 0.17294,
+     "book_cost_ann_%_50": 0.34589,
+     "excess_vs_U_ann_%_net25": 1.22209,
+     "excess_vs_U_ann_%_net50": 1.17029,
+     "hit_rate_vs_U": 0.91111,
+     "excess_2022_23_ann_%": 1.70436,
+     "excess_2024_26_ann_%": 0.78192
+    },
+    "P4 + excl. pior quintil cobertura": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 99.95556,
+     "gross_ann_%": 2.36358,
+     "excess_vs_U_ann_%_gross": 1.36838,
+     "t_nw": 3.0471,
+     "t_nonoverlap": 4.49409,
+     "book_cost_ann_%_25": 0.17499,
+     "book_cost_ann_%_50": 0.34999,
+     "excess_vs_U_ann_%_net25": 1.31453,
+     "excess_vs_U_ann_%_net50": 1.26068,
+     "hit_rate_vs_U": 0.88889,
+     "excess_2022_23_ann_%": 2.00036,
+     "excess_2024_26_ann_%": 0.64611
+    },
+    "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t)": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 108.84444,
+     "gross_ann_%": 2.25542,
+     "excess_vs_U_ann_%_gross": 1.26022,
+     "t_nw": 3.06441,
+     "t_nonoverlap": 2.38245,
+     "book_cost_ann_%_25": 0.17282,
+     "book_cost_ann_%_50": 0.34564,
+     "excess_vs_U_ann_%_net25": 1.20855,
+     "excess_vs_U_ann_%_net50": 1.15687,
+     "hit_rate_vs_U": 0.86667,
+     "excess_2022_23_ann_%": 1.7146,
+     "excess_2024_26_ann_%": 0.74094
+    },
+    "P4 + excl. pior quintil qualidade composta": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 102.31111,
+     "gross_ann_%": 2.314,
+     "excess_vs_U_ann_%_gross": 1.3188,
+     "t_nw": 3.3524,
+     "t_nonoverlap": 2.74468,
+     "book_cost_ann_%_25": 0.17599,
+     "book_cost_ann_%_50": 0.35199,
+     "excess_vs_U_ann_%_net25": 1.26395,
+     "excess_vs_U_ann_%_net50": 1.2091,
+     "hit_rate_vs_U": 0.91111,
+     "excess_2022_23_ann_%": 1.8181,
+     "excess_2024_26_ann_%": 0.74816
+    },
+    "P4 + excl. pior quintil qualidade, exclui não cobertos": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 68.0,
+     "gross_ann_%": 1.84188,
+     "excess_vs_U_ann_%_gross": 0.84668,
+     "t_nw": 1.91497,
+     "t_nonoverlap": 0.67146,
+     "book_cost_ann_%_25": 0.17636,
+     "book_cost_ann_%_50": 0.35273,
+     "excess_vs_U_ann_%_net25": 0.79146,
+     "excess_vs_U_ann_%_net50": 0.73624,
+     "hit_rate_vs_U": 0.75556,
+     "excess_2022_23_ann_%": 1.42739,
+     "excess_2024_26_ann_%": 0.18301
+    },
+    "P4 só cobertos (controle)": {
+     "n_cohorts": 45,
+     "first": "2022-01-03",
+     "avg_bonds": 93.31111,
+     "gross_ann_%": 1.63905,
+     "excess_vs_U_ann_%_gross": 0.64385,
+     "t_nw": 1.33594,
+     "t_nonoverlap": 0.72591,
+     "book_cost_ann_%_25": 0.16457,
+     "book_cost_ann_%_50": 0.32914,
+     "excess_vs_U_ann_%_net25": 0.60043,
+     "excess_vs_U_ann_%_net50": 0.557,
+     "hit_rate_vs_U": 0.71111,
+     "excess_2022_23_ann_%": 1.18602,
+     "excess_2024_26_ann_%": 0.02423
+    },
+    "Score ER: carry - EL + convergência": {
+     "n_cohorts": 31,
+     "first": "2023-03-01",
+     "avg_bonds": 152.41935,
+     "gross_ann_%": 2.85402,
+     "excess_vs_U_ann_%_gross": 0.73496,
+     "t_nw": 1.75104,
+     "t_nonoverlap": 1.62509,
+     "book_cost_ann_%_25": 0.14623,
+     "book_cost_ann_%_50": 0.29246,
+     "excess_vs_U_ann_%_net25": 0.70988,
+     "excess_vs_U_ann_%_net50": 0.68479,
+     "hit_rate_vs_U": 0.74194,
+     "excess_2022_23_ann_%": 1.60636,
+     "excess_2024_26_ann_%": 0.32001
+    },
+    "Score ER sem EL (ablação)": {
+     "n_cohorts": 31,
+     "first": "2023-03-01",
+     "avg_bonds": 152.41935,
+     "gross_ann_%": 2.81198,
+     "excess_vs_U_ann_%_gross": 0.69291,
+     "t_nw": 1.69174,
+     "t_nonoverlap": 1.60402,
+     "book_cost_ann_%_25": 0.14502,
+     "book_cost_ann_%_50": 0.29004,
+     "excess_vs_U_ann_%_net25": 0.66904,
+     "excess_vs_U_ann_%_net50": 0.64516,
+     "hit_rate_vs_U": 0.74194,
+     "excess_2022_23_ann_%": 1.52788,
+     "excess_2024_26_ann_%": 0.29531
+    }
+   }
+  }
+ },
+ "check_unpatched_ret_excess_vs_U_ann_%": {
+  "P4 | H=63": 1.02521,
+  "P4 + excl. pior quintil qualidade composta | H=63": 1.24286,
+  "P4 | H=126": 0.9094,
+  "P4 + excl. pior quintil qualidade composta | H=126": 1.2193,
+  "P4 | H=252": 0.71217,
+  "P4 + excl. pior quintil qualidade composta | H=252": 0.9398
+ },
+ "placebo": {
+  "P4 + excl. alavancagem subindo (top quintil dND/EBITDA 4t) vs P4 | H=252": {
+   "actual_diff_ann_%": 0.19193,
+   "null_mean": 0.07441,
+   "null_p95": 0.13184,
+   "actual_minus_null_mean": 0.11752,
+   "p_value_one_sided": 0.0,
+   "n_perm": 100
+  },
+  "P4 + excl. pior quintil qualidade composta vs P4 | H=63": {
+   "actual_diff_ann_%": 0.38408,
+   "null_mean": 0.11737,
+   "null_p95": 0.23843,
+   "actual_minus_null_mean": 0.26671,
+   "p_value_one_sided": 0.0,
+   "n_perm": 100
+  },
+  "P4 + excl. pior quintil qualidade composta vs P4 | H=126": {
+   "actual_diff_ann_%": 0.44429,
+   "null_mean": 0.10621,
+   "null_p95": 0.18614,
+   "actual_minus_null_mean": 0.33808,
+   "p_value_one_sided": 0.0,
+   "n_perm": 100
+  },
+  "P4 + excl. pior quintil qualidade, exclui não cobertos vs P4 só cobertos (controle) | H=126": {
+   "actual_diff_ann_%": 0.4424,
+   "null_mean": 0.00552,
+   "null_p95": 0.15377,
+   "actual_minus_null_mean": 0.43689,
+   "p_value_one_sided": 0.0,
+   "n_perm": 100
+  },
+  "P4 + excl. pior quintil qualidade composta vs P4 | H=252": {
+   "actual_diff_ann_%": 0.23783,
+   "null_mean": 0.08483,
+   "null_p95": 0.14567,
+   "actual_minus_null_mean": 0.153,
+   "p_value_one_sided": 0.0,
+   "n_perm": 100
+  }
+ },
+ "equity_6m_final_cum_excess_%": {
+  "P4": 2.56048,
+  "P4 + excl. pior quintil qualidade composta": 3.50805,
+  "Score ER: carry - EL + convergência": 5.05712,
+  "Score ER sem EL (ablação)": 5.08075,
+  "Ridge carry+RV (sem fund.)": -0.48054,
+  "Ridge carry+RV+fund.": -0.51229,
+  "GBM carry+RV (sem fund.)": 0.676,
+  "GBM carry+RV+fund.": 0.96632
+ }
+}
