@@ -1,6 +1,7 @@
 """Local dashboard (FastAPI + Jinja2). Binds to 127.0.0.1 by default."""
 from __future__ import annotations
 
+import hmac
 import json
 import math
 import threading
@@ -51,9 +52,49 @@ async def lifespan(app: FastAPI):
         sched.shutdown(wait=False)
 
 
+EDIT_COOKIE = "rfm_edit_key"
+
+
 def create_app(scheduler: bool = True) -> FastAPI:
     app = FastAPI(title="Renda Fixa Monitor", lifespan=lifespan)
     app.state.scheduler = scheduler
+
+    @app.middleware("http")
+    async def edit_guard(request: Request, call_next):
+        """Viewing is open to anyone. When ADMIN_KEY is set (public hosting), actions that change data
+        (add/remove assets, positions, manual prices, manual refresh) need the edit key once per browser."""
+        key = settings.admin_key
+        given = request.cookies.get(EDIT_COOKIE) or request.headers.get("x-edit-key")
+        request.state.can_edit = (not key) or (given is not None and hmac.compare_digest(given, key))
+        request.state.locked = bool(key)
+        if request.method not in ("GET", "HEAD", "OPTIONS") and not request.state.can_edit \
+                and request.url.path not in ("/unlock",):
+            return RedirectResponse(f"/unlock?next={request.headers.get('referer', '/')}", status_code=303)
+        return await call_next(request)
+
+    @app.get("/healthz")
+    def healthz():
+        return {"ok": True}
+
+    @app.get("/unlock", response_class=HTMLResponse)
+    def unlock_page(request: Request, next: str = "/", error: str = ""):
+        return templates.TemplateResponse(request, "unlock.html", {"tab": "", "next": next, "error": error})
+
+    @app.post("/unlock")
+    def unlock(request: Request, key: str = Form(...), next: str = Form("/")):
+        dest = next if next.startswith("/") or next.startswith(str(request.base_url)) else "/"
+        if not settings.admin_key or not hmac.compare_digest(key.strip(), settings.admin_key):
+            return RedirectResponse(f"/unlock?error=1&next={dest}", status_code=303)
+        resp = RedirectResponse(dest, status_code=303)
+        resp.set_cookie(EDIT_COOKIE, key.strip(), max_age=365 * 86400, httponly=True, samesite="lax",
+                        secure=request.url.scheme == "https")
+        return resp
+
+    @app.get("/lock")
+    def lock():
+        resp = RedirectResponse("/", status_code=303)
+        resp.delete_cookie(EDIT_COOKIE)
+        return resp
 
     def row(entry: dict) -> dict:
         code = isin_mod.normalize(entry["isin"])

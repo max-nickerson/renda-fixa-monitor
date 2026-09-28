@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Modo edição · Renda Fixa Monitor{% endblock %}
+{% block body %}
+<div class="card" style="max-width:520px">
+  <h2>Ativar modo edição</h2>
+  <p class="small muted">Ver o dashboard é livre. Para adicionar ou remover ativos, informar posições, inserir preços ou
+    forçar atualização, digite a chave de edição (variável <code>ADMIN_KEY</code> configurada no servidor).
+    Ela fica salva neste navegador.</p>
+  {% if error %}<p class="small" style="color:var(--down)">Chave incorreta.</p>{% endif %}
+  <form class="inline" method="post" action="/unlock">
+    <input type="password" name="key" id="key" placeholder="chave de edição" required autofocus>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button>Ativar</button>
+  </form>
+</div>
+{% endblock %}

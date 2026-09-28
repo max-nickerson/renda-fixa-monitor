@@ -1,0 +1,43 @@
+# Render Blueprint — one-click deploy of the full dashboard (Docker web service + persistent disk).
+# Deploy: https://render.com/deploy?repo=https://github.com/max-nickerson/renda-fixa-monitor
+services:
+  - type: web
+    name: renda-fixa-monitor
+    runtime: docker
+    plan: starter            # always on; a persistent disk needs a paid plan (Starter ≈ US$7/month)
+    region: virginia
+    healthCheckPath: /healthz
+    autoDeploy: true         # redeploys on every push to main
+    disk:
+      name: data
+      mountPath: /var/data   # database, watchlist, cached files and research history survive redeploys
+      sizeGB: 5
+    envVars:
+      - key: BRAPI_TOKEN      # required — brapi.dev token
+        sync: false
+      - key: ADMIN_KEY        # edit key: viewing is open, changes (add ISIN, positions…) need it once per browser
+        sync: false
+      - key: ANBIMA_CLIENT_ID
+        sync: false
+      - key: ANBIMA_CLIENT_SECRET
+        sync: false
+      - key: ANBIMA_ENV
+        value: production
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: ALERT_EMAIL_TO
+        sync: false
+      - key: COLLECT_EVERY_MINUTES
+        value: "15"
+      - key: QUOTES_EVERY_SECONDS
+        value: "60"
+      - key: BOOTSTRAP_HISTORY  # first boot downloads SND/B3/IDA history in the background (~30–60 min)
+        value: "true"
+      - key: ENABLE_ML_SELECTION # the monthly ML ranking needs ~1–2 GB RAM; set "true" on a Standard plan
+        value: "false"

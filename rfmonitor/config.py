@@ -61,6 +61,12 @@ class Settings:
     port: int = field(default_factory=lambda: int(_env("PORT", "8000")))
     collect_every_minutes: int = field(default_factory=lambda: int(_env("COLLECT_EVERY_MINUTES", "15")))
     quotes_every_seconds: int = field(default_factory=lambda: int(_env("QUOTES_EVERY_SECONDS", "60")))
+    # Public hosting: viewing is open; changes need this key (empty = everything open, e.g. local use).
+    admin_key: str = field(default_factory=lambda: _env("ADMIN_KEY"))
+    # Bond-selection ML model needs the SND/B3 history (~1 GB, more RAM). P4, regime and alerts don't.
+    enable_ml_selection: bool = field(default_factory=lambda: _env("ENABLE_ML_SELECTION", "true").lower() == "true")
+    # First boot on a server: download the research history in the background if it isn't there yet.
+    bootstrap_history: bool = field(default_factory=lambda: _env("BOOTSTRAP_HISTORY", "false").lower() == "true")
     backfill_days: int = field(default_factory=lambda: int(_env("BACKFILL_DAYS", "180")))
 
     @property

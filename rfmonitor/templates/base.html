@@ -44,6 +44,8 @@ canvas{max-height:260px}
   <a href="/alerts" class="{{ 'active' if tab == 'alerts' }}">Alertas</a>
   <a href="/research" class="{{ 'active' if tab == 'research' }}">Pesquisa</a>
   <a href="/docs">API</a>
+  {% if request.state.locked %}{% if request.state.can_edit %}<a href="/lock" title="Sair do modo edição">✏️ edição ativa</a>
+  {% else %}<a href="/unlock?next={{ request.url.path }}" title="Ver é livre; editar precisa da chave">🔒 somente leitura</a>{% endif %}{% endif %}
 </nav></header>
 <main>{% block body %}{% endblock %}</main>
 </body>

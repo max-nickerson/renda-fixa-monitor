@@ -64,6 +64,24 @@ CLI: `python -m rfmonitor screener --top 20`.
 
 ---
 
+## Put it online (Render, one click)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/max-nickerson/renda-fixa-monitor)
+
+1. Click the button (create a free Render account with your GitHub login when asked).
+2. Render reads `render.yaml`: a Docker web service on the **Starter** plan (always on, ≈ US$7/month) with a
+   5 GB persistent disk for the database, watchlist and history.
+3. Fill in the secrets it asks for: **`BRAPI_TOKEN`** (required), **`ADMIN_KEY`** (any password-like string —
+   your edit key), and optionally ANBIMA and SMTP.
+4. **Apply**. After the build you get `https://renda-fixa-monitor-xxxx.onrender.com`.
+
+- **Viewing is open to anyone with the URL** (no login). Adding/removing ISINs, positions, manual prices and
+  "Atualizar agora" ask for the `ADMIN_KEY` once per browser (🔒 in the menu).
+- First boot downloads the research history in the background (~30–60 min); the dashboard works meanwhile.
+- The monthly ML ranking column is off on Starter (`ENABLE_ML_SELECTION=false`, it needs ~1–2 GB RAM); P4,
+  regime, alerts and everything else run. Switch to a Standard plan and set it to `true` to enable it.
+- Every `git push` to `main` redeploys automatically.
+
 ## Quick start (any machine with Python 3.10+)
 
 ```bash

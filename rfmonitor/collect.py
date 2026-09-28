@@ -196,11 +196,17 @@ def _debenture_rows(info: dict, mkt: Market, rows: pd.DataFrame) -> list[tuple]:
     return out
 
 
+def history_ready() -> bool:
+    """Research history (SND trades + B3 curves) downloaded? (`python -m rfmonitor history`)"""
+    b3 = history.HIST / "b3"
+    return b3.exists() and sum(1 for _ in b3.glob("*.csv")) >= 500 and any(history.HIST.glob("snd_trades_*.csv.gz"))
+
+
 def seed_trade_history(info: dict) -> int:
     """Years of CDI+ spread history from SND trades (implied from PU vs par curve), stored as
     `cdi_spread_bps` (source 'snd_trades') on dates that ANBIMA doesn't cover. Runs once per asset."""
     code = (info.get("cetip_code") or "").strip()
-    if not code or info.get("trade_history_seeded"):
+    if not code or info.get("trade_history_seeded") or not history_ready():
         return 0
     try:
         from .ml.selection import build_panel

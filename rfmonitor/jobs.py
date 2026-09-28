@@ -10,7 +10,7 @@ import threading
 
 from . import alerts, db, isin as isin_mod, screener
 from .ml import live
-from .collect import collect_all, refresh_quotes
+from .collect import collect_all, history_ready, refresh_quotes
 from .config import load_watchlist, settings
 
 log = logging.getLogger(__name__)
@@ -43,7 +43,8 @@ def run_cycle(backfill_days: int | None = None) -> dict:
         emailed = alerts.send_pending_email()
         log.info("cycle: %d assets, %d alerts, %d e-mailed", len(results), len(fired), emailed)
         live.regime()            # credit-timing model, recomputed once a day
-        live.selection()         # bond-selection model (SND trades), retrained once a day
+        if settings.enable_ml_selection and history_ready():
+            live.selection()     # bond-selection model (SND trades), retrained once a day
         res = screener.ensure_fresh()  # re-rank the universe when ANBIMA publishes a new day
         # Negative-press check (P4) for C3 candidates + holdings, once a day; re-rank to apply it.
         if res and "rows" in res:
@@ -78,6 +79,27 @@ def run_quick() -> dict:
         _lock.release()
 
 
+def bootstrap_history() -> None:
+    """First boot on a server: download SND trades / B3 curves / IDA (≈30–60 min, throttled) so trade-based
+    spread history and the selection model work. The dashboard is usable meanwhile."""
+    import runpy
+    import sys
+    from .config import ROOT
+    log.info("bootstrap: downloading research history in the background")
+    try:
+        sys.argv = ["download_history.py", "2021"]
+        runpy.run_path(str(ROOT / "research" / "download_history.py"), run_name="__main__")
+    except SystemExit:
+        pass
+    except Exception:
+        log.exception("bootstrap history failed")
+        return
+    log.info("bootstrap: history ready")
+    if settings.enable_ml_selection:
+        live.selection(refresh=True)
+    run_cycle()
+
+
 def start_scheduler():
     from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -88,4 +110,6 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.start()
     threading.Thread(target=run_cycle, daemon=True).start()  # first run right away
+    if settings.bootstrap_history and not history_ready():
+        threading.Thread(target=bootstrap_history, daemon=True).start()
     return sched
