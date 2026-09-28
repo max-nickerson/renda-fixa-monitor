@@ -13,7 +13,7 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import db, portfolio
+from . import db, lookup, portfolio
 from .config import DATA_DIR, ROOT
 from .ml import live
 
@@ -98,8 +98,15 @@ def build_payload() -> dict:
             "strategy", "press_neg_30d", "press_titles", "model_pct", "ml_pred_bps", "flags", "incentivada",
             "pct_pu_par", "group"]
     opp = [{k: _clean(r.get(k)) for k in keep} for r in scr["rows"]]
+    try:
+        reg = lookup.registry().set_index("codigo")
+        tk, direct = reg["ticker"].dropna().to_dict(), reg["direct"].fillna(False).to_dict()
+    except Exception:
+        tk, direct = {}, {}
     for r in opp:
         r["nome"] = (r["nome"] or "").replace(" (*)", "").replace(" (**)", "").strip()
+        r["tk"] = tk.get(r["codigo"])
+        r["tkd"] = bool(direct.get(r["codigo"])) if r["tk"] else None
 
     def load(name):
         p = ROOT / "research" / "out" / name

@@ -203,6 +203,29 @@ def create_app(scheduler: bool = True) -> FastAPI:
             return RedirectResponse(f"/screener?added={code}", status_code=303)
         return RedirectResponse(f"/asset/{code}", status_code=303)
 
+    @app.post("/add_bulk")
+    def add_bulk(items: str = Form(...)):
+        from .lookup import resolve_tokens
+        found, missing = resolve_tokens(items)
+        wl = load_watchlist()
+        have = {isin_mod.normalize(e["isin"]) for e in wl}
+        new = [c for c in found if c not in have]
+        for code in new:
+            wl.append({"isin": code})
+        if new:
+            save_watchlist(wl)
+
+            def work():
+                for code in new:
+                    try:
+                        resolve(code, {"isin": code}, refresh=True)
+                    except Exception:
+                        pass
+                jobs.run_cycle()
+            threading.Thread(target=work, daemon=True).start()
+        q = f"added={len(new)}" + (f"&missing={','.join(missing)[:300]}" if missing else "")
+        return RedirectResponse(f"/?{q}", status_code=303)
+
     @app.post("/remove/{isin}")
     def remove(isin: str):
         save_watchlist([e for e in load_watchlist() if isin_mod.normalize(e["isin"]) != isin])

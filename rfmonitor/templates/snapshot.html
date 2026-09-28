@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Monitor de Renda Fixa</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,6 +34,9 @@ nav{display:flex;gap:4px;margin-block:14px 18px;flex-wrap:wrap}
 nav button{font:500 13.5px var(--sans);border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:8px;cursor:pointer}
 nav button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 nav button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:500 13.5px var(--sans);border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:7px 14px;border-radius:8px;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 section{display:grid;gap:18px}
 [hidden]{display:none!important}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
@@ -175,6 +179,18 @@ function assetRows(rows, withPos) {
 const head = pos => `<tr><th>Ativo</th><th class="n">Duration</th><th class="n">Spread</th><th class="n">Δ 1d / 5d / 20d</th><th>Faixa histórica</th><th>Histórico</th><th class="n">Justo</th><th class="n">Preço → justo</th><th>Veredito</th><th${pos ? ' class="n">Valor' : ">Ação emissor"}</th><th>Ação</th></tr>`;
 const S = D.summary || {};
 $("carteira").innerHTML = `
+  <div class="panel" id="mylist">
+    <h2>Minha lista</h2>
+    <p class="note" style="margin-top:0">Cole uma coluna do Excel com <b>ISIN</b>, <b>código do ativo</b> (ex.: EQTL13) ou <b>ticker da bolsa</b> (ex.: RENT3, que adiciona as debêntures precificadas da própria empresa; se ela não tiver, as das controladas). Fica salvo <b>só neste navegador</b>; nada é enviado.</p>
+    <textarea id="ml_in" rows="4" style="width:100%;max-width:560px;font:inherit;padding:8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:inherit" placeholder="BRMEALDBS043&#10;EQTL13&#10;RENT3"></textarea>
+    <div class="filters" style="margin-top:8px">
+      <button id="ml_add" class="btn">Adicionar</button>
+      <button id="ml_copy" class="btn ghost">Copiar códigos</button>
+      <button id="ml_clear" class="btn ghost">Limpar lista</button>
+      <span class="mut" id="ml_msg" role="status"></span>
+    </div>
+    <div id="ml_out"></div>
+  </div>
   ${D.held.length ? `<div class="kpis">
     <div class="panel kpi"><div class="l">Valor de mercado</div><div class="v">R$ ${num(S.mv)}</div></div>
     <div class="panel kpi"><div class="l">Duration média</div><div class="v">${num(S.duration, 2)}</div></div>
@@ -186,6 +202,78 @@ $("carteira").innerHTML = `
   <div class="panel"><h2>Monitorados</h2><div class="scroll"><table>${head(false)}${assetRows(D.watched, false)}</table></div>
     <p class="note">Spread em CDI+ equivalente (DI+, %DI, Pré e IPCA+ na mesma régua; eurobonds vs Treasuries). Faixa histórica: onde o spread está no próprio histórico desde 2021 (verde = spread baixo, preço alto; vermelho = spread alto, preço baixo). Justo: curva de pares do mesmo indexador e tratamento tributário. Preço justo: preço se o spread convergir ao justo.</p></div>
   <div class="panel"><h2>Alertas recentes</h2><table>${(D.alerts || []).map(a => `<tr><td class="mut" style="width:130px">${esc(a.ts)}</td><td class="${a.high ? "down" : ""}">${esc(a.msg)}</td></tr>`).join("") || '<tr><td class="mut">Sem alertas.</td></tr>'}</table></div>`;
+
+// minha lista (localStorage only)
+const ML_KEY = "rfm_mylist";
+const byCode = new Map(D.opp.map(r => [r.codigo, r]));
+const byIsin = new Map(D.opp.filter(r => r.isin).map(r => [r.isin, r]));
+const mlLoad = () => { try { return JSON.parse(localStorage.getItem(ML_KEY)) || {codes: [], missing: []}; } catch (e) { return {codes: [], missing: []}; } };
+let ML = mlLoad();
+const mlSave = () => { try { localStorage.setItem(ML_KEY, JSON.stringify(ML)); } catch (e) {} };
+function mlResolve(text) {
+  const skip = new Set(["ISIN", "CODIGO", "CÓDIGO", "TICKER", "ATIVO"]);
+  const toks = [...new Set(text.toUpperCase().split(/[\s;,|]+/).map(t => t.replace(/^["']|["']$/g, "")).filter(t => t && !skip.has(t)))];
+  const codes = [], missing = [];
+  for (const t of toks) {
+    if (byCode.has(t)) { codes.push(t); continue; }
+    if (byIsin.has(t)) { codes.push(byIsin.get(t).codigo); continue; }
+    if (/^[A-Z]{4}(3|4|5|6|11)$/.test(t)) {  // B3 share classes / units, not debenture codes like EQTL13
+      const grp = D.opp.filter(r => (r.tk || "").slice(0, 4) === t.slice(0, 4));
+      let hit = grp.filter(r => r.tkd);  // the listed company's own bonds; else its subsidiaries'
+      if (!hit.length) hit = grp;
+      if (hit.length) { hit.forEach(r => codes.push(r.codigo)); continue; }
+    }
+    missing.push(t);
+  }
+  return {codes, missing};
+}
+function mlRender() {
+  const rows = ML.codes.map(c => byCode.get(c)).filter(Boolean);
+  const buy = rows.filter(r => (r.strategy || "").startsWith("C3 · comprar")).length, sell = rows.filter(r => (r.strategy || "").startsWith("VENDER")).length;
+  const avg = k => rows.length ? rows.reduce((a, r) => a + (r[k] ?? 0), 0) / rows.length : null;
+  $("ml_out").innerHTML = !rows.length && !ML.missing.length ? "" : `
+    ${rows.length ? `<div class="kpis" style="margin:12px 0">
+      <div class="panel kpi"><div class="l">Títulos</div><div class="v">${rows.length}</div></div>
+      <div class="panel kpi"><div class="l">Duration média</div><div class="v">${num(avg("duration"), 2)}</div></div>
+      <div class="panel kpi"><div class="l">CDI+ médio</div><div class="v">${num(avg("spread_bps"))} bps</div></div>
+      <div class="panel kpi"><div class="l">vs justo médio</div><div class="v">${sgn(avg("resid_bps"))} bps</div></div>
+      <div class="panel kpi"><div class="l">P4 hoje</div><div class="v"><span class="up">${buy} comprar</span> · <span class="down">${sell} vender</span></div></div>
+    </div>
+    <div class="scroll"><table><tr><th class="n">#</th><th>Ativo</th><th>Indexador · taxa</th><th class="n">Duration</th><th class="n">CDI+</th><th class="n">Justo</th><th class="n">vs justo</th><th class="n">Δ5d</th><th class="n">PU → justo</th><th>Estratégia</th><th></th></tr>
+      ${rows.map(r => `<tr>
+        <td class="n">${r.rank ?? "—"}</td>
+        <td><div class="nm">${esc(r.codigo)} <span class="mut">${esc(r.isin || "")}${r.tk ? " · " + esc(r.tk) : ""}</span></div><div class="mut">${esc(r.nome)} · venc. ${esc(r.vencimento)}</div>
+          ${(r.flags || []).length ? `<div class="mut w">${esc(r.flags.join(" · ").slice(0, 110))}</div>` : ""}</td>
+        <td class="mut">${esc(r.indice)} · ${num(r.taxa_indicativa, 2)}${r.group === "DI_SPREAD" ? "" : "%"}</td>
+        <td class="n">${num(r.duration, 2)}</td>
+        <td class="n"><b>${num(r.spread_bps)}</b></td>
+        <td class="n">${num(r.fair_bps)}</td>
+        <td class="n ${r.resid_bps > 0 ? "up" : "down"}">${sgn(r.resid_bps)}<div class="mut">${esc(r.verdict || "")}</div></td>
+        <td class="n">${chg(r.chg_5d_bps)}</td>
+        <td class="n">${num(r.pu, 2)}<div class="mut">→ ${num(r.fair_pu, 2)} <span class="${r.upside_pct > 0 ? "up" : "down"}">(${sgn(r.upside_pct, 1)}%)</span></div></td>
+        <td><span class="pill ${stratCls(r.strategy || "")}">${esc(r.strategy || "—")}</span>
+          ${r.press_neg_30d ? `<div class="mut w" title="${esc((r.press_titles || []).join(" | "))}">${r.press_neg_30d} notícia(s) negativa(s) em 30d</div>` : ""}</td>
+        <td><button class="btn ghost" data-rm="${esc(r.codigo)}" aria-label="Remover ${esc(r.codigo)}">×</button></td>
+      </tr>`).join("")}</table></div>` : ""}
+    ${ML.missing.length ? `<p class="note">Não encontrados entre as ${D.opp.length} debêntures precificadas pela ANBIMA hoje: ${ML.missing.map(esc).join(", ")}. Títulos públicos, CRI/CRA, bancários e eurobonds entram pela versão local (python -m rfmonitor run). <button class="btn ghost" id="ml_clrmiss">limpar</button></p>` : ""}`;
+  $("ml_out").querySelectorAll("[data-rm]").forEach(b => b.addEventListener("click", () => { ML.codes = ML.codes.filter(c => c !== b.dataset.rm); mlSave(); mlRender(); }));
+  const cm = $("ml_clrmiss"); if (cm) cm.addEventListener("click", () => { ML.missing = []; mlSave(); mlRender(); });
+}
+$("ml_add").addEventListener("click", () => {
+  const r = mlResolve($("ml_in").value);
+  const before = ML.codes.length;
+  ML.codes = [...new Set([...ML.codes, ...r.codes])];
+  ML.missing = [...new Set([...ML.missing, ...r.missing])];
+  mlSave(); mlRender();
+  $("ml_msg").textContent = `${ML.codes.length - before} adicionado(s)${r.missing.length ? ` · ${r.missing.length} não encontrado(s)` : ""}`;
+  $("ml_in").value = "";
+});
+$("ml_clear").addEventListener("click", () => { if (confirm("Limpar a lista deste navegador?")) { ML = {codes: [], missing: []}; mlSave(); mlRender(); $("ml_msg").textContent = ""; } });
+$("ml_copy").addEventListener("click", async () => {
+  const txt = ML.codes.join("\n");
+  try { await navigator.clipboard.writeText(txt); $("ml_msg").textContent = "Códigos copiados — cole no Excel."; }
+  catch (e) { $("ml_in").value = txt; $("ml_in").select(); $("ml_msg").textContent = "Selecionado: Ctrl+C para copiar."; }
+});
 
 // oportunidades
 $("p4note").innerHTML = `Carrega o top 30% de CDI+ que <b>não</b> está caro vs pares, <b>não compra</b> emissor com notícia negativa na imprensa nos últimos 30 dias, com ação em queda de 15% ou mais em 4 semanas ou rebaixado nos últimos 180 dias, <b>vende</b> os caros e vai para CDI quando o regime está defensivo. Regime hoje: ${D.regime_on ? '<span class="pill good">risk-on</span>' : '<span class="pill bad">defensivo → CDI</span>'} · ${D.ranked} de ${D.universe} debêntures ranqueadas · ${D.c3_n} na carteira C3 · ${D.rich_n} caras.`;
@@ -218,6 +306,7 @@ function renderOpp() {
 }
 ["f_strat", "f_peer", "f_dmin", "f_dmax", "f_noflag", "f_q"].forEach(id => $(id).addEventListener("input", renderOpp));
 renderOpp();
+mlRender();
 
 // pesquisa
 const lab = (D.lab || []).slice().sort((a, b) => (b.sharpe ?? -9) - (a.sharpe ?? -9));

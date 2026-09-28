@@ -121,6 +121,13 @@ td.tight{white-space:nowrap}
     <input name="cetip_code" placeholder="Código CETIP (CRI/CRA)" size="20">
     <button>Adicionar</button>
   </form>
+  <form method="post" action="/add_bulk" style="margin-top:12px">
+    <label class="small">Ou cole uma coluna do Excel: ISIN, código do ativo (ex.: EQTL13) ou ticker da bolsa (ex.: RENT3 adiciona as debêntures da empresa)</label><br>
+    <textarea name="items" rows="4" cols="40" placeholder="BRMEALDBS043&#10;EQTL13&#10;RENT3" required></textarea><br>
+    <button>Adicionar lista</button>
+  </form>
+  {% if request.query_params.get('added') %}<p class="small">{{ request.query_params.get('added') }} ativo(s) adicionado(s); dados chegando em alguns minutos.
+    {% if request.query_params.get('missing') %}<span class="sev-high">Não encontrados: {{ request.query_params.get('missing') }}</span>{% endif %}</p>{% endif %}
 </div>
 
 <div class="card">
@@ -132,6 +139,6 @@ td.tight{white-space:nowrap}
    · Ações a cada {{ settings.quotes_every_seconds }}s no pregão · coleta completa a cada {{ settings.collect_every_minutes }} min</p>
 </div>
 <script>
-setInterval(() => { if (!document.activeElement || document.activeElement.tagName !== 'INPUT') location.reload(); }, 60000);
+setInterval(() => { if (!document.activeElement || !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) location.reload(); }, 60000);
 </script>
 {% endblock %}
