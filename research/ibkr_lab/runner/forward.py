@@ -15,6 +15,7 @@ from __future__ import annotations
 import importlib
 import json
 import logging
+import math
 import pkgutil
 import sqlite3
 from contextlib import contextmanager
@@ -25,6 +26,7 @@ from research.ibkr_lab import safe
 log = logging.getLogger(__name__)
 DB = safe.DATA / "forward.db"
 CAPITAL_USD = 250_000.0  # per strategy, small on purpose
+MAX_POS_USD = min(50_000.0, safe.MAX_ORDER_USD)  # per position (valuation notional); targets above are clipped
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS strategies (name TEXT PRIMARY KEY, description TEXT, rebalance TEXT, expected TEXT,
     started TEXT, capital REAL, active INTEGER DEFAULT 1);
@@ -71,14 +73,47 @@ def _is_rebalance(freq: str, d: date, last: str | None) -> bool:
             "monthly": (d.year, d.month) != (ld.year, ld.month)}.get(freq, False)
 
 
+_QCACHE: dict = {}  # conId -> quote, cleared at the start of every run_day (one quote per contract per run)
+
+
 def _price(ib, contract) -> dict:
-    ib.reqMarketDataType(1)
+    """Quote at the touch. Market-data type 4 = live where subscribed, else 15-min delayed, and the last (frozen)
+    values once the market is closed. Type 1 (live only) returned nothing for CME/B3 futures, US options and SPX on
+    this paper login. 'last' is the valuation price: MID first (a stale last trade mis-marks options/bonds)."""
+    if contract.conId and contract.conId in _QCACHE:
+        return _QCACHE[contract.conId]
+    ib.reqMarketDataType(4)
     t = ib.reqMktData(contract, "", False, False)
-    ib.sleep(2)
+    ib.sleep(3)
     ib.cancelMktData(contract)
     ok = lambda v: v if v and v == v and v > 0 else None
     mid = (ok(t.bid) + ok(t.ask)) / 2 if ok(t.bid) and ok(t.ask) else None
-    return {"bid": ok(t.bid), "ask": ok(t.ask), "last": ok(t.last) or mid or ok(t.close)}
+    val = mid or ok(t.last) or ok(t.close)
+    if mid and (ok(t.ask) - ok(t.bid)) / mid > 0.015:
+        # very wide touch (typically one stale side on a delayed/frozen back month or an illiquid bond): value at the
+        # last trade / close if it lies inside the touch, else keep the mid
+        inside = [v for v in (ok(t.last), ok(t.close)) if v and ok(t.bid) <= v <= ok(t.ask)]
+        val = inside[0] if inside else mid
+    q = {"bid": ok(t.bid), "ask": ok(t.ask), "last": val}
+    if contract.conId:
+        _QCACHE[contract.conId] = q
+    return q
+
+
+def _mult(c) -> float:
+    """Value of 1 unit per 1 price point. IBKR bonds: size = face value in USD, price = % of par -> 0.01."""
+    if getattr(c, "secType", "") == "BOND":
+        return 0.01
+    return float(getattr(c, "multiplier", "") or 1)
+
+
+def _unit(mod, c, px, asof, mult):
+    """Optional plugin hook unit_value(contract, px, asof) -> value of ONE unit in the contract currency (multiplier
+    included). Used for instruments quoted in something other than price, e.g. DI1 (quoted as a rate)."""
+    f = getattr(mod, "unit_value", None)
+    if f is None or px is None:
+        return px, mult
+    return f(c, px, asof), 1.0
 
 
 def _orders_accepted(ib) -> bool:
@@ -92,6 +127,7 @@ def _orders_accepted(ib) -> bool:
 
 def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
     asof = asof or date.today()
+    _QCACHE.clear()
     ib = safe.connect_paper(client_id=80)
     out = {}
     try:
@@ -121,46 +157,65 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
                         if c is None:  # close a position no longer wanted
                             from ib_async import Contract
                             c = Contract(conId=pos[key]["conid"])
-                            ib.qualifyContracts(c)
+                            try:
+                                ib.qualifyContracts(c)
+                            except Exception as e:
+                                note.append(f"cannot qualify {key}: {e!r}"[:120])
+                                continue
                         q = _price(ib, c)
                         px = q["last"]
                         if not px:
                             note.append(f"no price {key}")
                             continue
-                        mult = float(getattr(c, "multiplier", "") or 1)
+                        mult = _mult(c)
                         fx = 1.0 if (c.currency or "USD") == "USD" else _fx_usd(ib, c.currency)
+                        upx, umult = _unit(mod, c, px, asof, mult)   # valuation price/multiplier (hook-aware)
+                        unit_usd = abs(upx * umult * fx)
                         tgt_qty = 0.0
                         if t:
                             sign = 1 if t.get("side", "LONG") == "LONG" else -1
-                            tgt_qty = sign * round(t["target_notional_usd"] / (px * mult * fx))
+                            # explicit unit count (option legs, DI1, bonds) or notional sizing
+                            tgt_qty = sign * (abs(float(t["qty"])) if t.get("qty") is not None
+                                              else round(t["target_notional_usd"] / unit_usd))
+                            cap = t.get("cap_usd", MAX_POS_USD)  # a plugin may only LOWER the per-position cap
+                            if abs(tgt_qty) * unit_usd > min(cap, MAX_POS_USD):
+                                tgt_qty = sign * math.floor(min(cap, MAX_POS_USD) / unit_usd)
+                                note.append(f"{key} clipped to {abs(tgt_qty):g} (cap)")
                         cur = pos.get(key, {}).get("qty", 0.0)
                         dq = tgt_qty - cur
                         if abs(dq) < 1:
                             continue
                         action = "BUY" if dq > 0 else "SELL"
+                        mode = None
                         if live_orders:
-                            st = safe.place_paper_order(ib, c, action, abs(dq), "LMT",
-                                                        q["ask"] if action == "BUY" else q["bid"], strategy=name,
-                                                        est_notional_usd=abs(dq) * px * mult * fx)
-                            fill_px, mode = (st.get("avg_price") or px), f"paper:{st.get('status')}"
-                        else:
+                            try:
+                                st = safe.place_paper_order(ib, c, action, abs(dq), "LMT",
+                                                            q["ask"] if action == "BUY" else q["bid"], strategy=name,
+                                                            est_notional_usd=abs(dq) * unit_usd)
+                                fill_px, mode = (st.get("avg_price") or px), f"paper:{st.get('status')}"
+                            except ValueError as e:  # safe.py size cap -> never bypass it, shadow instead
+                                note.append(f"{key}: {e}"[:120])
+                        if mode is None:
                             fill_px = (q["ask"] if action == "BUY" else q["bid"]) or px
                             safe.log("shadow_fills", {"strategy": name, "key": key, "action": action, "qty": abs(dq),
                                                       "price": fill_px, "bid": q["bid"], "ask": q["ask"]})
                             mode = "shadow"
-                        cash -= dq * fill_px * mult * fx
+                        fill_u, _ = _unit(mod, c, fill_px, asof, mult)
+                        cash -= dq * fill_u * umult * fx
                         new_qty = cur + dq
                         with db() as con:
                             con.execute("INSERT INTO fills VALUES (?,?,?,?,?,?,?,?,?,?)",
                                         (datetime.now(timezone.utc).isoformat(timespec="seconds"), name, key, action,
-                                         abs(dq), fill_px, q["bid"], q["ask"], mode, ""))
+                                         abs(dq), fill_px, q["bid"], q["ask"], mode,
+                                         (t or {}).get("note", "close") if t else "close"))
                             if abs(new_qty) < 1e-9:
                                 con.execute("DELETE FROM positions WHERE strategy=? AND key=?", (name, key))
                                 pos.pop(key, None)
                             else:
+                                # avg_px/last_px are VALUATION prices (after the unit_value hook), multiplier likewise
                                 con.execute("INSERT OR REPLACE INTO positions VALUES (?,?,?,?,?,?,?,?)",
-                                            (name, key, c.conId, new_qty, fill_px, fill_px, c.currency, mult))
-                                pos[key] = {"key": key, "conid": c.conId, "qty": new_qty, "multiplier": mult, "fx": fx}
+                                            (name, key, c.conId, new_qty, fill_u, fill_u, c.currency, umult))
+                                pos[key] = {"key": key, "conid": c.conId, "qty": new_qty, "multiplier": umult, "fx": fx}
             # mark to market
             gross, value = 0.0, 0.0
             with db() as con:
@@ -170,7 +225,8 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
                 c = Contract(conId=r["conid"])
                 try:
                     ib.qualifyContracts(c)
-                    px = _price(ib, c)["last"] or r["last_px"]
+                    raw = _price(ib, c)["last"]
+                    px = _unit(mod, c, raw, asof, r["multiplier"])[0] if raw else r["last_px"]
                 except Exception:
                     px = r["last_px"]
                 fx = 1.0 if (r["currency"] or "USD") == "USD" else _fx_usd(ib, r["currency"])
