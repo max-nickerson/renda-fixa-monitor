@@ -14,3 +14,4 @@ tzdata>=2024.1
 pytest>=8.0
 # Research charts (research/run_*.py): pip install matplotlib
 # Optional: TradingView MCP adapter (eurobond prices). Install with: pip install "mcp>=1.10"
+ib_async>=2.0  # optional: Interactive Brokers quotes via local IB Gateway/TWS

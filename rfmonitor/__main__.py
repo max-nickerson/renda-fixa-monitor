@@ -40,6 +40,7 @@ def main() -> None:
     sub.add_parser("site", help="one full cycle + regime + P4 ranking, then write site/index.html (GitHub Pages)")
     pp = sub.add_parser("paper", help="paper trading: collect today's data and advance the P7 / P4+Q books")
     pp.add_argument("action", nargs="?", default="run", choices=["run", "status", "reset", "warm"])
+    sub.add_parser("ibkr-test", help="check the Interactive Brokers API connection (IB Gateway/TWS running locally)")
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -148,6 +149,9 @@ def main() -> None:
             print("paper books reset (collected data kept)")
         for s_ in pc.status():
             print(f"{s_['label']:<45} {s_['n']:>8} rows  {s_['d']:>4} days  {s_['a']} .. {s_['b']}")
+    elif args.cmd == "ibkr-test":
+        from .sources import ibkr
+        print(json.dumps(ibkr.test(), indent=2, default=str))
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email
