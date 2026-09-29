@@ -38,6 +38,8 @@ def main() -> None:
     sub.add_parser("models", help="retrain the credit-regime and bond-selection models now")
     sub.add_parser("export", help="write a read-only HTML snapshot of the dashboard (data/export/)")
     sub.add_parser("site", help="one full cycle + regime + P4 ranking, then write site/index.html (GitHub Pages)")
+    pp = sub.add_parser("paper", help="paper trading: collect today's data and advance the P7 / P4+Q books")
+    pp.add_argument("action", nargs="?", default="run", choices=["run", "status", "reset"])
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -135,6 +137,15 @@ def main() -> None:
         out = ROOT / "site" / "index.html"
         out.parent.mkdir(exist_ok=True)
         print(export(out))
+    elif args.cmd == "paper":
+        from .paper import collect as pc, engine
+        if args.action == "run":
+            print(json.dumps(engine.run_daily(force=True), indent=2, default=str))
+        elif args.action == "reset":
+            engine.reset()
+            print("paper books reset (collected data kept)")
+        for s_ in pc.status():
+            print(f"{s_['label']:<45} {s_['n']:>8} rows  {s_['d']:>4} days  {s_['a']} .. {s_['b']}")
     elif args.cmd == "test-email":
         from . import db
         from .alerts import send_pending_email

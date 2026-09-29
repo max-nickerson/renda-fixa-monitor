@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}Paper trading · Renda Fixa Monitor{% endblock %}
+{% block body %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start">
+    <div>
+      <h2 style="margin-bottom:4px">Paper trading · P7 vs P4+Q</h2>
+      <div class="small" style="max-width:900px">Carteiras simuladas com dados reais, só para frente. Todo mês abre uma tranche de 1/6 do patrimônio;
+        a compra executa no <b>próximo negócio real do SND</b> (preço do negócio), fica ~6 meses e sai no próximo negócio.
+        Marcação diária no preço indicativo ANBIMA. O <b>slippage</b> é a diferença entre o negócio e a marcação ANBIMA do mesmo dia:
+        é o custo real que o backtest não conseguia medir. Caixa rende CDI. Patrimônio simulado de R$ 100 mi por carteira.</div>
+      <div class="muted small" style="margin-top:6px">Dados até {{ last_day or '—' }} · atualiza sozinho de hora em hora quando a ANBIMA publica
+        {% if msg %}· <b>{{ msg }}</b>{% endif %}</div>
+    </div>
+    <form method="post" action="/paper/run"><button>↻ Coletar dados e avançar</button></form>
+  </div>
+</div>
+
+{% if not books %}
+<div class="card"><h2>Ainda não começou</h2>
+  <p class="muted">Clique em “Coletar dados e avançar”: a coleta baixa preços ANBIMA, negócios do SND, ações dos emissores e CDI,
+    e a primeira tranche é aberta no último dia com preços. Os preenchimentos começam a aparecer nos dias seguintes.</p></div>
+{% else %}
+<div class="grid">
+{% for b in books %}
+  <div class="card">
+    <h2>{{ b.name }} <span class="muted small">desde {{ b.start }}</span></h2>
+    <table class="kv small">
+      <tr><td>Patrimônio</td><td class="num"><b>R$ {{ b.nav|fmt(0) }}</b></td></tr>
+      <tr><td>Retorno total</td><td class="num {{ 'up' if (b.ret or 0) >= 0 else 'down' }}">{{ b.ret|fmt(2, '%') }}</td></tr>
+      <tr><td>vs CDI</td><td class="num {{ 'up' if (b.vs_cdi or 0) >= 0 else 'down' }}">{{ b.vs_cdi|fmt(0) }} bps</td></tr>
+      <tr><td>vs universo ANBIMA</td><td class="num {{ 'up' if (b.vs_uni or 0) >= 0 else 'down' }}">{{ b.vs_uni|fmt(0) }} bps</td></tr>
+      <tr><td>Investido / caixa</td><td class="num">{{ b.inv_pct|fmt(0, '%') }} / {{ (100 - (b.inv_pct or 0))|fmt(0, '%') }}</td></tr>
+      <tr><td>Títulos</td><td class="num">{{ b.n_pos }}</td></tr>
+      <tr><td>Ordens executadas / abertas / expiradas</td><td class="num">{{ b.filled }} / {{ b.open }} / {{ b.expired }}</td></tr>
+      <tr><td>Slippage médio (compra)</td><td class="num">{{ b.slip_buy|fmt(1) }} bps</td></tr>
+      <tr><td>Dias até executar (mediana)</td><td class="num">{{ b.days_to_fill|fmt(0) }}</td></tr>
+    </table>
+  </div>
+{% endfor %}
+</div>
+
+<div class="card">
+  <h2>Curva de patrimônio (base 100)</h2>
+  <div id="chart" style="width:100%;overflow-x:auto"></div>
+  <div class="muted small" id="legend"></div>
+</div>
+
+<div class="card">
+  <h2>Posições</h2>
+  <form class="inline small" method="get" action="/paper" style="margin-bottom:8px">
+    <select name="book" onchange="this.form.submit()">{% for b in books %}<option {{ 'selected' if b.name == book }}>{{ b.name }}</option>{% endfor %}</select>
+    <a href="/paper/export/positions.csv">CSV</a>
+  </form>
+  <div class="scroll"><table class="small">
+    <tr><th>Título</th><th>Emissor</th><th>Tranche</th><th class="num">Valor R$</th><th class="num">Peso</th><th class="num">CDI+ hoje</th><th>Entrada</th><th>Saída prevista</th><th>Status</th></tr>
+    {% for p in positions %}<tr><td><b>{{ p.codigo }}</b></td><td>{{ (p.nome or '')[:40] }}</td><td>{{ p.tranche[-7:] }}</td>
+      <td class="num">{{ p.value|fmt(0) }}</td><td class="num">{{ p.weight|fmt(2, '%') }}</td><td class="num">{{ p.spread_bps|fmt(0) }}</td>
+      <td>{{ p.entry_date }}</td><td>{{ p.exit_due }}</td><td>{{ p.status }}</td></tr>
+    {% else %}<tr><td colspan="9" class="muted">Nenhuma posição ainda: as ordens executam no próximo negócio de cada título.</td></tr>{% endfor %}
+  </table></div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h2>Ordens abertas <a class="small" href="/paper/export/orders.csv">CSV</a></h2>
+    <div class="scroll"><table class="small">
+      <tr><th>Título</th><th>Lado</th><th class="num">Valor R$</th><th>Criada</th><th>Expira</th></tr>
+      {% for o in open_orders %}<tr><td>{{ o.codigo }}</td><td>{{ 'compra' if o.side == 'buy' else 'venda' }}</td><td class="num">{{ o.value|fmt(0) }}</td><td>{{ o.created }}</td><td>{{ o.expires }}</td></tr>
+      {% else %}<tr><td colspan="5" class="muted">—</td></tr>{% endfor %}
+    </table></div>
+  </div>
+  <div class="card">
+    <h2>Execuções recentes e slippage</h2>
+    <div class="scroll"><table class="small">
+      <tr><th>Data</th><th>Título</th><th>Lado</th><th class="num">Negócio (% par)</th><th class="num">ANBIMA</th><th class="num">Slippage</th></tr>
+      {% for o in fills %}<tr><td>{{ o.fill_date }}</td><td>{{ o.codigo }}</td><td>{{ 'compra' if o.side == 'buy' else 'venda' }}{% if o.status == 'forced' %} <span class="chip SELL">forçada</span>{% endif %}</td>
+        <td class="num">{{ (o.fill_ratio * 100)|fmt(2) }}</td><td class="num">{{ (o.mark_ratio * 100 if o.mark_ratio else None)|fmt(2) }}</td>
+        <td class="num {{ 'down' if (o.slippage_bps or 0) * (1 if o.side == 'buy' else -1) > 0 else 'up' }}">{{ o.slippage_bps|fmt(1) }} bps</td></tr>
+      {% else %}<tr><td colspan="6" class="muted">Nenhuma execução ainda.</td></tr>{% endfor %}
+    </table></div>
+    <p class="muted small">Compra acima da ANBIMA (slippage +) custa; venda acima da ANBIMA ganha.</p>
+  </div>
+</div>
+
+<div class="card">
+  <h2>Última decisão de {{ book }} ({{ sig_date or '—' }}) <a class="small" href="/paper/export/signals.csv">CSV</a></h2>
+  <div class="scroll"><table class="small">
+    <tr><th>Título</th><th>Emissor</th><th class="num">Peso alvo</th><th class="num">CDI+ bps</th><th class="num">Saúde da ação</th><th class="num">Qualidade balanço</th><th>Motivo</th></tr>
+    {% for s in signals %}<tr><td>{{ s.codigo }}</td><td>{{ (s.nome or '')[:40] }}</td><td class="num">{{ (s.weight * 100)|fmt(2, '%') }}</td><td class="num">{{ s.cdi_bps|fmt(0) }}</td>
+      <td class="num">{{ s.eqh|fmt(2) }}</td><td class="num">{{ s.quality|fmt(2) }}</td><td>{% if s.note %}<span class="chip SELL">{{ s.note }}</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table></div>
+  <p class="muted small">Saúde da ação e qualidade: percentis 0–1 (maior = melhor). “Motivo” mostra o que foi excluído da compra.</p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Coleta de dados (point-in-time)</h2>
+  <table class="small">
+    <tr><th>Base</th><th class="num">Linhas</th><th class="num">Dias</th><th>De</th><th>Até</th><th></th></tr>
+    {% for s in status %}<tr><td>{{ s.label }}</td><td class="num">{{ s.n|fmt(0) }}</td><td class="num">{{ s.d }}</td><td>{{ s.a or '—' }}</td><td>{{ s.b or '—' }}</td>
+      <td><a href="/paper/export/{{ s.table }}.csv">CSV</a></td></tr>{% endfor %}
+  </table>
+  <p class="muted small">Cada dia é gravado com a data em que foi conhecido e não é reescrito, então esta base serve depois para pesquisa sem viés.
+    Arquivo: <code>data/paper.db</code> (SQLite).</p>
+  <details class="small"><summary style="cursor:pointer">Reiniciar as carteiras simuladas</summary>
+    <form class="inline" method="post" action="/paper/reset" style="margin-top:8px">
+      <input name="confirm" placeholder="digite REINICIAR" size="16"><button class="ghost">Reiniciar</button>
+      <span class="muted">Apaga ordens, posições e patrimônio. Mantém os dados coletados.</span></form></details>
+</div>
+
+<script>
+const S = {{ curves|tojson }};
+(function () {
+  const el = document.getElementById("chart");
+  const names = Object.keys(S.series || {});
+  if (!S.dates || S.dates.length < 2) { el.innerHTML = '<p class="muted small">A curva aparece a partir do segundo dia de dados.</p>'; return; }
+  const colors = {"P7": "#b42318", "P4Q": "#1d4ed8", "CDI": "#667085", "Universo": "#98a2b3"};
+  const W = Math.max(640, el.clientWidth || 900), H = 260, L = 48, R = 12, T = 10, B = 26;
+  const all = names.flatMap(n => S.series[n]).filter(v => v != null);
+  const lo = Math.min(...all), hi = Math.max(...all), span = (hi - lo) || 1;
+  const x = i => L + i / (S.dates.length - 1) * (W - L - R), y = v => T + (1 - (v - lo) / span) * (H - T - B);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block" role="img" aria-label="Curva de patrimônio">`;
+  for (let k = 0; k <= 4; k++) { const v = lo + span * k / 4;
+    svg += `<line x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" stroke="currentColor" opacity=".12"/><text x="${L - 6}" y="${y(v) + 4}" font-size="11" text-anchor="end" fill="currentColor" opacity=".6">${v.toFixed(2)}</text>`; }
+  [0, S.dates.length - 1].forEach(i => svg += `<text x="${x(i)}" y="${H - 6}" font-size="11" text-anchor="${i ? 'end' : 'start'}" fill="currentColor" opacity=".6">${S.dates[i]}</text>`);
+  names.forEach(n => {
+    const pts = S.series[n].map((v, i) => v == null ? null : `${x(i).toFixed(1)},${y(v).toFixed(1)}`).filter(Boolean).join(" ");
+    svg += `<polyline points="${pts}" fill="none" stroke="${colors[n] || '#444'}" stroke-width="${n.startsWith('P') ? 2.2 : 1.4}" ${n === 'CDI' ? 'stroke-dasharray="4 3"' : ''}/>`;
+  });
+  el.innerHTML = svg + "</svg>";
+  document.getElementById("legend").innerHTML = names.map(n => `<span style="color:${colors[n]}">■</span> ${n} ${(S.series[n].at(-1)).toFixed(3)}`).join(" · ");
+})();
+</script>
+{% endblock %}

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hmac
+import logging
 import json
 import math
 import threading
@@ -202,6 +203,39 @@ def create_app(scheduler: bool = True) -> FastAPI:
         if next == "screener":
             return RedirectResponse(f"/screener?added={code}", status_code=303)
         return RedirectResponse(f"/asset/{code}", status_code=303)
+
+    @app.get("/paper", response_class=HTMLResponse)
+    def paper_page(request: Request, book: str | None = None, msg: str | None = None):
+        from .paper import view
+        return templates.TemplateResponse(request, "paper.html", {"tab": "paper", "msg": msg, **view.context(book)})
+
+    @app.post("/paper/run")
+    def paper_run():
+        from .paper import engine
+        def work():
+            try:
+                engine.run_daily()
+            except Exception:
+                logging.getLogger(__name__).exception("paper run failed")
+        threading.Thread(target=work, daemon=True).start()
+        return RedirectResponse("/paper?msg=coleta+em+andamento+(1-3+min);+recarregue+a+página", status_code=303)
+
+    @app.post("/paper/reset")
+    def paper_reset(confirm: str = Form("")):
+        from .paper import engine
+        if confirm.strip().upper() != "REINICIAR":
+            return RedirectResponse("/paper?msg=digite+REINICIAR+para+confirmar", status_code=303)
+        engine.reset()
+        return RedirectResponse("/paper?msg=carteiras+reiniciadas", status_code=303)
+
+    @app.get("/paper/export/{table}.csv")
+    def paper_export(table: str):
+        from fastapi.responses import Response
+        from .paper import store, view
+        if table not in view.EXPORTABLE:
+            raise HTTPException(404)
+        return Response(store.df(f"SELECT * FROM {table}").to_csv(index=False), media_type="text/csv",
+                        headers={"Content-Disposition": f'attachment; filename="{table}.csv"'})
 
     @app.post("/add_bulk")
     def add_bulk(items: str = Form(...)):

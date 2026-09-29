@@ -122,10 +122,24 @@ python -m rfmonitor backtest USN15516AB8      # walk-forward backtest on stored 
 python -m rfmonitor import-prices <ISIN> prices.csv   # CSV: date,price  (or TradingView t,close)
 python -m rfmonitor history                   # once per machine: SND trades, B3 curves, IDA (~30 min)
 python -m rfmonitor models                    # retrain regime + selection models now (else daily)
+python -m rfmonitor paper [run|status|reset]  # paper trading: collect today's data, advance P7 / P4+Q books
 python -m rfmonitor test-email
 ```
 
 JSON API at `/docs` (FastAPI): `/api/assets`, `/api/asset/{isin}/series|signal|backtest`.
+
+## Paper trading (`/paper`)
+
+Two simulated R$100m books run forward on live data: **P7** (the overnight-research strategy: P4+Q minus
+stressed-equity issuers, carry-weighted, liquidity-capped) and **P4+Q** (the baseline). Every month each opens a
+tranche of 1/6 of its NAV; buys fill at the **next real SND trade** (price of that trade), are held ~6 months and
+sold at the next trade. Positions are marked daily on ANBIMA indicative prices; cash earns CDI. Every fill records
+its **slippage vs the ANBIMA mark** of the same day, which is the cost the backtests could not measure.
+
+While the app runs it collects, every hour, point-in-time data into `data/paper.db` (SQLite): ANBIMA prices +
+model fields for every priced debenture, SND trades, issuer/parent stock closes and CDI/IPCA. Each day is stored with
+the date it was known and never rewritten, so the file doubles as a clean research dataset. Everything is
+downloadable as CSV from the page. Code: `rfmonitor/paper/`.
 
 ## How an ISIN is resolved
 

@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import logging
 import threading
+from datetime import datetime, timedelta
 
 from . import alerts, db, isin as isin_mod, screener
 from .ml import live
@@ -101,6 +102,15 @@ def bootstrap_history() -> None:
     run_cycle()
 
 
+def _paper():
+    """Paper trading: collect the day's data and advance the books (idempotent; cheap when nothing is new)."""
+    try:
+        from .paper import engine
+        log.info("paper: %s", engine.run_daily())
+    except Exception:
+        log.exception("paper trading step failed")
+
+
 def start_scheduler():
     from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -109,6 +119,8 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(run_quick, "interval", seconds=settings.quotes_every_seconds, id="quick",
                   max_instances=1, coalesce=True)
+    sched.add_job(_paper, "interval", minutes=60, id="paper", max_instances=1, coalesce=True,
+                  next_run_time=datetime.now() + timedelta(minutes=3))
     sched.start()
     threading.Thread(target=run_cycle, daemon=True).start()  # first run right away
     if settings.bootstrap_history and not history_ready():
