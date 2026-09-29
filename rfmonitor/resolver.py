@@ -39,7 +39,7 @@ def resolve(raw_isin: str, overrides: dict | None = None, refresh: bool = False)
     info: dict = {"isin": code, "kind": isin_mod.guess_kind(code), "notes": [], "currency": "BRL",
                   "resolved_at": date.today().isoformat()}
     if cached:  # keep runtime state across re-resolution
-        info.update({k: cached[k] for k in ("last_signal", "last_collected") if k in cached})
+        info.update({k: cached[k] for k in ("last_signal", "last_collected", "news_last") if k in cached})
 
     # 1) Debentures: SND registry has CETIP code, issuer CNPJ, indexer, maturity.
     deb = snd.by_isin(code) if code.startswith("BR") else None

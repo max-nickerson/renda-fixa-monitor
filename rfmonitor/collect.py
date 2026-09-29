@@ -12,6 +12,7 @@ Metrics stored per ISIN (observations table):
 from __future__ import annotations
 
 import logging
+import os
 from datetime import date, datetime, timezone
 from zoneinfo import ZoneInfo
 
@@ -345,6 +346,9 @@ def collect_stock(info: dict, first_run: bool) -> int:
 
 
 # ---------------------------------------------------------------- events
+NEWS_EVERY_MIN = int(os.getenv("NEWS_EVERY_MIN", "120"))
+
+
 def collect_events(info: dict, first_run: bool) -> list[dict]:
     new: list[dict] = []
     isin = info["isin"]
@@ -364,7 +368,11 @@ def collect_events(info: dict, first_run: bool) -> list[dict]:
             except Exception as e:
                 log.warning("CVM fetch failed (%s, %s): %s", cnpj, y, e)
     q = info.get("news_query")
-    if q:
+    # Big watchlists: each asset's news is refreshed at most every NEWS_EVERY_MIN minutes (Google News throttles).
+    last = info.get("news_last")
+    fresh = last and (datetime.now(timezone.utc) - datetime.fromisoformat(last)).total_seconds() < 60 * NEWS_EVERY_MIN
+    if q and (first_run or not fresh):
+        info["news_last"] = datetime.now(timezone.utc).isoformat()
         for it in news.search(q, "30d" if first_run else "3d"):
             if db.put_event(isin, it["ts"], "news", it["title"], it["url"], it["source"], it["uid"], it["severity"]):
                 new.append({**it, "kind": "news"})
