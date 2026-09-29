@@ -97,6 +97,23 @@
 {% endif %}
 
 <div class="card">
+  <h2>IBKR paper · validação ao vivo das estratégias</h2>
+  <p class="small muted" style="margin-top:0">Estratégias do laboratório IBKR rodando para frente na conta <b>paper</b> (nunca na real): sinais com preços ao vivo,
+    execução por ordem paper (se o login aceitar ordens) ou <b>shadow</b> no bid/ask ao vivo, marcação diária. Capital simulado US$ 250 mil por estratégia.
+    Um dia valida o encanamento e os custos; a vantagem só aparece com semanas/meses de histórico ao lado do backtest.</p>
+  {% if ibkr %}
+  <div class="scroll"><table class="small">
+    <tr><th>Estratégia</th><th>Rebalanceia</th><th>Desde</th><th class="num">Dias</th><th class="num">Retorno</th><th class="num">Esperado a.a. (backtest)</th>
+      <th class="num">Posições</th><th class="num">Execuções</th><th>Modo</th><th class="num">Spread médio pago</th></tr>
+    {% for s in ibkr %}<tr><td><b>{{ s.name }}</b><div class="muted">{{ s.description[:90] }}</div></td><td>{{ s.rebalance }}</td><td>{{ s.started }}</td>
+      <td class="num">{{ s.days }}</td><td class="num {{ 'up' if s.ret > 0 else 'down' if s.ret < 0 }}">{{ s.ret|fmt(2, '%') }}</td>
+      <td class="num">{{ s.exp_ann|fmt(1, '%') if s.exp_ann is not none else '—' }}</td><td class="num">{{ s.n_pos }}</td><td class="num">{{ s.fills }}</td>
+      <td>{{ s.modes|join(', ') }}</td><td class="num">{{ s.avg_spread_bps|fmt(1) if s.avg_spread_bps is not none else '—' }} bps</td></tr>{% endfor %}
+  </table></div>
+  {% else %}<p class="muted small">Ainda sem estratégias ligadas: elas entram quando a pesquisa do laboratório terminar e a verificação aprovar.</p>{% endif %}
+</div>
+
+<div class="card">
   <h2>Coleta de dados (point-in-time)</h2>
   <table class="small">
     <tr><th>Base</th><th class="num">Linhas</th><th class="num">Dias</th><th>De</th><th>Até</th><th></th></tr>

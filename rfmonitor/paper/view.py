@@ -58,7 +58,40 @@ def context(book: str | None = None) -> dict:
         "fills": store.rows("SELECT * FROM orders WHERE book = ? AND status IN ('filled', 'forced') ORDER BY fill_date DESC "
                             "LIMIT 60", (book,)),
         "status": collect.status(),
+        "ibkr": ibkr_forward(),
     }
+
+
+def ibkr_forward() -> list[dict]:
+    """IBKR paper forward-validation strategies (research/ibkr_lab/runner): NAV, return, live vs backtest expectation."""
+    import json
+    import sqlite3
+    from ..config import DATA_DIR
+    path = DATA_DIR / "ibkr_lab" / "forward.db"
+    if not path.exists():
+        return []
+    con = sqlite3.connect(path)
+    con.row_factory = sqlite3.Row
+    try:
+        out = []
+        for st in con.execute("SELECT * FROM strategies ORDER BY name"):
+            nav = [dict(r) for r in con.execute("SELECT date, nav, gross, n_pos FROM nav WHERE strategy=? ORDER BY date",
+                                                (st["name"],))]
+            fills = [dict(r) for r in con.execute("SELECT * FROM fills WHERE strategy=?", (st["name"],))]
+            spreads = [(f["ask"] - f["bid"]) / ((f["ask"] + f["bid"]) / 2) * 1e4 for f in fills if f["bid"] and f["ask"]]
+            exp = json.loads(st["expected"] or "{}")
+            last = nav[-1] if nav else {}
+            ret = (last.get("nav", st["capital"]) / st["capital"] - 1) * 100 if nav else 0.0
+            out.append({"name": st["name"], "description": st["description"], "rebalance": st["rebalance"],
+                        "started": st["started"], "days": len(nav), "ret": ret, "n_pos": last.get("n_pos", 0),
+                        "gross": last.get("gross", 0), "fills": len(fills),
+                        "modes": sorted({f["mode"] for f in fills}),
+                        "avg_spread_bps": sum(spreads) / len(spreads) if spreads else None,
+                        "exp_ann": exp.get("ann_return"), "exp_sharpe": exp.get("sharpe"),
+                        "curve": [round(r["nav"] / st["capital"] * 100, 3) for r in nav]})
+        return out
+    finally:
+        con.close()
 
 
 EXPORTABLE = {"positions", "orders", "signals", "nav", "snap_bonds", "snd_trades", "eq_close", "rates"}

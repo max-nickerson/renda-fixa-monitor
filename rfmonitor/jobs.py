@@ -114,6 +114,21 @@ def _ativos():
         log.exception("ativos refresh failed")
 
 
+def _ibkr_forward(mark_only: bool = False):
+    """Forward validation of the IBKR-lab strategies on the PAPER login (research/ibkr_lab/runner)."""
+    import asyncio
+    import sys
+    from .config import ROOT
+    sys.path.insert(0, str(ROOT))
+    try:
+        asyncio.set_event_loop(asyncio.new_event_loop())
+        from research.ibkr_lab.runner import forward
+        if forward.plugins():
+            log.info("ibkr forward: %s", forward.run_day(mark_only=mark_only))
+    except Exception:
+        log.exception("ibkr forward run failed (is IB Gateway logged into the paper account?)")
+
+
 def _paper():
     """Paper trading: collect the day's data and advance the books (idempotent; cheap when nothing is new)."""
     try:
@@ -133,6 +148,10 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(_ativos, "interval", seconds=60, id="ativos", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(seconds=20))
+    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=17, minute=25, id="ibkr_forward_day",
+                  kwargs={"mark_only": False}, max_instances=1, coalesce=True)
+    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour="10-16", minute=47, id="ibkr_forward_mark",
+                  kwargs={"mark_only": True}, max_instances=1, coalesce=True)
     sched.add_job(_paper, "interval", minutes=60, id="paper", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(minutes=3))
     sched.start()

@@ -39,23 +39,32 @@ def log(name: str, rec: dict) -> None:
 
 
 def connect_paper(client_id: int | None = None, timeout: float = 15.0):
+    """Paper session only. If the client id is busy (e.g. a stale connection), the next ids are tried."""
     from ib_async import IB
-    cid = int(client_id or os.getenv("IBKR_LAB_CLIENT_ID", "60"))
-    last = None
+    base = int(client_id or os.getenv("IBKR_LAB_CLIENT_ID", "60"))
+    errors = []
     for port in PAPER_PORTS:
-        ib = IB()
-        ib.RequestTimeout = 30
-        try:
-            ib.connect("127.0.0.1", port, clientId=cid, timeout=timeout)
-        except Exception as e:
-            last = e
-            continue
-        accts = ib.managedAccounts()
-        if not accts or not all(a.startswith("DU") for a in accts):
-            ib.disconnect()
-            raise NotPaper(f"refusing: port {port} is not a paper session ({[a[:2] for a in accts]})")
-        return ib
-    raise ConnectionError(f"no paper Gateway/TWS on {PAPER_PORTS}: {last}")
+        for cid in (base, base + 100, base + 200, base + 300):
+            ib = IB()
+            ib.RequestTimeout = 30
+            try:
+                ib.connect("127.0.0.1", port, clientId=cid, timeout=timeout)
+            except ConnectionRefusedError as e:
+                errors.append(f"{port}: refused")
+                break  # nothing listening on this port
+            except Exception as e:
+                errors.append(f"{port}/{cid}: {e!r}"[:120])
+                try:
+                    ib.disconnect()
+                except Exception:
+                    pass
+                continue
+            accts = ib.managedAccounts()
+            if not accts or not all(a.startswith("DU") for a in accts):
+                ib.disconnect()
+                raise NotPaper(f"refusing: port {port} is not a paper session ({[a[:2] for a in accts]})")
+            return ib
+    raise ConnectionError(f"no paper Gateway/TWS on {PAPER_PORTS}: {errors}")
 
 
 def assert_paper(ib) -> None:
