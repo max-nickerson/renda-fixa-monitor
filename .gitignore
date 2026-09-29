@@ -11,3 +11,9 @@
 __pycache__/
 site/
 venv/
+# IBKR lab outputs reference the private holdings list: keep local (only the generic framework is public)
+research/ibkr_lab/*
+!research/ibkr_lab/__init__.py
+!research/ibkr_lab/safe.py
+!research/ibkr_lab/heartbeat.py
+!research/ibkr_lab/runner/
