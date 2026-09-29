@@ -204,6 +204,19 @@ def create_app(scheduler: bool = True) -> FastAPI:
             return RedirectResponse(f"/screener?added={code}", status_code=303)
         return RedirectResponse(f"/asset/{code}", status_code=303)
 
+    @app.get("/ativos", response_class=HTMLResponse)
+    def ativos_page(request: Request, q: str = "", tipo: str = "", grupo: str = "", setor: str = "",
+                    alertas: str = "", todos: str = ""):
+        from . import ativos
+        v = ativos.view(q, tipo, grupo, setor, only_alerts=bool(alertas), credit_only=not todos)
+        return templates.TemplateResponse(request, "ativos.html", {"tab": "ativos", "v": v})
+
+    @app.post("/ativos/refresh")
+    def ativos_refresh():
+        from . import ativos
+        threading.Thread(target=ativos.refresh_live, daemon=True).start()
+        return RedirectResponse("/ativos", status_code=303)
+
     @app.get("/paper", response_class=HTMLResponse)
     def paper_page(request: Request, book: str | None = None, msg: str | None = None):
         from .paper import view

@@ -35,22 +35,35 @@ def connect(timeout: float = 4.0):
 
 def b3_stock(symbol: str):
     from ib_async import Stock
-    return Stock(symbol, "BOVESPA", "BRL")
+    return Stock(symbol, "B3", "BRL")
 
 
-def quotes(ib, contracts: list, wait: float = 3.0) -> dict:
-    """Snapshot of last/bid/ask/close for qualified contracts: {localSymbol: {...}}."""
+def bond_isin(isin: str):
+    from ib_async import Contract
+    return Contract(secType="BOND", secIdType="ISIN", secId=isin, currency="USD")
+
+
+def quotes(ib, contracts: list, wait: float = 2.5, chunk: int = 80) -> dict:
+    """last/bid/ask/close for many contracts, streamed in chunks under IBKR's ~100 market-data-lines limit.
+    Returns {key: {...}} where key is the stock symbol, or the ISIN for bonds."""
     ib.reqMarketDataType(int(os.getenv("IBKR_DATA_TYPE", "1")))  # 1 real-time, 3 delayed
-    cs = ib.qualifyContracts(*contracts)
-    tickers = [ib.reqMktData(c, "", snapshot=False, regulatorySnapshot=False) for c in cs]
-    ib.sleep(wait)
     out = {}
-    for t in tickers:
-        c = t.contract
-        out[c.localSymbol or c.symbol] = {"last": t.last, "bid": t.bid, "ask": t.ask, "close": t.close,
-                                          "time": str(t.time) if t.time else None, "exchange": c.exchange,
-                                          "currency": c.currency}
-        ib.cancelMktData(c)
+    for i in range(0, len(contracts), chunk):
+        batch = contracts[i:i + chunk]
+        keys = [c.secId or c.symbol for c in batch]
+        try:
+            cs = ib.qualifyContracts(*batch)
+        except Exception as e:
+            log.debug("qualify failed: %s", e)
+            continue
+        live = [(k, c) for k, c in zip(keys, cs) if c is not None and getattr(c, "conId", 0)]
+        tickers = [(k, ib.reqMktData(c, "", snapshot=False, regulatorySnapshot=False)) for k, c in live]
+        ib.sleep(wait)
+        for k, t in tickers:
+            nz = lambda v: None if v is None or v != v or v <= 0 else float(v)
+            out[k] = {"last": nz(t.last), "bid": nz(t.bid), "ask": nz(t.ask), "close": nz(t.close),
+                      "time": str(t.time) if t.time else None, "currency": t.contract.currency, "source": "ibkr"}
+            ib.cancelMktData(t.contract)
     return out
 
 

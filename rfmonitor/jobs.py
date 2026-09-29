@@ -102,6 +102,18 @@ def bootstrap_history() -> None:
     run_cycle()
 
 
+def _ativos():
+    """Live quotes for the researched holdings list, every minute while B3 is open (and once on start)."""
+    from .collect import b3_open
+    from . import ativos
+    if not ativos.FILE.exists() or (not b3_open() and ativos.LIVE.exists()):
+        return
+    try:
+        ativos.refresh_live()
+    except Exception:
+        log.exception("ativos refresh failed")
+
+
 def _paper():
     """Paper trading: collect the day's data and advance the books (idempotent; cheap when nothing is new)."""
     try:
@@ -119,6 +131,8 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(run_quick, "interval", seconds=settings.quotes_every_seconds, id="quick",
                   max_instances=1, coalesce=True)
+    sched.add_job(_ativos, "interval", seconds=60, id="ativos", max_instances=1, coalesce=True,
+                  next_run_time=datetime.now() + timedelta(seconds=20))
     sched.add_job(_paper, "interval", minutes=60, id="paper", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(minutes=3))
     sched.start()

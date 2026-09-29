@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Meus ativos · Renda Fixa Monitor{% endblock %}
+{% block body %}
+{% if v.missing %}
+<div class="card"><h2>Lista de ativos não encontrada</h2>
+  <p class="muted">Coloque a planilha pesquisada em <code>data/ativos/ativos_pesquisa.xlsx</code> (aba “Ativos”). Ela fica só neste computador.</p></div>
+{% else %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div>
+      <h2 style="margin-bottom:4px">Meus ativos · monitoramento</h2>
+      <div class="small muted">{{ v.n_total }} ativos · <b class="{{ 'down' if v.n_alerts }}">{{ v.n_alerts }} com alerta</b> ·
+        cotações ao vivo: {{ v.n_quotes }} ({{ 'IBKR tempo real' if v.live_src == 'ibkr' else 'brapi' }}{% if v.live_at %}, {{ v.live_at[11:19] }} UTC{% endif %}) ·
+        spreads ANBIMA do último arquivo · atualiza a cada minuto no pregão</div>
+      <div class="small muted">Só neste computador: a lista e as cotações nunca vão para o site público.</div>
+    </div>
+    <form method="post" action="/ativos/refresh"><button class="ghost">↻ Atualizar cotações agora</button></form>
+  </div>
+  <form class="inline small" method="get" action="/ativos" style="margin-top:10px">
+    <input name="q" value="{{ v.f.q }}" placeholder="buscar código, ISIN, emissor, grupo, ticker" size="30">
+    <select name="tipo"><option value="">todos os tipos</option>{% for x in v.tipos %}<option {{ 'selected' if x == v.f.tipo }}>{{ x }}</option>{% endfor %}</select>
+    <select name="grupo"><option value="">todos os grupos</option>{% for x in v.grupos %}<option {{ 'selected' if x == v.f.grupo }}>{{ x }}</option>{% endfor %}</select>
+    <select name="setor"><option value="">todos os setores</option>{% for x in v.setores %}<option {{ 'selected' if x == v.f.setor }}>{{ x }}</option>{% endfor %}</select>
+    <label><input type="checkbox" name="alertas" value="1" {{ 'checked' if v.f.only_alerts }}> só com alerta</label>
+    <label><input type="checkbox" name="todos" value="1" {{ 'checked' if not v.f.credit_only }}> incluir caixa/derivativos</label>
+    <button>Filtrar</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Por grupo econômico <span class="muted small">(alertas primeiro)</span></h2>
+  <div class="scroll"><table class="small">
+    <tr><th>Grupo</th><th class="num">Ativos</th><th class="num">Com alerta</th><th>Proxy</th><th class="num">Hoje</th><th class="num">4 sem.</th></tr>
+    {% for g, x in v.groups %}<tr><td><a href="/ativos?grupo={{ g|urlencode }}">{{ g }}</a></td><td class="num">{{ x.n }}</td>
+      <td class="num {{ 'down' if x.alerts }}">{{ x.alerts or '' }}</td><td>{{ x.proxy or '' }}</td>
+      <td class="num {{ 'up' if (x.px_chg or 0) > 0 else 'down' if (x.px_chg or 0) < 0 }}">{{ x.px_chg|fmt(1, '%') if x.px_chg is not none else '' }}</td>
+      <td class="num {{ 'down' if (x.r4w or 0) < -0.1 }}">{{ (x.r4w * 100)|fmt(0, '%') if x.r4w is not none else '' }}</td></tr>{% endfor %}
+  </table></div>
+</div>
+
+<div class="card">
+  <h2>{{ v.rows|length }} ativos no filtro</h2>
+  <div class="scroll"><table class="small">
+    <tr><th>Ativo</th><th>Tipo</th><th>Emissor / fundo</th><th>Grupo · setor</th><th>Proxy</th><th class="num">Preço</th><th class="num">Hoje</th>
+      <th class="num">4 sem.</th><th class="num">CDI+ bps</th><th class="num">Δ5d</th><th>Veredito · P4</th><th>Alertas</th></tr>
+    {% for r in v.rows %}<tr>
+      <td><b>{{ r.id_origem }}</b>{% if r.codigo and r.codigo != r.id_origem %}<div class="muted">{{ r.codigo }}</div>{% endif %}
+        {% if r.isin and r.isin != r.id_origem %}<div class="muted">{{ r.isin }}</div>{% endif %}</td>
+      <td>{{ r.tipo or '' }}{% if r.classe_serie %}<div class="muted">{{ r.classe_serie }}</div>{% endif %}</td>
+      <td>{{ (r.emissor or '')[:48] }}{% if r.originador_cedente %}<div class="muted">orig.: {{ r.originador_cedente[:40] }}</div>{% endif %}
+        {% if r.devedor and r.devedor != r.emissor %}<div class="muted">devedor: {{ r.devedor[:40] }}</div>{% endif %}</td>
+      <td>{{ r.grupo_economico or '' }}<div class="muted">{{ r.setor or '' }}{% if r.subsetor %} · {{ r.subsetor }}{% endif %}</div></td>
+      <td>{{ r.proxy_ticker or '' }}{% if r.proxy_tipo %}<div class="muted">{{ r.proxy_tipo }}</div>{% endif %}</td>
+      <td class="num">{% if r.bond_px %}{{ r.bond_px|fmt(2) }}<div class="muted">bond</div>{% elif r.px %}{{ r.px|fmt(2) }}{% endif %}</td>
+      <td class="num {{ 'up' if ((r.bond_chg if r.bond_px else r.px_chg) or 0) > 0 else 'down' if ((r.bond_chg if r.bond_px else r.px_chg) or 0) < 0 }}">
+        {% set c = r.bond_chg if r.bond_px else r.px_chg %}{{ c|fmt(1, '%') if c is not none else '' }}</td>
+      <td class="num {{ 'down' if (r.r4w or 0) < -0.1 }}">{{ (r.r4w * 100)|fmt(0, '%') if r.r4w is not none else '' }}</td>
+      <td class="num">{{ r.spread|fmt(0) if r.spread is not none else '' }}</td>
+      <td class="num {{ 'down' if (r.chg5 or 0) > 20 else 'up' if (r.chg5 or 0) < -20 }}">{{ r.chg5|fmt(0) if r.chg5 is not none else '' }}</td>
+      <td>{{ r.veredito or '' }}{% if r.p4 %}<div class="muted">{{ r.p4 }}</div>{% endif %}</td>
+      <td>{% for a in r.alerts %}<span class="chip SELL" style="display:inline-block;margin:1px 0">{{ a }}</span> {% endfor %}
+        {% if r.confianca and 'alta' not in r.confianca %}<div class="muted">confiança {{ r.confianca }}</div>{% endif %}</td>
+    </tr>{% endfor %}
+  </table></div>
+  <p class="muted small">Preço: ação proxy (emissor, controlador, originador ou par) ou, para eurobonds, bid IBKR. Debêntures: CDI+ e Δ5d do arquivo ANBIMA mais recente.
+    LF, FIDC e CRI/CRA sem preço público ao vivo aparecem pelo proxy. Não é recomendação.</p>
+</div>
+<script>setInterval(() => { if (!document.activeElement || !['INPUT', 'SELECT'].includes(document.activeElement.tagName)) location.reload(); }, 60000);</script>
+{% endif %}
+{% endblock %}
