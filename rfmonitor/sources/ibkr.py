@@ -17,18 +17,29 @@ PORTS = [int(p) for p in os.getenv("IBKR_PORT", "4001,7496,4002,7497").split(","
 CLIENT_ID = int(os.getenv("IBKR_CLIENT_ID", "17"))
 
 
-def connect(timeout: float = 4.0):
-    """First port that answers (Gateway live, TWS live, Gateway paper, TWS paper)."""
+def connect(timeout: float = 4.0, client_id: int | None = None):
+    """First port that answers (Gateway live, TWS live, Gateway paper, TWS paper). Several processes (the app's
+    minute job, the CLI) can be connected at once, so a busy client id falls through to the next one."""
     from ib_async import IB
     last = None
+    ids = [client_id] if client_id is not None else [CLIENT_ID + k for k in range(6)]
     for port in PORTS:
-        ib = IB()
-        try:
-            ib.connect(HOST, port, clientId=CLIENT_ID, timeout=timeout, readonly=True)
-            log.info("IBKR connected on %s:%s", HOST, port)
-            return ib
-        except Exception as e:  # not listening / refused
-            last = e
+        for cid in ids:
+            ib = IB()
+            ib.RequestTimeout = float(os.getenv("IBKR_TIMEOUT", "20"))  # never hang the scheduler
+            try:
+                ib.connect(HOST, port, clientId=cid, timeout=timeout, readonly=True)
+                log.info("IBKR connected on %s:%s (client %s)", HOST, port, cid)
+                return ib
+            except ConnectionRefusedError as e:  # nothing listening on this port
+                last = e
+                break
+            except Exception as e:  # e.g. client id in use -> try the next id
+                last = e
+                try:
+                    ib.disconnect()
+                except Exception:
+                    pass
     raise ConnectionError(f"IB Gateway/TWS API not reachable on {HOST}:{PORTS} ({last}). "
                           "Is it logged in with 'Enable ActiveX and Socket Clients' on?")
 
