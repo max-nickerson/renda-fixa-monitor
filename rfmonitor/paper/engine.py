@@ -27,6 +27,7 @@ TRANCHES = 6
 HOLD_DAYS = 126
 EXPIRE_DAYS = 20
 FORCED_HAIRCUT_BPS = 50
+MAX_PRINT_GAP_BPS = 500
 
 
 def _bdays(a: str, b: str) -> int:
@@ -47,12 +48,13 @@ class Market:
     """Everything the engine needs for a range of days, loaded once."""
 
     def __init__(self, start: str, end: str):
-        s = store.df("SELECT date, codigo, ratio, kind, contract FROM snap_bonds WHERE date >= date(?, '-10 day') "
+        s = store.df("SELECT date, codigo, ratio, pu, kind, contract FROM snap_bonds WHERE date >= date(?, '-10 day') "
                      "AND date <= ?", (start, end))
         self.ratio = s.pivot(index="date", columns="codigo", values="ratio").sort_index()
+        self.pu = s.pivot(index="date", columns="codigo", values="pu").sort_index()
         self.ref = s.drop_duplicates("codigo", keep="last").set_index("codigo")[["kind", "contract"]]
-        t = store.df("SELECT date, codigo, pct_curve FROM snd_trades WHERE date >= ? AND date <= ?", (start, end))
-        self.trades = t.pivot_table(index="date", columns="codigo", values="pct_curve", aggfunc="mean").sort_index() / 100
+        t = store.df("SELECT date, codigo, pu_avg FROM snd_trades WHERE date >= ? AND date <= ?", (start, end))
+        self.trades = t.pivot_table(index="date", columns="codigo", values="pu_avg", aggfunc="mean").sort_index()
         r = store.df("SELECT * FROM rates ORDER BY date").set_index("date")
         self.C = (1 + r["cdi"]).cumprod()
         self.I = r["ipca_factor"]
@@ -65,10 +67,18 @@ class Market:
         return None
 
     def trade(self, code: str, day: str) -> float | None:
-        if code in self.trades.columns and day in self.trades.index:
-            v = self.trades.at[day, code]
-            return None if pd.isna(v) else float(v)
-        return None
+        """Price of the day's SND trades as a ratio to par: ANBIMA ratio x (SND average PU / ANBIMA PU).
+        Both PUs are R$ per unit on the same day, so this avoids SND's inconsistent '% PU da curva' field.
+        A print more than MAX_PRINT_GAP_BPS away from ANBIMA is treated as a bad print (no fill that day)."""
+        if code not in self.trades.columns or day not in self.trades.index or code not in self.pu.columns                 or day not in self.pu.index:
+            return None
+        v, a, mk = self.trades.at[day, code], self.pu.at[day, code], self.mark(code, day)
+        if pd.isna(v) or pd.isna(a) or not a or mk is None:
+            return None
+        if abs(v / a - 1) * 1e4 > MAX_PRINT_GAP_BPS:
+            log.info("paper: ignoring SND print %s %s (%.0f vs ANBIMA %.0f)", code, day, v, a)
+            return None
+        return mk * float(v / a)
 
     def _f(self, s: pd.Series, a: str, b: str) -> float:
         x = s[s.index <= b]
@@ -129,17 +139,16 @@ def step(until: str | None = None) -> dict:
     if not days_all:
         return {"error": "no data collected yet"}
     until = until or days_all[-1]
-    _ensure_books(days_all[-1])
+    _ensure_books(days_all[-1])  # no-op when the books exist (e.g. after warm_start)
     out = {}
     for b in store.rows("SELECT * FROM books"):
         book, last = b["name"], b["last_day"]
-        if last is None:  # book starts at the latest collected day: open the first tranche, nothing to mark yet
+        if last is None:  # first tranche is decided at the close of the start day, then replay any later days
             open_tranche(book, b["start"])
             with store.connect() as con:
                 con.execute("UPDATE books SET last_day = ? WHERE name = ?", (b["start"], book))
                 con.execute("INSERT OR REPLACE INTO nav VALUES (?,?,?,?,?,?)", (book, b["start"], b["cash"], b["cash"], 0, 0))
-            out[book] = {"started": b["start"]}
-            continue
+            last = b["start"]
         mkt = Market(last, until)
         cash = b["cash"]
         prev = last
@@ -223,10 +232,35 @@ def benchmarks() -> pd.DataFrame:
     return pd.DataFrame({"CDI": cdi, "Universo": uni}, index=days)
 
 
-def reset() -> None:
+def reset(start: str | None = None) -> None:
+    """Delete the books (collected data is kept). With `start`, the books restart on that ANBIMA day."""
     with store.connect() as con:
         for t in ("books", "signals", "orders", "positions", "nav"):
             con.execute(f"DELETE FROM {t}")
+    if start:
+        _ensure_books(start)
+
+
+def warm_start() -> dict:
+    """Restart the books on the oldest day still in ANBIMA's public files (~10 business days back) and replay
+    to today, so fills, slippage and the equity curve show up immediately instead of after a few days.
+    Prices, trades, stock closes and financials are point-in-time; the press / stock-crash flags of those
+    replayed days are today's values (they only affect a few names)."""
+    from .. import screener
+    from ..sources import anbima_public
+    from . import collect
+    have = {r["date"] for r in store.rows("SELECT DISTINCT date FROM snap_bonds")}
+    days = [d.isoformat() for d in anbima_public.business_days_back(14)
+            if (x := anbima_public.debentures(d)) is not None and not x.empty]
+    for d in days:
+        if d not in have:
+            res = screener.run(history_days=14, as_of=d)
+            log.info("paper warm start: ranked %s (%s bonds)", d, res.get("ranked"))
+    screener.run()  # keep today's ranking as the latest one
+    c = collect.run(force=True)
+    start = min(r["date"] for r in store.rows("SELECT DISTINCT date FROM snap_bonds"))
+    reset(start)
+    return {"start": start, "collect": c, "step": step()}
 
 
 def run_daily(force: bool = False) -> dict:

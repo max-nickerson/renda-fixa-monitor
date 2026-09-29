@@ -18,8 +18,9 @@
 
 {% if not books %}
 <div class="card"><h2>Ainda não começou</h2>
-  <p class="muted">Clique em “Coletar dados e avançar”: a coleta baixa preços ANBIMA, negócios do SND, ações dos emissores e CDI,
-    e a primeira tranche é aberta no último dia com preços. Os preenchimentos começam a aparecer nos dias seguintes.</p></div>
+  <p class="muted">Recomendado: comece pelos últimos 10 dias úteis que a ANBIMA ainda publica. As carteiras são montadas no primeiro desses dias
+    e avançam até hoje com os negócios reais do SND, então execuções, slippage e a curva já aparecem (leva ~10 min).</p>
+  <form method="post" action="/paper/warm" style="margin-top:8px"><button>Começar pelos últimos 10 dias úteis</button></form></div>
 {% else %}
 <div class="grid">
 {% for b in books %}
@@ -107,7 +108,10 @@
   <details class="small"><summary style="cursor:pointer">Reiniciar as carteiras simuladas</summary>
     <form class="inline" method="post" action="/paper/reset" style="margin-top:8px">
       <input name="confirm" placeholder="digite REINICIAR" size="16"><button class="ghost">Reiniciar</button>
-      <span class="muted">Apaga ordens, posições e patrimônio. Mantém os dados coletados.</span></form></details>
+      <span class="muted">Apaga ordens, posições e patrimônio. Mantém os dados coletados.</span></form>
+    <form class="inline" method="post" action="/paper/warm" style="margin-top:8px">
+      <button class="ghost">Recomeçar pelos últimos 10 dias úteis</button>
+      <span class="muted">Refaz as carteiras desde o dia mais antigo que a ANBIMA ainda publica (~10 min).</span></form></details>
 </div>
 
 <script>

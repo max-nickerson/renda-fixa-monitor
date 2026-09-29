@@ -68,12 +68,17 @@ def _recent_negative_filings(days: int = 15) -> dict[str, str]:
     return out
 
 
-def run(history_days: int = 10) -> dict:
+def run(history_days: int = 10, as_of: str | None = None) -> dict:
+    """as_of (YYYY-MM-DD) ranks an earlier day still in ANBIMA's public files (used to warm-start paper trading)."""
     mkt = Market(max(history_days, 6))
     deb = mkt.deb
     if deb.empty:
         return {"error": "ANBIMA debenture files unavailable"}
     deb = deb.dropna(subset=["taxa_indicativa"]).copy()
+    if as_of:
+        deb = deb[deb["date"] <= pd.Timestamp(as_of)]
+        if deb.empty:
+            return {"error": f"no ANBIMA file on or before {as_of}"}
     last_date = deb["date"].max()
 
     # Spreads for every bond/day (history is only used for the 5-day change).

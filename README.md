@@ -122,7 +122,7 @@ python -m rfmonitor backtest USN15516AB8      # walk-forward backtest on stored 
 python -m rfmonitor import-prices <ISIN> prices.csv   # CSV: date,price  (or TradingView t,close)
 python -m rfmonitor history                   # once per machine: SND trades, B3 curves, IDA (~30 min)
 python -m rfmonitor models                    # retrain regime + selection models now (else daily)
-python -m rfmonitor paper [run|status|reset]  # paper trading: collect today's data, advance P7 / P4+Q books
+python -m rfmonitor paper [run|warm|status|reset]  # paper trading (warm = restart 10 business days back)
 python -m rfmonitor test-email
 ```
 

@@ -39,7 +39,7 @@ def main() -> None:
     sub.add_parser("export", help="write a read-only HTML snapshot of the dashboard (data/export/)")
     sub.add_parser("site", help="one full cycle + regime + P4 ranking, then write site/index.html (GitHub Pages)")
     pp = sub.add_parser("paper", help="paper trading: collect today's data and advance the P7 / P4+Q books")
-    pp.add_argument("action", nargs="?", default="run", choices=["run", "status", "reset"])
+    pp.add_argument("action", nargs="?", default="run", choices=["run", "status", "reset", "warm"])
     sub.add_parser("test-email", help="send a test e-mail")
     sub.add_parser("tv-login", help="sign in to TradingView MCP (optional eurobond prices)")
     sub.add_parser("version")
@@ -141,6 +141,8 @@ def main() -> None:
         from .paper import collect as pc, engine
         if args.action == "run":
             print(json.dumps(engine.run_daily(force=True), indent=2, default=str))
+        elif args.action == "warm":
+            print(json.dumps(engine.warm_start(), indent=2, default=str))
         elif args.action == "reset":
             engine.reset()
             print("paper books reset (collected data kept)")

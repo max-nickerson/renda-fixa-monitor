@@ -220,6 +220,18 @@ def create_app(scheduler: bool = True) -> FastAPI:
         threading.Thread(target=work, daemon=True).start()
         return RedirectResponse("/paper?msg=coleta+em+andamento+(1-3+min);+recarregue+a+página", status_code=303)
 
+    @app.post("/paper/warm")
+    def paper_warm():
+        from .paper import engine
+        def work():
+            try:
+                engine.warm_start()
+            except Exception:
+                logging.getLogger(__name__).exception("paper warm start failed")
+        threading.Thread(target=work, daemon=True).start()
+        return RedirectResponse("/paper?msg=recomeçando+pelos+últimos+10+dias+úteis+(~10+min);+recarregue+depois",
+                                status_code=303)
+
     @app.post("/paper/reset")
     def paper_reset(confirm: str = Form("")):
         from .paper import engine
