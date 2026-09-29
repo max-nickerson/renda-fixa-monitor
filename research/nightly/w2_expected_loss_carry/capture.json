@@ -1,0 +1,73 @@
+{
+ "P4_issuer_months": 4483,
+ "with_event_12m": 420,
+ "issuers_with_event": 59,
+ "pdl": {
+  "flag_rate": 0.11130939103279054,
+  "recall_events": 0.2857142857142857,
+  "precision": 0.24048096192384769,
+  "fwd126_flagged": 0.009600069150872043,
+  "fwd126_unflagged": 0.012570570962438436
+ },
+ "pdg": {
+  "flag_rate": 0.15904528217711353,
+  "recall_events": 0.3738095238095238,
+  "precision": 0.22019635343618513,
+  "fwd126_flagged": 0.006554106532553278,
+  "fwd126_unflagged": 0.013337385737741552
+ },
+ "wq": {
+  "flag_rate": 0.18380548739683247,
+  "recall_events": 0.38333333333333336,
+  "precision": 0.1953883495145631,
+  "fwd126_flagged": 0.003964023896536894,
+  "fwd126_unflagged": 0.014239471107275536
+ },
+ "eqh": {
+  "flag_rate": 0.14633058219942002,
+  "recall_events": 0.3619047619047619,
+  "precision": 0.23170731707317074,
+  "fwd126_flagged": -0.004448439566644047,
+  "fwd126_unflagged": 0.015423387096282234
+ },
+ "onsets_per_year_all_types_debenture_issuers": {
+  "2021": 7,
+  "2022": 11,
+  "2023": 46,
+  "2024": 23,
+  "2025": 34
+ },
+ "hard_onsets_per_year_debenture_issuers": {
+  "2021": 1,
+  "2022": 2,
+  "2023": 14,
+  "2024": 10,
+  "2025": 10
+ },
+ "onsets_per_year_by_type_all_issuers": {
+  "(2019, 'ipe_rj_doc')": 18,
+  "(2019, 'ipe_rj_fact')": 6,
+  "(2020, 'ipe_rj_doc')": 6,
+  "(2020, 'ipe_rj_fact')": 5,
+  "(2021, 'bias_audit_distress')": 1,
+  "(2021, 'bond_loss')": 6,
+  "(2021, 'ipe_rj_doc')": 3,
+  "(2021, 'ipe_rj_fact')": 1,
+  "(2022, 'bias_audit_distress')": 1,
+  "(2022, 'bond_loss')": 9,
+  "(2022, 'ipe_rj_doc')": 3,
+  "(2022, 'ipe_rj_fact')": 3,
+  "(2023, 'bias_audit_distress')": 6,
+  "(2023, 'bond_loss')": 39,
+  "(2023, 'ipe_rj_fact')": 2,
+  "(2023, 'rating_severe')": 1,
+  "(2024, 'bias_audit_distress')": 5,
+  "(2024, 'bond_loss')": 17,
+  "(2024, 'ipe_rj_doc')": 2,
+  "(2024, 'ipe_rj_fact')": 8,
+  "(2025, 'bias_audit_distress')": 2,
+  "(2025, 'bond_loss')": 31,
+  "(2025, 'ipe_rj_doc')": 1,
+  "(2025, 'ipe_rj_fact')": 6
+ }
+}

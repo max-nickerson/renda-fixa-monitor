@@ -1,0 +1,102 @@
+{
+ "table": {
+  "best_repro": {
+   "exCDI_%": 2.286,
+   "exU_%": 1.1843,
+   "t_vsU": 2.7436,
+   "vs_bench_%": 0.0678,
+   "t_vs_bench": 0.9222,
+   "p_vs_bench": 0.3564,
+   "vol_%": 1.1085,
+   "sharpe": 2.0623,
+   "maxDD_%": -1.4267,
+   "h1_vs_bench": 0.0037,
+   "h2_vs_bench": 0.1319,
+   "turnover": 3.1674,
+   "n_avg": 81.3542,
+   "p_holm": 1.0
+  },
+  "lag1period": {
+   "exCDI_%": 2.1989,
+   "exU_%": 1.0971,
+   "t_vsU": 2.4474,
+   "vs_bench_%": -0.0193,
+   "t_vs_bench": -0.3273,
+   "p_vs_bench": 0.7434,
+   "vol_%": 1.0675,
+   "sharpe": 2.06,
+   "maxDD_%": -1.3048,
+   "h1_vs_bench": -0.0085,
+   "h2_vs_bench": -0.0301,
+   "turnover": 3.1828,
+   "n_avg": 82.0208,
+   "p_holm": 1.0
+  },
+  "q0.7": {
+   "exCDI_%": 2.2441,
+   "exU_%": 1.1423,
+   "t_vsU": 2.4328,
+   "vs_bench_%": 0.0259,
+   "t_vs_bench": 0.3299,
+   "p_vs_bench": 0.7415,
+   "vol_%": 1.1343,
+   "sharpe": 1.9784,
+   "maxDD_%": -1.3138,
+   "h1_vs_bench": 0.133,
+   "h2_vs_bench": -0.0813,
+   "turnover": 3.2463,
+   "n_avg": 72.3333,
+   "p_holm": 1.0
+  },
+  "q0.9": {
+   "exCDI_%": 2.2476,
+   "exU_%": 1.1459,
+   "t_vsU": 2.5196,
+   "vs_bench_%": 0.0294,
+   "t_vs_bench": 0.9821,
+   "p_vs_bench": 0.3261,
+   "vol_%": 1.0767,
+   "sharpe": 2.0876,
+   "maxDD_%": -1.3874,
+   "h1_vs_bench": 0.0266,
+   "h2_vs_bench": 0.0322,
+   "turnover": 3.0375,
+   "n_avg": 92.9583,
+   "p_holm": 1.0
+  },
+  "flip": {
+   "exCDI_%": 2.2946,
+   "exU_%": 1.1928,
+   "t_vsU": 2.4479,
+   "vs_bench_%": 0.0763,
+   "t_vs_bench": 0.8138,
+   "p_vs_bench": 0.4158,
+   "vol_%": 1.0149,
+   "sharpe": 2.2608,
+   "maxDD_%": -1.3609,
+   "h1_vs_bench": 0.0336,
+   "h2_vs_bench": 0.1191,
+   "turnover": 3.1717,
+   "n_avg": 80.5625,
+   "p_holm": 1.0
+  }
+ },
+ "shuffle_diff_vs_p4q": {
+  "mean": -0.0198,
+  "p95": 0.0259,
+  "draws": [
+   0.019,
+   -0.0463,
+   0.0316,
+   -0.0248,
+   -0.0083,
+   -0.0367,
+   -0.027,
+   -0.1085,
+   0.0086,
+   -0.0052
+  ]
+ },
+ "cov_in_p4q": 0.8477,
+ "distinct_values_per_date_median": 23.0
+}

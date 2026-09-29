@@ -1,0 +1,157 @@
+{
+ "reproduce": {
+  "honest_P4Q_vs_U": {
+   "ann_excess_%": 1.2004,
+   "diff_ann_%": 0.9526,
+   "diff_t_nw": 2.0545,
+   "diff_h1_%": 1.4691,
+   "diff_h2_%": 0.4362
+  },
+  "honest_P4Q_vs_base_P4Q": {
+   "ann_excess_%": 1.2004,
+   "diff_ann_%": -1.0178,
+   "diff_t_nw": -7.589,
+   "diff_h1_%": -1.2007,
+   "diff_h2_%": -0.8349
+  },
+  "honest_P4_vs_U": {
+   "ann_excess_%": 0.9982,
+   "diff_ann_%": 0.7504,
+   "diff_t_nw": 1.414,
+   "diff_h1_%": 1.4116,
+   "diff_h2_%": 0.0892
+  },
+  "honest_P4Q_vs_P4": {
+   "ann_excess_%": 1.2004,
+   "diff_ann_%": 0.2022,
+   "diff_t_nw": 1.4078,
+   "diff_h1_%": 0.0574,
+   "diff_h2_%": 0.347
+  },
+  "base_P4Q_vs_U": {
+   "ann_excess_%": 2.2182,
+   "diff_ann_%": 1.1165,
+   "diff_t_nw": 2.4091,
+   "diff_h1_%": 1.6292,
+   "diff_h2_%": 0.6037
+  }
+ },
+ "ex2023": {
+  "honest_P4Q_vs_U": {
+   "diff_ann_%": 0.8970944084559637,
+   "t_nw6": 1.6061439422561539,
+   "n_months": 36
+  },
+  "honest_P4Q_vs_P4": {
+   "diff_ann_%": 0.18749252486549942,
+   "t_nw6": 1.0280420371589283,
+   "n_months": 36
+  },
+  "honest_P4_vs_U": {
+   "diff_ann_%": 0.7096018835904643,
+   "t_nw6": 1.098719843215448,
+   "n_months": 36
+  }
+ },
+ "by_year": {
+  "honest_P4Q_vs_U": {
+   "2022": 1.819,
+   "2023": 1.119,
+   "2024": -0.058,
+   "2025": 0.93
+  },
+  "honest_P4Q_vs_P4": {
+   "2022": -0.131,
+   "2023": 0.246,
+   "2024": 0.522,
+   "2025": 0.172
+  },
+  "honest_P4Q_vs_base_P4Q": {
+   "2022": -1.215,
+   "2023": -1.186,
+   "2024": -0.431,
+   "2025": -1.239
+  }
+ },
+ "cost_flat50": {
+  "P4Q_vs_U": {
+   "ann_excess_%": 1.6372,
+   "diff_ann_%": 0.9702,
+   "diff_t_nw": 2.0816,
+   "diff_h1_%": 1.4186,
+   "diff_h2_%": 0.5217
+  },
+  "U_level": 0.6671
+ },
+ "cost_bucket_x1.5": {
+  "P4Q_vs_U": {
+   "ann_excess_%": 0.5987,
+   "diff_ann_%": 0.7769,
+   "diff_t_nw": 1.6651,
+   "diff_h1_%": 1.3231,
+   "diff_h2_%": 0.2307
+  },
+  "U_level": -0.1782
+ },
+ "cost_bucket_x0.5": {
+  "P4Q_vs_U": {
+   "ann_excess_%": 1.8021,
+   "diff_ann_%": 1.1284,
+   "diff_t_nw": 2.4448,
+   "diff_h1_%": 1.615,
+   "diff_h2_%": 0.6417
+  },
+  "U_level": 0.6738
+ },
+ "honest_P4Q_vs_costless_U": {
+  "ann_excess_%": 1.2004,
+  "diff_ann_%": 0.1006,
+  "diff_t_nw": 0.1923,
+  "diff_h1_%": 0.4149,
+  "diff_h2_%": -0.2137
+ },
+ "carry_only_honest": {
+  "vs_U": {
+   "ann_excess_%": 0.9644,
+   "diff_ann_%": 0.7166,
+   "diff_t_nw": 1.2434,
+   "diff_h1_%": 1.528,
+   "diff_h2_%": -0.0947
+  },
+  "honest_P4Q_vs_carry": {
+   "ann_excess_%": 1.2004,
+   "diff_ann_%": 0.236,
+   "diff_t_nw": 1.1933,
+   "diff_h1_%": -0.0589,
+   "diff_h2_%": 0.5309
+  }
+ },
+ "top5_issuers": {
+  "12979552": 0.02852551823473209,
+  "12647827": 0.027199275429943978,
+  "08827501": 0.018094639058268764,
+  "21314559": 0.015315368342640325,
+  "45242914": 0.01372403136931316
+ },
+ "ex_top5_P4Q_only": {
+  "ann_excess_%": 0.92,
+  "diff_ann_%": 0.6722,
+  "diff_t_nw": 1.4639,
+  "diff_h1_%": 1.1526,
+  "diff_h2_%": 0.1918
+ },
+ "ex_top5_both": {
+  "ann_excess_%": 0.92,
+  "diff_ann_%": 0.7438,
+  "diff_t_nw": 1.5439,
+  "diff_h1_%": 1.2685,
+  "diff_h2_%": 0.2191
+ },
+ "liquid_q3to5_only": {
+  "ann_excess_%": 1.2312,
+  "diff_ann_%": 0.7339,
+  "diff_t_nw": 1.7106,
+  "diff_h1_%": 1.2571,
+  "diff_h2_%": 0.2107
+ }
+}

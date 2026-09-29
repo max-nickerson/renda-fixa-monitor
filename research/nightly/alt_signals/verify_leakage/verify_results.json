@@ -1,0 +1,215 @@
+{
+ "repro_best": {
+  "ann_excess_%": 2.5548,
+  "diff_ann_%": 0.3365,
+  "diff_t_nw": 2.9437,
+  "diff_h1_%": 0.3458,
+  "diff_h2_%": 0.3272,
+  "n_avg": 78.8
+ },
+ "repro_supply_only": {
+  "ann_excess_%": 2.427,
+  "diff_ann_%": 0.2087,
+  "diff_t_nw": 1.8862,
+  "diff_h1_%": 0.071,
+  "diff_h2_%": 0.3465,
+  "n_avg": 84.4
+ },
+ "orig_flag_match": 1.0,
+ "best|orig": {
+  "ann_excess_%": 2.5548,
+  "diff_ann_%": 0.3365,
+  "diff_t_nw": 2.9437,
+  "diff_h1_%": 0.3458,
+  "diff_h2_%": 0.3272,
+  "n_avg": 78.8
+ },
+ "supply_only|orig": {
+  "ann_excess_%": 2.427,
+  "diff_ann_%": 0.2087,
+  "diff_t_nw": 1.8862,
+  "diff_h1_%": 0.071,
+  "diff_h2_%": 0.3465,
+  "n_avg": 84.4
+ },
+ "best|legacy_at_last_comunicado": {
+  "ann_excess_%": 2.5479,
+  "diff_ann_%": 0.3297,
+  "diff_t_nw": 3.7598,
+  "diff_h1_%": 0.3295,
+  "diff_h2_%": 0.3299,
+  "n_avg": 78.2
+ },
+ "supply_only|legacy_at_last_comunicado": {
+  "ann_excess_%": 2.4159,
+  "diff_ann_%": 0.1976,
+  "diff_t_nw": 2.1037,
+  "diff_h1_%": 0.0465,
+  "diff_h2_%": 0.3488,
+  "n_avg": 83.8
+ },
+ "best|r160_at_registro": {
+  "ann_excess_%": 2.5768,
+  "diff_ann_%": 0.3586,
+  "diff_t_nw": 3.1948,
+  "diff_h1_%": 0.3626,
+  "diff_h2_%": 0.3545,
+  "n_avg": 78.5
+ },
+ "supply_only|r160_at_registro": {
+  "ann_excess_%": 2.4444,
+  "diff_ann_%": 0.2262,
+  "diff_t_nw": 2.066,
+  "diff_h1_%": 0.0872,
+  "diff_h2_%": 0.3652,
+  "n_avg": 84.0
+ },
+ "best|both_conservative": {
+  "ann_excess_%": 2.57,
+  "diff_ann_%": 0.3518,
+  "diff_t_nw": 4.0734,
+  "diff_h1_%": 0.3463,
+  "diff_h2_%": 0.3572,
+  "n_avg": 77.9
+ },
+ "supply_only|both_conservative": {
+  "ann_excess_%": 2.4334,
+  "diff_ann_%": 0.2152,
+  "diff_t_nw": 2.2973,
+  "diff_h1_%": 0.0628,
+  "diff_h2_%": 0.3675,
+  "n_avg": 83.4
+ },
+ "best|r160_at_encerramento": {
+  "ann_excess_%": 2.5382,
+  "diff_ann_%": 0.32,
+  "diff_t_nw": 3.0199,
+  "diff_h1_%": 0.3597,
+  "diff_h2_%": 0.2802,
+  "n_avg": 78.4
+ },
+ "supply_only|r160_at_encerramento": {
+  "ann_excess_%": 2.4084,
+  "diff_ann_%": 0.1901,
+  "diff_t_nw": 1.9371,
+  "diff_h1_%": 0.0857,
+  "diff_h2_%": 0.2946,
+  "n_avg": 83.8
+ },
+ "best|all_plus30d": {
+  "ann_excess_%": 2.5296,
+  "diff_ann_%": 0.3114,
+  "diff_t_nw": 3.3273,
+  "diff_h1_%": 0.3984,
+  "diff_h2_%": 0.2243,
+  "n_avg": 77.6
+ },
+ "supply_only|all_plus30d": {
+  "ann_excess_%": 2.3928,
+  "diff_ann_%": 0.1746,
+  "diff_t_nw": 2.0363,
+  "diff_h1_%": 0.1084,
+  "diff_h2_%": 0.2407,
+  "n_avg": 83.2
+ },
+ "best|include_expired": {
+  "ann_excess_%": 2.5548,
+  "diff_ann_%": 0.3365,
+  "diff_t_nw": 2.9437,
+  "diff_h1_%": 0.3458,
+  "diff_h2_%": 0.3272,
+  "n_avg": 78.8
+ },
+ "supply_only|include_expired": {
+  "ann_excess_%": 2.427,
+  "diff_ann_%": 0.2087,
+  "diff_t_nw": 1.8862,
+  "diff_h1_%": 0.071,
+  "diff_h2_%": 0.3465,
+  "n_avg": 84.4
+ },
+ "best|add_icvm400_by_registro": {
+  "ann_excess_%": 2.5565,
+  "diff_ann_%": 0.3382,
+  "diff_t_nw": 2.951,
+  "diff_h1_%": 0.3467,
+  "diff_h2_%": 0.3298,
+  "n_avg": 78.8
+ },
+ "supply_only|add_icvm400_by_registro": {
+  "ann_excess_%": 2.4289,
+  "diff_ann_%": 0.2107,
+  "diff_t_nw": 1.9014,
+  "diff_h1_%": 0.0725,
+  "diff_h2_%": 0.3488,
+  "n_avg": 84.3
+ },
+ "flag_share_p4q_rows": 0.18334005647438484,
+ "flag_rows_age_lt_180d_share": 1.0,
+ "supply_only_seasoned_bonds": {
+  "ann_excess_%": 2.2182,
+  "diff_ann_%": 0.0,
+  "diff_t_nw": NaN,
+  "diff_h1_%": 0.0,
+  "diff_h2_%": 0.0,
+  "n_avg": 103.3
+ },
+ "supply_only_new_bonds": {
+  "ann_excess_%": 2.427,
+  "diff_ann_%": 0.2087,
+  "diff_t_nw": 1.8862,
+  "diff_h1_%": 0.071,
+  "diff_h2_%": 0.3465,
+  "n_avg": 84.4
+ },
+ "flag_share_by_year": {
+  "2022": 0.146,
+  "2023": 0.124,
+  "2024": 0.233,
+  "2025": 0.216
+ },
+ "best|nc_lag30": {
+  "ann_excess_%": 2.5295,
+  "diff_ann_%": 0.3113,
+  "diff_t_nw": 2.9966,
+  "diff_h1_%": 0.3136,
+  "diff_h2_%": 0.309,
+  "n_avg": 78.4
+ },
+ "nc_only|nc_lag30": {
+  "ann_excess_%": 2.3024,
+  "diff_ann_%": 0.0842,
+  "diff_t_nw": 1.2043,
+  "diff_h1_%": 0.2361,
+  "diff_h2_%": -0.0677,
+  "n_avg": 96.2
+ },
+ "best|nc_lag60": {
+  "ann_excess_%": 2.5083,
+  "diff_ann_%": 0.29,
+  "diff_t_nw": 3.0026,
+  "diff_h1_%": 0.2966,
+  "diff_h2_%": 0.2834,
+  "n_avg": 78.3
+ },
+ "nc_only|nc_lag60": {
+  "ann_excess_%": 2.3036,
+  "diff_ann_%": 0.0854,
+  "diff_t_nw": 1.2371,
+  "diff_h1_%": 0.2653,
+  "diff_h2_%": -0.0946,
+  "n_avg": 95.9
+ },
+ "exposure_rows_WB_monthly_vars": [
+  "coal",
+  "corn",
+  "dap",
+  "gas_eu",
+  "iron_ore",
+  "potash",
+  "soy",
+  "sugar",
+  "urea",
+  "wheat"
+ ]
+}

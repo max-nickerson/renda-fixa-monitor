@@ -1,0 +1,40 @@
+[     6s] panels (210973, 130) (48339, 130)
+[    12s] signal caches written
+[    21s] convergence {"beta_mean": -0.372, "beta_t_nw": -13.79, "r2_mean": 0.1462, "r2_pooled": 0.1183} {"beta_mean": -0.233, "beta_t_nw": -11.37, "r2_mean": 0.0796, "r2_pooled": 0.0529}
+[    40s] ic done {'ic': 0.2091, 't': 11.53, 'n': 52} {'ic': 0.1662, 't': 8.42, 'n': 52} {'ic': np.float64(0.1299), 't': 6.38}
+[   389s] pairs {"ann_%": 0.833, "t_nw": 6.44, "n_pairs": 5499, "hit": 0.589, "h1_%": 0.738, "h2_%": 1.012, "mean_gap_bps": 75.7, "mean_carry_diff_bps": 54.7} {"ann_%": 0.57, "t_nw": 1.43, "n_pairs": 5509, "hit": 0.593, "h1_%": 0.6, "h2_%": 0.514, "mean_gap_bps": 97.5, "mean_carry_diff_bps": 97.5}
+[   392s] basis {'basis_ipca_di': {'basis_first_bps': -110.1, 'basis_last_pre2026_bps': -145.4, 'basis_min': -159.3, 'basis_max': -51.7, 'corr_expanding_z_vs_fwd126': -0.069, 'sign_trade_ann_%': 0.991, 'sign_trade_t_nw': 0.98, 'n_months': 44}, 'basis_inc_tax': {'basis_first_bps': -101.0, 'basis_last_pre2026_bps': -110.8, 'basis_min': -241.0, 'basis_max': -43.0, 'corr_expanding_z_vs_fwd126': 0.116, 'sign_trade_ann_%': -0.898, 'sign_trade_t_nw': -1.18, 'n_months': 44}}
+[   394s] bt P4Q_issrich 2.227
+[   396s] bt P4Q_bothrich 2.226
+[   398s] bt P4Q_secrich 2.224
+[   468s] bt P4Q_switch_resid 2.21
+[   549s] bt P4Q_switch_eslope 2.198
+[   620s] bt P4Q_switch_carry 2.218
+[   622s] bt tilt_carry+0.5eiss 2.245
+[   625s] bt tilt_carry+1.0eiss 2.234
+[   627s] bt RV_top20_e_iss_z 1.238
+[   629s] bt RV_top20_e_isec_z 1.791
+[   631s] bt RV_top20_r_sec_z 1.988
+[   634s] bt RV_top20_resid_z 1.929
+[   655s] 
+                    exCDI_%  exU_%  vs_bench_%  t_vs_bench  p_holm  h1_vs_bench  h2_vs_bench  turnover    n_avg
+P4Q_issrich           2.226  1.125       0.008       0.494   1.000        0.010        0.006     2.955  100.812
+P4Q_bothrich          2.226  1.125       0.008       0.485   1.000        0.010        0.006     2.955  100.792
+P4Q_secrich           2.224  1.123       0.006       0.614   1.000        0.005        0.007     2.970  101.042
+P4Q_switch_resid      2.210  1.108      -0.008      -0.182   1.000       -0.051        0.034     2.988  103.292
+P4Q_switch_eslope     2.198  1.096      -0.020      -0.425   1.000       -0.060        0.019     2.992  103.292
+P4Q_switch_carry      2.218  1.116       0.000         NaN     NaN        0.000        0.000     2.945  103.292
+tilt_carry+0.5eiss    2.245  1.143       0.026       0.651   1.000        0.015        0.038     2.965  104.042
+tilt_carry+1.0eiss    2.234  1.132       0.016       0.236   1.000        0.007        0.024     3.009  103.604
+RV_top20_e_iss_z      1.238  0.136      -0.980      -1.969   0.538       -1.225       -0.736     2.957  103.083
+RV_top20_e_isec_z     1.791  0.690      -0.427      -0.988   1.000       -0.932        0.079     2.756  139.833
+RV_top20_r_sec_z      1.988  0.886      -0.230      -0.618   1.000       -0.241       -0.219     2.636  139.854
+RV_top20_resid_z      1.928  0.827      -0.290      -0.920   1.000       -0.164       -0.416     2.498  139.833
+P4                    1.890  0.788      -0.329      -2.275     NaN       -0.296       -0.362     2.738  129.521
+P4Q                   2.218  1.116       0.000         NaN     NaN        0.000        0.000     2.945  103.292
+U                     1.102  0.000      -1.116      -2.409     NaN       -1.629       -0.604     1.674  698.500
+[   744s] sens {'50bps': {'exCDI_%': 1.861, 'vs_P4Q_%': 0.024, 't': 0.59}, 'rec40': {'exCDI_%': 2.213, 'vs_P4Q_%': 0.027, 't': 0.67}, 'hold63': {'exCDI_%': 2.318, 'vs_P4Q_%': 0.054, 't': 1.02}, 'P4Q_switch_resid_50bps': {'vs_P4Q_%': -0.014, 't': -0.31}, 'P4Q_issrich_50bps': {'vs_P4Q_%': 0.007, 't': 0.41}}
+[   771s] placebo {'actual': 2.245, 'random_mean': 0.741, 'random_p95': 0.978}
+[   786s] charts
+[   894s] holdout {'tilt_carry+0.5eiss': {'exCDI_%': 0.035, 'vs_P4Q_%': -0.045, 't': -1.99, 'vs_U_%': 3.296, 'months': 9}, 'P4Q_switch_resid': {'exCDI_%': -0.097, 'vs_P4Q_%': -0.177, 't': -2.76, 'vs_U_%': 3.164, 'months': 9}, 'P4Q_issrich': {'exCDI_%': 0.149, 'vs_P4Q_%': 0.069, 't': 1.81, 'vs_U_%': 3.41, 'months': 9}}
+[   894s] done

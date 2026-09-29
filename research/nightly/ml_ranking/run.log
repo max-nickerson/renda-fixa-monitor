@@ -1,0 +1,97 @@
+01:32:27 lgb_reg: walk-forward
+01:32:28   [lgb_reg] 2022 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:32:30   [lgb_reg] 2023 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:32:47   [lgb_reg] 2024 params {'num_leaves': 11, 'min_data_in_leaf': 156, 'learning_rate': 0.01931200603530703, 'n_estimators': 500, 'feature_fraction': 0.5194934162178646, 'bagging_fraction': 0.6750886818599455, 'lambda_l2': 24.24624316984198}
+01:32:59   [lgb_reg] 2025 params {'num_leaves': 11, 'min_data_in_leaf': 156, 'learning_rate': 0.01931200603530703, 'n_estimators': 500, 'feature_fraction': 0.5194934162178646, 'bagging_fraction': 0.6750886818599455, 'lambda_l2': 24.24624316984198}
+01:33:18   [lgb_reg] done 48 dates in 51s
+01:33:18 lgb_loss: walk-forward
+01:33:19   [lgb_loss] 2022 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:33:21   [lgb_loss] 2023 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:33:39   [lgb_loss] 2024 params {'num_leaves': 19, 'min_data_in_leaf': 405, 'learning_rate': 0.015422399897421833, 'n_estimators': 100, 'feature_fraction': 0.5025094761971445, 'bagging_fraction': 0.5424251497905063, 'lambda_l2': 9.179083779025769}
+01:33:42   [lgb_loss] 2025 params {'num_leaves': 19, 'min_data_in_leaf': 405, 'learning_rate': 0.015422399897421833, 'n_estimators': 100, 'feature_fraction': 0.5025094761971445, 'bagging_fraction': 0.5424251497905063, 'lambda_l2': 9.179083779025769}
+01:33:48   [lgb_loss] done 48 dates in 29s
+01:33:48 lgb_mono: walk-forward
+01:33:48   [lgb_mono] 2022 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:33:53   [lgb_mono] 2023 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:34:25   [lgb_mono] 2024 params {'num_leaves': 11, 'min_data_in_leaf': 156, 'learning_rate': 0.01931200603530703, 'n_estimators': 500, 'feature_fraction': 0.5194934162178646, 'bagging_fraction': 0.6750886818599455, 'lambda_l2': 24.24624316984198}
+01:34:45   [lgb_mono] 2025 params {'num_leaves': 11, 'min_data_in_leaf': 156, 'learning_rate': 0.01931200603530703, 'n_estimators': 500, 'feature_fraction': 0.5194934162178646, 'bagging_fraction': 0.6750886818599455, 'lambda_l2': 24.24624316984198}
+01:35:13   [lgb_mono] done 48 dates in 85s
+01:35:13 lgb_peer: walk-forward
+01:35:14   [lgb_peer] 2022 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:35:17   [lgb_peer] 2023 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:35:39   [lgb_peer] 2024 params {'num_leaves': 19, 'min_data_in_leaf': 405, 'learning_rate': 0.015422399897421833, 'n_estimators': 100, 'feature_fraction': 0.5025094761971445, 'bagging_fraction': 0.5424251497905063, 'lambda_l2': 9.179083779025769}
+01:35:43   [lgb_peer] 2025 params {'num_leaves': 19, 'min_data_in_leaf': 405, 'learning_rate': 0.015422399897421833, 'n_estimators': 100, 'feature_fraction': 0.5025094761971445, 'bagging_fraction': 0.5424251497905063, 'lambda_l2': 9.179083779025769}
+01:35:50   [lgb_peer] done 48 dates in 36s
+01:35:50 lgb_rank: walk-forward
+01:35:50   [lgb_rank] 2022 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:35:57   [lgb_rank] 2023 params {'num_leaves': 15, 'min_data_in_leaf': 200, 'learning_rate': 0.03, 'n_estimators': 300, 'feature_fraction': 0.7, 'bagging_fraction': 0.8, 'lambda_l2': 5.0}
+01:36:47   [lgb_rank] 2024 params {'num_leaves': 24, 'min_data_in_leaf': 307, 'learning_rate': 0.02812880710942793, 'n_estimators': 200, 'feature_fraction': 0.7350871484463478, 'bagging_fraction': 0.7943066369807654, 'lambda_l2': 0.4969612065140508}
+01:37:10   [lgb_rank] 2025 params {'num_leaves': 24, 'min_data_in_leaf': 307, 'learning_rate': 0.02812880710942793, 'n_estimators': 200, 'feature_fraction': 0.7350871484463478, 'bagging_fraction': 0.7943066369807654, 'lambda_l2': 0.4969612065140508}
+01:37:41   [lgb_rank] done 48 dates in 111s
+01:37:41 hier: walk-forward
+01:37:41   [hier] 2022 params {'alpha': 0.0001, 'l1_ratio': 0.0, 'k_iss': 20.0, 'k_sec': 200.0}
+01:37:47   [hier] 2023 params {'alpha': 0.0001, 'l1_ratio': 0.0, 'k_iss': 20.0, 'k_sec': 200.0}
+01:38:45   [hier] 2024 params {'alpha': 6.211311329383157e-05, 'l1_ratio': 0.0, 'k_iss': 1.1260795696497763, 'k_sec': 1074.5839197788732}
+01:39:35   [hier] 2025 params {'alpha': 6.211311329383157e-05, 'l1_ratio': 0.0, 'k_iss': 1.1260795696497763, 'k_sec': 1074.5839197788732}
+01:40:59   [hier] done 48 dates in 197s
+01:40:59 enet_int: walk-forward
+01:40:59   [enet_int] 2022 params {'alpha': 0.0001, 'l1_ratio': 0.2}
+01:41:04   [enet_int] 2023 params {'alpha': 0.0001, 'l1_ratio': 0.2}
+01:41:45   [enet_int] 2024 params {'alpha': 0.0008108874421334601, 'l1_ratio': 0.6794005235251416}
+01:41:51   [enet_int] 2025 params {'alpha': 0.0008108874421334601, 'l1_ratio': 0.6794005235251416}
+01:41:57   [enet_int] done 48 dates in 58s
+01:41:57 xgb_pair: walk-forward
+01:41:57   [xgb_pair] 2022 params {'max_depth': 4, 'learning_rate': 0.05, 'n_estimators': 300, 'subsample': 0.8, 'colsample_bytree': 0.7, 'min_child_weight': 20, 'reg_lambda': 5.0}
+01:42:06   [xgb_pair] 2023 params {'max_depth': 4, 'learning_rate': 0.05, 'n_estimators': 300, 'subsample': 0.8, 'colsample_bytree': 0.7, 'min_child_weight': 20, 'reg_lambda': 5.0}
+01:43:08   [xgb_pair] 2024 params {'max_depth': 4, 'learning_rate': 0.05, 'n_estimators': 300, 'subsample': 0.8, 'colsample_bytree': 0.7, 'min_child_weight': 20.0, 'reg_lambda': 5.0}
+01:43:39   [xgb_pair] 2025 params {'max_depth': 4, 'learning_rate': 0.05, 'n_estimators': 300, 'subsample': 0.8, 'colsample_bytree': 0.7, 'min_child_weight': 20.0, 'reg_lambda': 5.0}
+01:44:17   [xgb_pair] done 48 dates in 140s
+01:44:17 cat_yeti: walk-forward
+01:44:17   [cat_yeti] 2022 params {'depth': 5, 'learning_rate': 0.1, 'iterations': 150, 'l2_leaf_reg': 5.0}
+01:44:47   [cat_yeti] 2023 params {'depth': 5, 'learning_rate': 0.1, 'iterations': 150, 'l2_leaf_reg': 5.0}
+01:46:03   [cat_yeti] 2024 params {'depth': 5, 'learning_rate': 0.1, 'iterations': 150, 'l2_leaf_reg': 5.0}
+01:48:11   [cat_yeti] 2025 params {'depth': 5, 'learning_rate': 0.1, 'iterations': 150, 'l2_leaf_reg': 5.0}
+01:51:57   [cat_yeti] done 48 dates in 460s
+01:52:19 IC table
+01:52:26   lgb_reg        {'ic': -0.0107, 'ic_t_nw': -0.11, 'n_dates': 42, 'ic_within_p4q': 0.2144, 'ic_within_p4q_t': 5.86}
+01:52:26   lgb_rank       {'ic': 0.0637, 'ic_t_nw': 0.64, 'n_dates': 42, 'ic_within_p4q': 0.211, 'ic_within_p4q_t': 5.54}
+01:52:26   xgb_pair       {'ic': 0.0668, 'ic_t_nw': 0.73, 'n_dates': 42, 'ic_within_p4q': 0.2239, 'ic_within_p4q_t': 6.87}
+01:52:26   cat_yeti       {'ic': -0.0113, 'ic_t_nw': -0.11, 'n_dates': 42, 'ic_within_p4q': 0.1473, 'ic_within_p4q_t': 2.66}
+01:52:26   lgb_mono       {'ic': -0.0104, 'ic_t_nw': -0.11, 'n_dates': 42, 'ic_within_p4q': 0.2123, 'ic_within_p4q_t': 5.87}
+01:52:26   enet_int       {'ic': -0.0142, 'ic_t_nw': -0.15, 'n_dates': 42, 'ic_within_p4q': 0.1467, 'ic_within_p4q_t': 3.14}
+01:52:26   hier           {'ic': -0.0466, 'ic_t_nw': -0.59, 'n_dates': 42, 'ic_within_p4q': 0.0943, 'ic_within_p4q_t': 4.14}
+01:52:26   lgb_peer       {'ic': 0.1567, 'ic_t_nw': 4.84, 'n_dates': 42, 'ic_within_p4q': 0.249, 'ic_within_p4q_t': 4.82}
+01:52:26   lgb_loss       {'ic': -0.0019, 'ic_t_nw': -0.02, 'n_dates': 42, 'ic_within_p4q': -0.0634, 'ic_within_p4q_t': -1.09}
+01:52:26   ens            {'ic': 0.0355, 'ic_t_nw': 0.39, 'n_dates': 42, 'ic_within_p4q': 0.2253, 'ic_within_p4q_t': 7.45}
+01:52:26   stack          {'ic': 0.0494, 'ic_t_nw': 0.57, 'n_dates': 42, 'ic_within_p4q': 0.2471, 'ic_within_p4q_t': 4.88}
+01:52:26   ctrl_carry     {'ic': 0.2516, 'ic_t_nw': 3.55, 'n_dates': 42, 'ic_within_p4q': 0.3311, 'ic_within_p4q_t': 11.22}
+01:52:26   ctrl_resid     {'ic': 0.2284, 'ic_t_nw': 14.62, 'n_dates': 42, 'ic_within_p4q': 0.2966, 'ic_within_p4q_t': 9.19}
+01:52:26   cdi_bps (ref)  {'ic': 0.2516, 'ic_t_nw': 3.55, 'n_dates': 42, 'ic_within_p4q': 0.3311, 'ic_within_p4q_t': 11.22}
+01:52:29 51 variants
+01:54:43 | variant | exCDI_% | exU_% | t_vsU | vs_bench_% | t_vs_bench | p_holm | h1_vs_bench | h2_vs_bench | sharpe | maxDD_% | turnover | n_avg |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| lgb_peer:tilt | 2.39 | 1.29 | 3.11 | 0.17 | 2.18 | 1 | 0.01 | 0.33 | 2.21 | -1.38 | 2.96 | 103.29 |
+| stack:tilt | 2.38 | 1.28 | 3.32 | 0.16 | 1.57 | 1 | -0 | 0.32 | 2.12 | -1.38 | 2.96 | 103.29 |
+| stack:veto20 | 2.37 | 1.26 | 2.96 | 0.15 | 2.89 | 0.18 | 0.1 | 0.19 | 2.25 | -1.38 | 2.98 | 97.5 |
+| lgb_peer:veto20 | 2.34 | 1.24 | 2.78 | 0.12 | 2.61 | 0.41 | 0.05 | 0.19 | 2.27 | -1.38 | 2.96 | 99.46 |
+| lgb_reg:tilt | 2.32 | 1.22 | 2.94 | 0.1 | 1.23 | 1 | 0.07 | 0.13 | 2.06 | -1.35 | 2.98 | 103.29 |
+| lgb_mono:tilt | 2.31 | 1.21 | 2.89 | 0.09 | 1.12 | 1 | 0.08 | 0.1 | 2.05 | -1.35 | 2.98 | 103.29 |
+| lgb_loss:veto10 | 2.3 | 1.2 | 2.41 | 0.08 | 1.39 | 1 | 0.16 | -0.01 | 2.38 | -1.32 | 2.98 | 99.27 |
+| ctrl_resid:tilt | 2.29 | 1.19 | 2.57 | 0.08 | 3.23 | 0.06 | 0.1 | 0.06 | 2.16 | -1.32 | 2.93 | 103.29 |
+| lgb_reg:veto20 | 2.29 | 1.19 | 2.75 | 0.07 | 1.69 | 1 | 0.08 | 0.07 | 2.13 | -1.42 | 3.01 | 98.44 |
+| hier:veto20 | 2.28 | 1.18 | 2.66 | 0.07 | 1.25 | 1 | 0.09 | 0.04 | 2.13 | -1.36 | 3.04 | 92.29 |
+| ens:tilt | 2.28 | 1.18 | 2.85 | 0.06 | 0.92 | 1 | 0.04 | 0.09 | 2.05 | -1.37 | 2.95 | 103.29 |
+| ctrl_carry:tilt | 2.28 | 1.18 | 2.54 | 0.06 | 5.22 | 0 | 0.06 | 0.06 | 2.18 | -1.34 | 2.93 | 103.29 |
+| stack:veto10 | 2.28 | 1.18 | 2.62 | 0.06 | 2.11 | 1 | 0.03 | 0.09 | 2.17 | -1.41 | 2.96 | 101.12 |
+| lgb_mono:veto20 | 2.28 | 1.17 | 2.67 | 0.06 | 1.42 | 1 | 0.08 | 0.03 | 2.12 | -1.43 | 3.02 | 98.67 |
+| lgb_peer:veto10 | 2.28 | 1.17 | 2.59 | 0.06 | 1.92 | 1 | 0.02 | 0.09 | 2.17 | -1.41 | 2.95 | 101.5 |
+01:54:43 best lgb_peer:tilt
+01:55:04 lgb_peer:tilt {'net50_diff_vs_p4q': 0.17, 'net50_t': 2.144, 'rec40_diff_vs_p4q': 0.167, 'hold63_diff_vs_p4q': 0.225, 'cohort126_diff_vs_p4q_ann': 0.143, 'cohort_t': 1.943}
+01:55:15 stack:tilt {'net50_diff_vs_p4q': 0.158, 'net50_t': 1.536, 'rec40_diff_vs_p4q': 0.155, 'hold63_diff_vs_p4q': 0.203, 'cohort126_diff_vs_p4q_ann': 0.109, 'cohort_t': 1.179}
+01:55:24 stack:veto20 {'net50_diff_vs_p4q': 0.144, 'net50_t': 2.805, 'rec40_diff_vs_p4q': 0.147, 'hold63_diff_vs_p4q': 0.143, 'cohort126_diff_vs_p4q_ann': 0.127, 'cohort_t': 2.52}
+01:55:32 lgb_peer:veto20 {'net50_diff_vs_p4q': 0.121, 'net50_t': 2.539, 'rec40_diff_vs_p4q': 0.122, 'hold63_diff_vs_p4q': 0.112, 'cohort126_diff_vs_p4q_ann': 0.121, 'cohort_t': 2.44}
+01:55:40 lgb_reg:tilt {'net50_diff_vs_p4q': 0.097, 'net50_t': 1.181, 'rec40_diff_vs_p4q': 0.096, 'hold63_diff_vs_p4q': 0.097, 'cohort126_diff_vs_p4q_ann': 0.052, 'cohort_t': 0.7}
+01:56:56 placebo {'actual_diff_vs_p4q': 0.1716, 'placebo_mean': -0.005469999999999999, 'placebo_p95': 0.05555499999999999, 'p_value': 0.0, 'n': 30}
+01:57:48 eval done 331.1
+01:58:47   [lgb_peer] done 9 dates in 10s
+01:59:00 HOLDOUT {"variant": "lgb_peer:tilt", "holdout_only": {"ann_excess_%": 0.1895, "vol_%": 1.3282, "sharpe": 0.1427, "max_dd_%": -0.8234, "worst_month_%": -0.6488, "hit": 0.4444, "skew": -0.0928, "t_nw": 0.1971, "h1_2022_23_%": NaN, "h2_2024_25_%": NaN, "cum_%": 0.1364, "n_months": 9, "period": "2026-01..2026-09", "diff_ann_%": 0.1096, "diff_t_nw": 1.1959, "diff_p": 0.2317, "diff_h1_%": NaN, "diff_h2_%": NaN, "diff_hit": 0.7778, "diff_te_%": 0.1218}, "holdout_vs_U": {"ann_excess_%": 0.1895, "vol_%": 1.3282, "sharpe": 0.1427, "max_dd_%": -0.8234, "worst_month_%": -0.6488, "hit": 0.4444, "skew": -0.0928, "t_nw": 0.1971, "h1_2022_23_%": NaN, "h2_2024_25_%": NaN, "cum_%": 0.1364, "n_months": 9, "period": "2026-01..2026-09", "diff_ann_%": 3.4506, "diff_t_nw": 4.3119, "diff_p": 0.0, "diff_h1_%": NaN, "diff_h2_%": NaN, "diff_hit": 0.7778, "diff_te_%": 1.1684}, "p4q_holdout_only": {"ann_excess_%": 0.08, "vol_%": 1.2492, "sharpe": 0.064, "max_dd_%": -0.7764, "worst_month_%": -0.5834, "hit": 0.4444, "skew": 0.0064, "t_nw": 0.0904, "h1_2022_23_%": NaN, "h2_2024_25_%": NaN, "cum_%": 0.0548, "n_months": 9, "period": "2026-01..2026-09", "diff_ann_%": 3.3411, "diff_t_nw": 4.0176, "diff_p": 0.0001, "diff_h1_%": NaN, "diff_h2_%": NaN, "diff_hit": 0.7778, "diff_te_%": 1.1828}, "full_incl_2026": {"ann_excess_%": 2.0424, "vol_%": 1.1364, "sharpe": 1.7972, "max_dd_%": -1.3834, "worst_month_%": -0.6488, "hit": 0.7193, "skew": -0.5405, "t_nw": 2.8964, "h1_2022_23_%": 1.4959, "h2_2024_25_%": 3.2837, "cum_%": 10.1453, "n_months": 57, "period": "2022-01..2026-09", "diff_ann_%": 0.1618, "diff_t_nw": 2.3849, "diff_p": 0.0171, "diff_h1_%": 0.0136, "diff_h2_%": 0.3295, "diff_hit": 0.6842, "diff_te_%": 0.1247}}

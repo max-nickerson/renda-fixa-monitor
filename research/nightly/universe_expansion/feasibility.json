@@ -1,0 +1,172 @@
+{
+ "cda_202506_blc5_bank_paper": {
+  "Letra Financeira": {
+   "n_pos": 52593,
+   "vol_bn": 620.93,
+   "issuers": 108
+  },
+  "CDB/ RDB": {
+   "n_pos": 13698,
+   "vol_bn": 145.19,
+   "issuers": 143
+  },
+  "Outros": {
+   "n_pos": 9225,
+   "vol_bn": 17.33,
+   "issuers": 79
+  },
+  "DPGE": {
+   "n_pos": 1279,
+   "vol_bn": 6.92,
+   "issuers": 15
+  },
+  "CDB Vinculado": {
+   "n_pos": 442,
+   "vol_bn": 0.45,
+   "issuers": 1
+  },
+  "Letra de C\u00e2mbio/ Letra Hipotec\u00e1ria/ Letra Imobili\u00e1ria": {
+   "n_pos": 19,
+   "vol_bn": 0.03,
+   "issuers": 6
+  }
+ },
+ "lf_di_plus_spread_pct_quantiles": {
+  "0.1": 0.37,
+  "0.25": 0.55,
+  "0.5": 0.99,
+  "0.75": 1.4,
+  "0.9": 2.35
+ },
+ "cda_202506_blc6_credit": {
+  "Deb\u00eanture simples": {
+   "n_pos": 4637,
+   "vol_bn": 28.12,
+   "issuers": 323
+  },
+  "Nota Promiss\u00f3ria/ Commercial Paper/ Export Note": {
+   "n_pos": 1215,
+   "vol_bn": 13.21,
+   "issuers": 121
+  },
+  "CCB": {
+   "n_pos": 275,
+   "vol_bn": 6.27,
+   "issuers": 113
+  },
+  "CRA": {
+   "n_pos": 1339,
+   "vol_bn": 3.99,
+   "issuers": 23
+  },
+  "LCA": {
+   "n_pos": 54,
+   "vol_bn": 1.65,
+   "issuers": 12
+  },
+  "NCA": {
+   "n_pos": 83,
+   "vol_bn": 1.62,
+   "issuers": 34
+  },
+  "Deb\u00eanture convers\u00edvel": {
+   "n_pos": 15,
+   "vol_bn": 0.32,
+   "issuers": 11
+  },
+  "CPR": {
+   "n_pos": 37,
+   "vol_bn": 0.3,
+   "issuers": 8
+  },
+  "CCI": {
+   "n_pos": 428,
+   "vol_bn": 0.18,
+   "issuers": 25
+  },
+  "CCCB": {
+   "n_pos": 20,
+   "vol_bn": 0.03,
+   "issuers": 2
+  },
+  "CDCA": {
+   "n_pos": 1,
+   "vol_bn": 0.0,
+   "issuers": 1
+  },
+  "Deb\u00eanture Permut\u00e1vel": {
+   "n_pos": 5,
+   "vol_bn": 0.0,
+   "issuers": 1
+  }
+ },
+ "fred_ice_bofa": {
+  "BAMLEMCBPITRIV": {
+   "first": "2023-09-29",
+   "last": "2026-09-25",
+   "n": 785,
+   "usd_tr_2024_25_ann_%": 7.33
+  },
+  "BAMLEMRLCRPILATRIV": {
+   "first": "2023-09-29",
+   "last": "2026-09-25",
+   "n": 785,
+   "usd_tr_2024_25_ann_%": 8.9
+  },
+  "BAMLEMHBHYCRPITRIV": {
+   "first": "2023-09-29",
+   "last": "2026-09-25",
+   "n": 785,
+   "usd_tr_2024_25_ann_%": 10.74
+  },
+  "BAMLEMIBHGCRPITRIV": {
+   "first": "2023-09-29",
+   "last": "2026-09-25",
+   "n": 785,
+   "usd_tr_2024_25_ann_%": 6.03
+  },
+  "BAMLEMRLCRPILAOAS": {
+   "first": "2023-09-29",
+   "last": "2026-09-25",
+   "n": 785
+  }
+ },
+ "fred_note": "ICE BofA series on FRED are truncated to a rolling ~3y window (first obs 2023-09-29): no 2022-23 history -> no pre-2024 backtest of an offshore sleeve is possible from free data; bond-level eurobond prices (TRACE does not cover 144A/RegS EM corporates well) are not free.",
+ "crisec": {
+  "certificates_2022_26": 4628,
+  "by_year_kind": {
+   "cra": {
+    "2022": 554,
+    "2023": 683,
+    "2024": 755,
+    "2025": 817,
+    "2026": 727
+   },
+   "cri": {
+    "2022": 1798,
+    "2023": 2113,
+    "2024": 2431,
+    "2025": 2575,
+    "2026": 2551
+   }
+  },
+  "median_filing_lag_days": 58.0,
+  "share_rows_in_arrears": 0.0568,
+  "share_rows_value_unchanged_vs_prev_month": 0.204,
+  "note": "Values are the securitiser's book (curve) values, often stale for months; 'Rentabilidade' is unusable (garbage units). No market price -> no return-based backtest. Useful as a credit-event registry (arrears) with a ~58-day filing lag."
+ },
+ "fidc": {
+  "senior_classes_2022_26": 20734,
+  "share_rows_ret_not_reported(0)": 0.499,
+  "share_closed_end": 0.837,
+  "share_exclusive": 0.072,
+  "note": "Self-reported monthly quota returns; closed-end quotas mostly untradeable; availability assumed ref month-end + 45d (no delivery date in open data)."
+ },
+ "fii": {
+  "tickers_ever": 89,
+  "avg_liquid_names(adtv>=500k)": 33.0,
+  "pnav_coverage": 0.852,
+  "note": "B3 closes + distributions from brapi; NAV from CVM FII informe mensal by Data_Entrega. Universe = tickers still resolvable on brapi today (dead/delisted funds missing).",
+  "cvm_credit_fii_listed_candidates": 196
+ }
+}

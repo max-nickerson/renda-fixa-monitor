@@ -1,0 +1,129 @@
+{
+ "IC_carry_over_var": {
+  "sign": "+",
+  "univ": 0.028,
+  "t_univ": 0.26,
+  "p4q": -0.1,
+  "t_p4q": -1.28
+ },
+ "IC_emp_vol": {
+  "sign": "-",
+  "univ": 0.04,
+  "t_univ": 0.34,
+  "p4q": -0.027,
+  "t_p4q": -0.51
+ },
+ "IC_vol_hat": {
+  "sign": "-",
+  "univ": -0.174,
+  "t_univ": -2.15,
+  "p4q": -0.189,
+  "t_p4q": -2.71
+ },
+ "IC_dts": {
+  "sign": "-",
+  "univ": -0.249,
+  "t_univ": -4.09,
+  "p4q": -0.226,
+  "t_p4q": -3.18
+ },
+ "IC_cdi_bps": {
+  "sign": "+",
+  "univ": 0.252,
+  "t_univ": 3.55,
+  "p4q": 0.331,
+  "t_p4q": 11.22
+ },
+ "double_sort_lowvol_minus_highvol_fwd126_ann%": {
+  "spread_T1": {
+   "mean": -0.46,
+   "t_nw": -0.5
+  },
+  "spread_T2": {
+   "mean": 1.25,
+   "t_nw": 1.1
+  },
+  "spread_T3": {
+   "mean": 0.07,
+   "t_nw": 0.07
+  }
+ },
+ "double_sort_rec40_lowmhigh_ann%": {
+  "spread_T1": -0.46,
+  "spread_T2": 1.48,
+  "spread_T3": 0.07
+ },
+ "share_p4q_with_emp_vol": 0.619,
+ "holdings_characteristics": {
+  "EW_cap10": {
+   "DI_SPREAD_share": 0.788,
+   "IPCA_share": 0.206,
+   "emp_vol": 0.025,
+   "trades_30d": 82.19,
+   "log10_vol91": 7.643,
+   "covered": 0.645,
+   "listed": 0.44,
+   "incent": 0.163,
+   "cdi_bps": 288.788,
+   "dur": 3.422,
+   "age_days": 2.26,
+   "executed_weight_share": 0.923
+  },
+  "mv_emp_g20": {
+   "DI_SPREAD_share": 0.91,
+   "IPCA_share": 0.081,
+   "emp_vol": 0.019,
+   "trades_30d": 54.817,
+   "log10_vol91": 7.42,
+   "covered": 0.463,
+   "listed": 0.266,
+   "incent": 0.038,
+   "cdi_bps": 460.963,
+   "dur": 2.149,
+   "age_days": 2.41,
+   "executed_weight_share": 0.862
+  },
+  "mv_emp_g20_fund500m": {
+   "DI_SPREAD_share": 0.891,
+   "IPCA_share": 0.1,
+   "emp_vol": 0.024,
+   "trades_30d": 97.738,
+   "log10_vol91": 8.054,
+   "covered": 0.688,
+   "listed": 0.402,
+   "incent": 0.073,
+   "cdi_bps": 349.674,
+   "dur": 2.909,
+   "age_days": 1.986,
+   "executed_weight_share": 0.948
+  },
+  "carry_over_var_tilt": {
+   "DI_SPREAD_share": 0.957,
+   "IPCA_share": 0.042,
+   "emp_vol": 0.011,
+   "trades_30d": 53.639,
+   "log10_vol91": 7.645,
+   "covered": 0.643,
+   "listed": 0.444,
+   "incent": 0.028,
+   "cdi_bps": 278.29,
+   "dur": 1.907,
+   "age_days": 2.434,
+   "executed_weight_share": 0.912
+  },
+  "top50_comp": {
+   "DI_SPREAD_share": 0.797,
+   "IPCA_share": 0.2,
+   "emp_vol": 0.028,
+   "trades_30d": 70.945,
+   "log10_vol91": 7.529,
+   "covered": 0.582,
+   "listed": 0.37,
+   "incent": 0.168,
+   "cdi_bps": 365.957,
+   "dur": 3.208,
+   "age_days": 2.331,
+   "executed_weight_share": 0.908
+  }
+ }
+}

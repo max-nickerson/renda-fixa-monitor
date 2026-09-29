@@ -1,0 +1,56 @@
+{
+ "executed_share_top25_vs_p4q": [
+  0.851,
+  0.923
+ ],
+ "corrR": {
+  "ann_excess_%": 3.756,
+  "diff_ann_%": 1.614,
+  "diff_t_nw": 4.351,
+  "diff_h1_%": 1.296,
+  "diff_h2_%": 1.932,
+  "P4Q_exCDI": 2.142
+ },
+ "corrR_forced_exec": {
+  "ann_excess_%": 4.596,
+  "diff_ann_%": 2.129,
+  "diff_t_nw": 5.501,
+  "diff_h1_%": 1.799,
+  "diff_h2_%": 2.458,
+  "P4Q_exCDI": 2.468
+ },
+ "n_harsh_bonds": 150,
+ "corrR_harsh_surv": {
+  "ann_excess_%": 2.696,
+  "diff_ann_%": 1.117,
+  "diff_t_nw": 1.506,
+  "diff_h1_%": 1.623,
+  "diff_h2_%": 0.611,
+  "P4Q_exCDI": 1.579
+ },
+ "corrR_harsh_surv_forced_exec": {
+  "ann_excess_%": 3.203,
+  "diff_ann_%": 1.358,
+  "diff_t_nw": 1.672,
+  "diff_h1_%": 2.126,
+  "diff_h2_%": 0.59,
+  "P4Q_exCDI": 1.845
+ },
+ "corrR_harsh_surv_forced_exec_origsel": {
+  "ann_excess_%": 3.118,
+  "diff_ann_%": 1.273,
+  "diff_t_nw": 1.359,
+  "diff_h1_%": 2.204,
+  "diff_h2_%": 0.342,
+  "P4Q_exCDI": 1.845
+ },
+ "n_extreme_bonds": 1192,
+ "EXTREME_all_stopped_below_101_forced_exec": {
+  "ann_excess_%": -6.678,
+  "diff_ann_%": -2.614,
+  "diff_t_nw": -2.196,
+  "diff_h1_%": -0.316,
+  "diff_h2_%": -4.912,
+  "P4Q_exCDI": -4.063
+ }
+}

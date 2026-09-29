@@ -1,0 +1,64 @@
+{
+ "top25_weight_share_gap_pos": 0.155,
+ "top25_wavg_gap_pp": 0.1,
+ "p4q_share_gap_pos": 0.119,
+ "p4q_avg_gap_pp": 0.041,
+ "A_original": {
+  "ann_excess_%": 3.979,
+  "diff_ann_%": 1.761,
+  "diff_t_nw": 4.737,
+  "diff_h1_%": 1.416,
+  "diff_h2_%": 2.107
+ },
+ "bias_matrix_sum_abs": 2.656485081283812,
+ "P4Q_exCDI_orig_vs_corr": [
+  2.218,
+  2.142
+ ],
+ "B_corrR_orig_selection": {
+  "ann_excess_%": 3.831,
+  "diff_ann_%": 1.69,
+  "diff_t_nw": 4.606,
+  "diff_h1_%": 1.382,
+  "diff_h2_%": 1.997
+ },
+ "C_corrR_pit_carry": {
+  "ann_excess_%": 3.756,
+  "diff_ann_%": 1.614,
+  "diff_t_nw": 4.351,
+  "diff_h1_%": 1.296,
+  "diff_h2_%": 1.932
+ },
+ "C_vs_U": 2.686,
+ "C_50bps": {
+  "ann_excess_%": 3.34,
+  "diff_ann_%": 1.579,
+  "diff_t_nw": 4.274,
+  "diff_h1_%": 1.263,
+  "diff_h2_%": 1.895
+ },
+ "D_corrR_pit_carry_p4q_recut": {
+  "ann_excess_%": 3.756,
+  "diff_ann_%": 1.614,
+  "diff_t_nw": 4.351,
+  "diff_h1_%": 1.296,
+  "diff_h2_%": 1.932
+ },
+ "top_gap_names_weightsum": {
+  "RDAS11": 0.554,
+  "ALMC12": 0.529,
+  "BVPL11": 0.342,
+  "QUAL16": 0.328,
+  "CEAB12": 0.321,
+  "EMIV11": 0.297,
+  "RDAS12": 0.287,
+  "OUSA11": 0.245,
+  "CELU13": 0.217,
+  "SVEA22": 0.179,
+  "CPLD14": 0.174,
+  "TOTB12": 0.144,
+  "VIAD11": 0.143,
+  "PNEU11": 0.143,
+  "HIAG11": 0.138
+ }
+}

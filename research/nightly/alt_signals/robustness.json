@@ -1,0 +1,284 @@
+{
+ "sensitivity": {
+  "best_supply30": {
+   "exCDI_%": 2.36,
+   "exU_%": 1.2582,
+   "t_vsU": 2.4697,
+   "vs_bench_%": 0.1418,
+   "t_vs_bench": 1.934,
+   "p_vs_bench": 0.0531,
+   "vol_%": 1.0123,
+   "sharpe": 2.3313,
+   "maxDD_%": -1.2087,
+   "h1_vs_bench": 0.2331,
+   "h2_vs_bench": 0.0504,
+   "turnover": 3.0816,
+   "n_avg": 91.2708,
+   "p_holm": 0.1239
+  },
+  "best_supply60": {
+   "exCDI_%": 2.4776,
+   "exU_%": 1.3758,
+   "t_vsU": 2.6983,
+   "vs_bench_%": 0.2593,
+   "t_vs_bench": 2.8956,
+   "p_vs_bench": 0.0038,
+   "vol_%": 0.9876,
+   "sharpe": 2.5087,
+   "maxDD_%": -1.0512,
+   "h1_vs_bench": 0.3196,
+   "h2_vs_bench": 0.1991,
+   "turnover": 3.1111,
+   "n_avg": 85.0833,
+   "p_holm": 0.0256
+  },
+  "best_supply180": {
+   "exCDI_%": 2.697,
+   "exU_%": 1.5952,
+   "t_vsU": 3.2128,
+   "vs_bench_%": 0.4788,
+   "t_vs_bench": 2.9144,
+   "p_vs_bench": 0.0036,
+   "vol_%": 0.9851,
+   "sharpe": 2.7379,
+   "maxDD_%": -0.8283,
+   "h1_vs_bench": 0.3292,
+   "h2_vs_bench": 0.6283,
+   "turnover": 3.3035,
+   "n_avg": 62.0,
+   "p_holm": 0.0256
+  },
+  "best_supply365": {
+   "exCDI_%": 2.8442,
+   "exU_%": 1.7425,
+   "t_vsU": 3.7835,
+   "vs_bench_%": 0.626,
+   "t_vs_bench": 2.0403,
+   "p_vs_bench": 0.0413,
+   "vol_%": 1.0145,
+   "sharpe": 2.8036,
+   "maxDD_%": -0.9261,
+   "h1_vs_bench": 0.2034,
+   "h2_vs_bench": 1.0486,
+   "turnover": 3.3914,
+   "n_avg": 37.1667,
+   "p_holm": 0.1239
+  },
+  "best_nc-0.5": {
+   "exCDI_%": 2.4651,
+   "exU_%": 1.3633,
+   "t_vsU": 2.6926,
+   "vs_bench_%": 0.2468,
+   "t_vs_bench": 1.8167,
+   "p_vs_bench": 0.0693,
+   "vol_%": 1.017,
+   "sharpe": 2.4239,
+   "maxDD_%": -0.9617,
+   "h1_vs_bench": 0.2825,
+   "h2_vs_bench": 0.2111,
+   "turnover": 3.1873,
+   "n_avg": 72.2292,
+   "p_holm": 0.1239
+  },
+  "best_nc-1.5": {
+   "exCDI_%": 2.4945,
+   "exU_%": 1.3927,
+   "t_vsU": 2.9138,
+   "vs_bench_%": 0.2762,
+   "t_vs_bench": 2.7033,
+   "p_vs_bench": 0.0069,
+   "vol_%": 0.9972,
+   "sharpe": 2.5016,
+   "maxDD_%": -0.9919,
+   "h1_vs_bench": 0.2543,
+   "h2_vs_bench": 0.2981,
+   "turnover": 3.1097,
+   "n_avg": 81.625,
+   "p_holm": 0.0345
+  },
+  "best_nc_margin": {
+   "exCDI_%": 2.4566,
+   "exU_%": 1.3548,
+   "t_vsU": 2.9933,
+   "vs_bench_%": 0.2383,
+   "t_vs_bench": 2.2721,
+   "p_vs_bench": 0.0231,
+   "vol_%": 1.0268,
+   "sharpe": 2.3925,
+   "maxDD_%": -1.0282,
+   "h1_vs_bench": 0.1196,
+   "h2_vs_bench": 0.357,
+   "turnover": 3.1004,
+   "n_avg": 82.25,
+   "p_holm": 0.0924
+  },
+  "best": {
+   "exCDI_%": 2.5548,
+   "exU_%": 1.453,
+   "t_vsU": 2.8503,
+   "vs_bench_%": 0.3365,
+   "t_vs_bench": 2.9437,
+   "p_vs_bench": 0.0032,
+   "vol_%": 0.9793,
+   "sharpe": 2.6088,
+   "maxDD_%": -0.9363,
+   "h1_vs_bench": 0.3458,
+   "h2_vs_bench": 0.3272,
+   "turnover": 3.1506,
+   "n_avg": 78.8125,
+   "p_holm": 0.0256
+  },
+  "P4Q": {
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": NaN,
+   "p_vs_bench": NaN,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": NaN
+  }
+ },
+ "engines": {
+  "hold63": {
+   "exCDI": 2.6686,
+   "vs_P4Q": 0.4043,
+   "t": 2.287
+  },
+  "hold252": {
+   "exCDI": 2.5069,
+   "vs_P4Q": 0.1376,
+   "t": 1.4953
+  },
+  "weekly126": {
+   "exCDI": 2.6085,
+   "vs_P4Q": 0.3326,
+   "t": 2.7023
+  },
+  "cohort63": {
+   "diff_ann_%": 0.453,
+   "t": 2.76,
+   "n": 45
+  },
+  "cohort126": {
+   "diff_ann_%": 0.433,
+   "t": 5.96,
+   "n": 42
+  },
+  "cohort252": {
+   "diff_ann_%": 0.164,
+   "t": 3.18,
+   "n": 36
+  }
+ },
+ "top_excluded": [
+  {
+   "cnpj8": "08827501",
+   "rows": 64,
+   "name": "AEGEA SANEAMENTO E PARTICIPACOES S/A",
+   "sector": "sanitation"
+  },
+  {
+   "cnpj8": "06047087",
+   "rows": 48,
+   "name": "REDE DOR SAO LUIZ S/A",
+   "sector": "healthcare"
+  },
+  {
+   "cnpj8": "09114805",
+   "rows": 32,
+   "name": "OCEANPACT SERVICOS MARITIMOS S.A.",
+   "sector": "oil_gas"
+  },
+  {
+   "cnpj8": "21314559",
+   "rows": 28,
+   "name": "MOVIDA PARTICIPACOES S/A",
+   "sector": "car_rental_fleet"
+  },
+  {
+   "cnpj8": "61486650",
+   "rows": 27,
+   "name": "DIAGNOSTICOS DA AMERICA S/A",
+   "sector": "healthcare"
+  },
+  {
+   "cnpj8": "07040108",
+   "rows": 25,
+   "name": "COMPANHIA DE AGUA E ESGOTO DO CEARA - CA",
+   "sector": "sanitation"
+  },
+  {
+   "cnpj8": "32681371",
+   "rows": 22,
+   "name": "VIX LOGISTICA S/A",
+   "sector": "airports_ports_logistics"
+  },
+  {
+   "cnpj8": "50746577",
+   "rows": 22,
+   "name": "COSAN S.A.",
+   "sector": "holding_diversified"
+  },
+  {
+   "cnpj8": "16670085",
+   "rows": 22,
+   "name": "LOCALIZA RENT A CAR S/A",
+   "sector": "car_rental_fleet"
+  },
+  {
+   "cnpj8": "40263170",
+   "rows": 20,
+   "name": "SOLVI ESSENCIS AMBIENTAL S.A.",
+   "sector": "sanitation"
+  },
+  {
+   "cnpj8": "07714104",
+   "rows": 19,
+   "name": "GIGA MAIS FIBRA TELECOMUNICACOES S.A.",
+   "sector": "telecom"
+  },
+  {
+   "cnpj8": "09149503",
+   "rows": 18,
+   "name": "SERENA GERACAO S.A.",
+   "sector": "utilities_generation_renewables"
+  }
+ ],
+ "leave_top5_issuers_in": {
+  "vs_P4Q": 0.2844,
+  "t": 2.8366
+ },
+ "supply_split": {
+  "supply_infra_only": {
+   "vs_P4Q": -0.0155,
+   "t": -0.7183
+  },
+  "supply_noninfra_only": {
+   "vs_P4Q": 0.214,
+   "t": 2.1553
+  }
+ },
+ "placebo_sector_permutation_nc_expo": {
+  "real": 0.094,
+  "mean": 0.011,
+  "p95": 0.067,
+  "p": 0.0
+ },
+ "supply_time_shift_placebo": {
+  "-365": {
+   "vs_P4Q": -0.101,
+   "t": -1.5314
+  },
+  "365": {
+   "vs_P4Q": -0.1147,
+   "t": -1.5206
+  }
+ }
+}

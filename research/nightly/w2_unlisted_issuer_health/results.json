@@ -1,0 +1,726 @@
+{
+ "coverage": {
+  "universe_rows": {
+   "own": 0.6628,
+   "fre": 0.0248,
+   "name": 0.0,
+   "none": 0.3124,
+   "none_with_px_sector": 0.2781,
+   "none_with_px_fund": 0.178,
+   "none_with_px_bond": 0.2549,
+   "none_with_any_proxy": 0.3063,
+   "none_no_proxy": 0.0061,
+   "harness_direct": 0.4172,
+   "harness_parent": 0.2467
+  },
+  "p4q_rows": {
+   "own": 0.4308,
+   "fre": 0.0254,
+   "name": 0.0,
+   "none": 0.5438,
+   "none_with_px_sector": 0.4782,
+   "none_with_px_fund": 0.2259,
+   "none_with_px_bond": 0.3602,
+   "none_with_any_proxy": 0.5212,
+   "none_no_proxy": 0.0226,
+   "harness_direct": 0.3649,
+   "harness_parent": 0.066
+  },
+  "P7_weight": {
+   "own": 0.3284,
+   "fre": 0.0361,
+   "name": 0.0,
+   "none": 0.6355,
+   "none_with_px_sector": 0.5434,
+   "none_with_px_fund": 0.3041,
+   "none_with_px_bond": 0.4237,
+   "none_with_any_proxy": 0.6121,
+   "none_no_proxy": 0.0234
+  },
+  "top_unlisted_p4q_issuers": {
+   "08827501 AEGEA SANEAMENTO E PARTICIPACOES S/A": 118,
+   "12647827 RDA IMPORTACAO EXPORTACAO E SERVICOS S.A": 91,
+   "32681371 VIX LOGISTICA S/A": 70,
+   "07040108 COMPANHIA DE AGUA E ESGOTO DO CEARA - CA": 54,
+   "40263170 SOLVI ESSENCIS AMBIENTAL S.A.": 41,
+   "07714104 GIGA MAIS FIBRA TELECOMUNICACOES S.A.": 40,
+   "34395916 V2I ENERGIA S.A.": 36,
+   "12979552 SKINSTORE S.A.": 36,
+   "09074183 TRANSBRASILIANA CONCESSIONARIA DE RODOVI": 34,
+   "24396489 BRK AMBIENTAL PARTICIPACOES S/A": 34,
+   "62070362 COMPANHIA DO METROPOLITANO DE SAO PAULO ": 34,
+   "09146451 KALLAS INCORPORACOES E CONSTRUCOES S.A.": 33,
+   "48344725 ALTHAIA S.A. INDUSTRIA FARMACEUTICA": 32,
+   "23318135 COPACABANA GERACAO DE ENERGIA E PARTICIP": 29,
+   "15385166 EQUIPAV SANEAMENTO S.A.": 29,
+   "43514079 CLI SUL S/A": 28,
+   "12229415 S/A USINA CORURIPE ACUCAR E ALCOOL": 28,
+   "15114494 CORREDOR LOGISTICA E INFRAESTRUTURA S.A": 28,
+   "08213823 AURA ALMAS MINERACAO S.A.": 26,
+   "09149503 SERENA GERACAO S.A.": 24,
+   "05917486 LIVETECH DA BAHIA INDUSTRIA E COMERCIO S": 24,
+   "27902165 HIGHLINE DO BRASIL II INFRAESTRUTURA DE ": 23,
+   "92802784 COMPANHIA RIOGRANDENSE DE SANEAMENTO - C": 23,
+   "41508382 RODOVIAS DO BRASIL HOLDING S.A.": 23,
+   "42353180 IGUA RIO DE JANEIRO S.A.": 23
+  },
+  "n_unlisted_issuers_U": 514,
+  "n_fre_mapped_issuers_U": 63,
+  "n_name_mapped_issuers_U": 0
+ },
+ "ic": {
+  "listed_own:eq_comp_own": {
+   "mean": 0.0115,
+   "t_nw": 0.3055,
+   "n_dates": 52
+  },
+  "listed_own:eq_comp_ext": {
+   "mean": 0.0119,
+   "t_nw": 0.3175,
+   "n_dates": 52
+  },
+  "listed_own:px_sector": {
+   "mean": -0.0133,
+   "t_nw": -0.2709,
+   "n_dates": 52
+  },
+  "listed_own:px_fund": {
+   "mean": 0.0178,
+   "t_nw": 1.2663,
+   "n_dates": 52
+  },
+  "listed_own:px_bond": {
+   "mean": 0.0241,
+   "t_nw": 0.7638,
+   "n_dates": 52
+  },
+  "listed_own:px_cascade": {
+   "mean": 0.0166,
+   "t_nw": 0.4783,
+   "n_dates": 52
+  },
+  "listed_own:cdi_bps": {
+   "mean": 0.184,
+   "t_nw": 2.1214,
+   "n_dates": 52
+  },
+  "unlisted_none:px_sector": {
+   "mean": 0.0111,
+   "t_nw": 0.2953,
+   "n_dates": 52
+  },
+  "unlisted_none:px_fund": {
+   "mean": 0.0403,
+   "t_nw": 2.1031,
+   "n_dates": 58
+  },
+  "unlisted_none:px_bond": {
+   "mean": 0.0238,
+   "t_nw": 0.4568,
+   "n_dates": 53
+  },
+  "unlisted_none:px_cascade": {
+   "mean": 0.0232,
+   "t_nw": 0.6836,
+   "n_dates": 58
+  },
+  "unlisted_none:cdi_bps": {
+   "mean": 0.2146,
+   "t_nw": 2.6031,
+   "n_dates": 58
+  },
+  "fre_parent:eq_comp_ext": {
+   "mean": -0.0145,
+   "t_nw": -0.2012,
+   "n_dates": 29
+  },
+  "all:eq_comp_own": {
+   "mean": 0.0115,
+   "t_nw": 0.3055,
+   "n_dates": 52
+  },
+  "all:eq_comp_ext": {
+   "mean": 0.0099,
+   "t_nw": 0.2585,
+   "n_dates": 52
+  },
+  "all:px_sector": {
+   "mean": 0.0019,
+   "t_nw": 0.0429,
+   "n_dates": 52
+  },
+  "all:px_fund": {
+   "mean": 0.0214,
+   "t_nw": 1.5871,
+   "n_dates": 58
+  },
+  "all:px_bond": {
+   "mean": 0.028,
+   "t_nw": 0.8084,
+   "n_dates": 53
+  },
+  "all:px_cascade": {
+   "mean": 0.0358,
+   "t_nw": 1.0678,
+   "n_dates": 58
+  },
+  "all:cdi_bps": {
+   "mean": 0.1674,
+   "t_nw": 1.9006,
+   "n_dates": 58
+  },
+  "proxy_vs_true_eqh_spearman_listed": {
+   "px_sector": 0.6598,
+   "px_fund": 0.1259,
+   "px_bond": -0.0178,
+   "px_cascade": 0.4561
+  },
+  "proxy_bottom20_precision_vs_true_eqh_listed(random=0.20)": {
+   "px_sector": 0.6337,
+   "px_fund": 0.3103,
+   "px_bond": 0.2645,
+   "px_cascade": 0.511
+  }
+ },
+ "p7_repro_maxabs": 0.0,
+ "compare_vs_P4Q": [
+  {
+   "index": "P7",
+   "exCDI_%": 2.7185,
+   "exU_%": 1.6167,
+   "t_vsU": 3.4639,
+   "vs_bench_%": 0.5003,
+   "t_vs_bench": 3.2905,
+   "p_vs_bench": 0.001,
+   "vol_%": 1.0061,
+   "sharpe": 2.7021,
+   "maxDD_%": -1.0036,
+   "h1_vs_bench": 0.374,
+   "h2_vs_bench": 0.6265,
+   "turnover": 3.1345,
+   "n_avg": 84.8542,
+   "p_holm": 0.002
+  },
+  {
+   "index": "X1_parent_fre_name",
+   "exCDI_%": 2.7872,
+   "exU_%": 1.6855,
+   "t_vsU": 3.5573,
+   "vs_bench_%": 0.569,
+   "t_vs_bench": 3.578,
+   "p_vs_bench": 0.0003,
+   "vol_%": 0.9874,
+   "sharpe": 2.8228,
+   "maxDD_%": -0.956,
+   "h1_vs_bench": 0.3817,
+   "h2_vs_bench": 0.7563,
+   "turnover": 3.1452,
+   "n_avg": 83.5625,
+   "p_holm": 0.0015
+  },
+  {
+   "index": "X3_sector_proxy",
+   "exCDI_%": 2.7396,
+   "exU_%": 1.6379,
+   "t_vsU": 3.3989,
+   "vs_bench_%": 0.5214,
+   "t_vs_bench": 4.1141,
+   "p_vs_bench": 0.0,
+   "vol_%": 0.9476,
+   "sharpe": 2.8912,
+   "maxDD_%": -1.1037,
+   "h1_vs_bench": 0.4488,
+   "h2_vs_bench": 0.5939,
+   "turnover": 3.3183,
+   "n_avg": 68.7083,
+   "p_holm": 0.0
+  },
+  {
+   "index": "X4_fund_proxy",
+   "exCDI_%": 2.7872,
+   "exU_%": 1.6855,
+   "t_vsU": 3.5573,
+   "vs_bench_%": 0.569,
+   "t_vs_bench": 3.578,
+   "p_vs_bench": 0.0003,
+   "vol_%": 0.9874,
+   "sharpe": 2.8228,
+   "maxDD_%": -0.956,
+   "h1_vs_bench": 0.3817,
+   "h2_vs_bench": 0.7563,
+   "turnover": 3.1452,
+   "n_avg": 83.5625,
+   "p_holm": 0.0015
+  },
+  {
+   "index": "X5_bond_proxy",
+   "exCDI_%": 2.7867,
+   "exU_%": 1.685,
+   "t_vsU": 3.3821,
+   "vs_bench_%": 0.5685,
+   "t_vs_bench": 3.448,
+   "p_vs_bench": 0.0006,
+   "vol_%": 0.9385,
+   "sharpe": 2.9694,
+   "maxDD_%": -0.9023,
+   "h1_vs_bench": 0.4521,
+   "h2_vs_bench": 0.6849,
+   "turnover": 3.2192,
+   "n_avg": 77.2292,
+   "p_holm": 0.0018
+  },
+  {
+   "index": "X6_cascade",
+   "exCDI_%": 2.8437,
+   "exU_%": 1.7419,
+   "t_vsU": 3.5918,
+   "vs_bench_%": 0.6254,
+   "t_vs_bench": 3.8708,
+   "p_vs_bench": 0.0001,
+   "vol_%": 0.9893,
+   "sharpe": 2.8745,
+   "maxDD_%": -1.0648,
+   "h1_vs_bench": 0.4264,
+   "h2_vs_bench": 0.8245,
+   "turnover": 3.2432,
+   "n_avg": 72.5417,
+   "p_holm": 0.0006
+  },
+  {
+   "index": "P4",
+   "exCDI_%": 1.8897,
+   "exU_%": 0.7879,
+   "t_vsU": 1.588,
+   "vs_bench_%": -0.3286,
+   "t_vs_bench": -2.2746,
+   "p_vs_bench": 0.0229,
+   "vol_%": 1.0464,
+   "sharpe": 1.8058,
+   "maxDD_%": -1.5639,
+   "h1_vs_bench": -0.2956,
+   "h2_vs_bench": -0.3615,
+   "turnover": 2.738,
+   "n_avg": 129.5208,
+   "p_holm": 0.0229
+  }
+ ],
+ "vs_P7": {
+  "X1_parent_fre_name": {
+   "diff": 0.0687,
+   "t": 0.7246,
+   "p": 0.4687,
+   "h1": 0.0077,
+   "h2": 0.1298,
+   "holm_p": 1.0
+  },
+  "X3_sector_proxy": {
+   "diff": 0.0211,
+   "t": 0.126,
+   "p": 0.8997,
+   "h1": 0.0748,
+   "h2": -0.0326,
+   "holm_p": 1.0
+  },
+  "X4_fund_proxy": {
+   "diff": 0.0687,
+   "t": 0.7246,
+   "p": 0.4687,
+   "h1": 0.0077,
+   "h2": 0.1298,
+   "holm_p": 1.0
+  },
+  "X5_bond_proxy": {
+   "diff": 0.0682,
+   "t": 0.4521,
+   "p": 0.6512,
+   "h1": 0.0781,
+   "h2": 0.0584,
+   "holm_p": 1.0
+  },
+  "X6_cascade": {
+   "diff": 0.1252,
+   "t": 0.8828,
+   "p": 0.3773,
+   "h1": 0.0523,
+   "h2": 0.198,
+   "holm_p": 1.0
+  }
+ },
+ "sensitivity": {
+  "P7": {
+   "net50_vs_P4Q": 0.4755,
+   "net50_t": 3.1284,
+   "rec40_vs_P4Q": 0.4631,
+   "rec40_t": 2.8232
+  },
+  "X1_parent_fre_name": {
+   "net50_vs_P4Q": 0.5429,
+   "net50_t": 3.3997,
+   "rec40_vs_P4Q": 0.5857,
+   "rec40_t": 3.6209
+  },
+  "X3_sector_proxy": {
+   "net50_vs_P4Q": 0.4728,
+   "net50_t": 3.7738,
+   "rec40_vs_P4Q": 0.5328,
+   "rec40_t": 3.8296
+  },
+  "X4_fund_proxy": {
+   "net50_vs_P4Q": 0.5429,
+   "net50_t": 3.3997,
+   "rec40_vs_P4Q": 0.5857,
+   "rec40_t": 3.6209
+  },
+  "X5_bond_proxy": {
+   "net50_vs_P4Q": 0.5328,
+   "net50_t": 3.2274,
+   "rec40_vs_P4Q": 0.601,
+   "rec40_t": 3.4522
+  },
+  "X6_cascade": {
+   "net50_vs_P4Q": 0.5866,
+   "net50_t": 3.5996,
+   "rec40_vs_P4Q": 0.6579,
+   "rec40_t": 3.8597
+  }
+ },
+ "realistic": {
+  "liq_costs": {
+   "X1_parent_fre_name": {
+    "vs_P4Q": 0.5338,
+    "t": 3.3802,
+    "vs_P7": 0.0621,
+    "t_vs_P7": 0.6452
+   },
+   "X3_sector_proxy": {
+    "vs_P4Q": 0.4526,
+    "t": 3.651,
+    "vs_P7": -0.0191,
+    "t_vs_P7": -0.1119
+   },
+   "X4_fund_proxy": {
+    "vs_P4Q": 0.5338,
+    "t": 3.3802,
+    "vs_P7": 0.0621,
+    "t_vs_P7": 0.6452
+   },
+   "X5_bond_proxy": {
+    "vs_P4Q": 0.5497,
+    "t": 3.3454,
+    "vs_P7": 0.0779,
+    "t_vs_P7": 0.5176
+   },
+   "X6_cascade": {
+    "vs_P4Q": 0.5746,
+    "t": 3.4608,
+    "vs_P7": 0.1028,
+    "t_vs_P7": 0.6894
+   },
+   "P7_vs_P4Q": 0.4717
+  },
+  "harsh+liq": {
+   "X1_parent_fre_name": {
+    "vs_P4Q": 0.7927,
+    "t": 3.4762,
+    "vs_P7": 0.0619,
+    "t_vs_P7": 0.6435
+   },
+   "X3_sector_proxy": {
+    "vs_P4Q": 0.7101,
+    "t": 4.5287,
+    "vs_P7": -0.0207,
+    "t_vs_P7": -0.1224
+   },
+   "X4_fund_proxy": {
+    "vs_P4Q": 0.7927,
+    "t": 3.4762,
+    "vs_P7": 0.0619,
+    "t_vs_P7": 0.6435
+   },
+   "X5_bond_proxy": {
+    "vs_P4Q": 0.8304,
+    "t": 3.8345,
+    "vs_P7": 0.0996,
+    "t_vs_P7": 0.6753
+   },
+   "X6_cascade": {
+    "vs_P4Q": 0.8482,
+    "t": 3.716,
+    "vs_P7": 0.1173,
+    "t_vs_P7": 0.7979
+   },
+   "P7_vs_P4Q": 0.7308
+  }
+ },
+ "placebo_vs_P7": {
+  "X6_cascade": {
+   "actual_vs_P7": 0.1252,
+   "placebo_mean": -0.001,
+   "placebo_p95": 0.061,
+   "placebo_p05": -0.0675,
+   "p_value": 0.0
+  },
+  "X3_sector_proxy": {
+   "actual_vs_P7": 0.0211,
+   "placebo_mean": -0.0443,
+   "placebo_p95": 0.0402,
+   "placebo_p05": -0.1275,
+   "p_value": 0.1
+  }
+ },
+ "best_variant_rule": "highest NW t vs P4+Q pre-2026 among X variants",
+ "best_variant": "X3_sector_proxy",
+ "best_vs_P7_by_year": {
+  "2022": 0.2207,
+  "2023": -0.0711,
+  "2024": -0.3187,
+  "2025": 0.2535
+ },
+ "best_vs_P7_excl_top3_months": {
+  "top_months": [
+   "2022-01-01",
+   "2022-07-01",
+   "2025-06-01"
+  ],
+  "diff_ann_%": -0.1449,
+  "t_nw": -0.9156
+ },
+ "best_vs_P4Q_excl_top3_months": {
+  "top_months": [
+   "2024-12-01",
+   "2022-01-01",
+   "2023-01-01"
+  ],
+  "diff_ann_%": 0.2374,
+  "t_nw": 1.0985
+ },
+ "unlisted_orphan": {
+  "n_bonds_harsh": 60,
+  "base": {
+   "levels_exCDI": {
+    "U_listed": 0.7999,
+    "U_unlisted": 1.6941,
+    "P4Q_listed": 1.6199,
+    "P4Q_unlisted": 2.5701,
+    "U_orphan": 1.5394,
+    "U_held": 1.0733,
+    "P4Q_orphan": 3.2139,
+    "P4Q_held": 2.0584
+   },
+   "pairs": {
+    "U_unlisted-U_listed": {
+     "diff": 0.8942,
+     "t": 1.9675,
+     "h1": 0.1019,
+     "h2": 1.6865
+    },
+    "P4Q_unlisted-P4Q_listed": {
+     "diff": 0.9502,
+     "t": 1.1781,
+     "h1": -0.0278,
+     "h2": 1.9282
+    },
+    "U_orphan-U_held": {
+     "diff": 0.466,
+     "t": 1.1207,
+     "h1": 0.372,
+     "h2": 0.56
+    },
+    "P4Q_orphan-P4Q_held": {
+     "diff": 1.1556,
+     "t": 1.4806,
+     "h1": 0.6626,
+     "h2": 1.6486
+    }
+   }
+  },
+  "harsh_surv": {
+   "levels_exCDI": {
+    "U_listed": 0.7127,
+    "U_unlisted": 1.4024,
+    "P4Q_listed": 1.3113,
+    "P4Q_unlisted": 2.1719,
+    "U_orphan": 1.5071,
+    "U_held": 0.9127,
+    "P4Q_orphan": 3.2139,
+    "P4Q_held": 1.6417
+   },
+   "pairs": {
+    "U_unlisted-U_listed": {
+     "diff": 0.6896,
+     "t": 1.6598,
+     "h1": 0.0212,
+     "h2": 1.3581
+    },
+    "P4Q_unlisted-P4Q_listed": {
+     "diff": 0.8607,
+     "t": 1.0211,
+     "h1": -0.0078,
+     "h2": 1.7292
+    },
+    "U_orphan-U_held": {
+     "diff": 0.5944,
+     "t": 1.441,
+     "h1": 0.4914,
+     "h2": 0.6974
+    },
+    "P4Q_orphan-P4Q_held": {
+     "diff": 1.5723,
+     "t": 1.8539,
+     "h1": 1.015,
+     "h2": 2.1296
+    }
+   }
+  },
+  "liq_costs": {
+   "levels_exCDI": {
+    "U_listed": 0.2418,
+    "U_unlisted": 0.902,
+    "P4Q_listed": 1.0336,
+    "P4Q_unlisted": 1.5764,
+    "U_orphan": 0.0554,
+    "U_held": 0.4519,
+    "P4Q_orphan": 2.3334,
+    "P4Q_held": 1.2534
+   },
+   "pairs": {
+    "U_unlisted-U_listed": {
+     "diff": 0.6601,
+     "t": 1.4279,
+     "h1": -0.1594,
+     "h2": 1.4797
+    },
+    "P4Q_unlisted-P4Q_listed": {
+     "diff": 0.5427,
+     "t": 0.6555,
+     "h1": -0.5339,
+     "h2": 1.6193
+    },
+    "U_orphan-U_held": {
+     "diff": -0.3965,
+     "t": -0.9231,
+     "h1": -0.5033,
+     "h2": -0.2896
+    },
+    "P4Q_orphan-P4Q_held": {
+     "diff": 1.08,
+     "t": 1.3995,
+     "h1": 0.8248,
+     "h2": 1.3351
+    }
+   }
+  },
+  "harsh+liq": {
+   "levels_exCDI": {
+    "U_listed": 0.1547,
+    "U_unlisted": 0.6104,
+    "P4Q_listed": 0.7251,
+    "P4Q_unlisted": 1.1786,
+    "U_orphan": 0.0232,
+    "U_held": 0.2914,
+    "P4Q_orphan": 2.3334,
+    "P4Q_held": 0.837
+   },
+   "pairs": {
+    "U_unlisted-U_listed": {
+     "diff": 0.4557,
+     "t": 1.0761,
+     "h1": -0.24,
+     "h2": 1.1515
+    },
+    "P4Q_unlisted-P4Q_listed": {
+     "diff": 0.4534,
+     "t": 0.5226,
+     "h1": -0.5137,
+     "h2": 1.4206
+    },
+    "U_orphan-U_held": {
+     "diff": -0.2681,
+     "t": -0.6281,
+     "h1": -0.384,
+     "h2": -0.1523
+    },
+    "P4Q_orphan-P4Q_held": {
+     "diff": 1.4964,
+     "t": 1.7803,
+     "h1": 1.177,
+     "h2": 1.8158
+    }
+   }
+  },
+  "diagnostics": {
+   "listed": {
+    "trades_30d_med": 53.0,
+    "share_rows_later_harsh": 0.0067,
+    "cdi_bps_med": 104.2715,
+    "dur_med": 3.0944,
+    "fwd126_mean_%": 0.392,
+    "n_rows": 22221
+   },
+   "unlisted": {
+    "trades_30d_med": 41.0,
+    "share_rows_later_harsh": 0.0186,
+    "cdi_bps_med": 141.242,
+    "dur_med": 3.4912,
+    "fwd126_mean_%": 0.9264,
+    "n_rows": 11307
+   },
+   "orphan": {
+    "trades_30d_med": 34.0,
+    "share_rows_later_harsh": 0.0071,
+    "cdi_bps_med": 112.2558,
+    "dur_med": 4.4188,
+    "fwd126_mean_%": 0.9796,
+    "n_rows": 1959
+   },
+   "held": {
+    "trades_30d_med": 50.0,
+    "share_rows_later_harsh": 0.0109,
+    "cdi_bps_med": 116.7412,
+    "dur_med": 3.1176,
+    "fwd126_mean_%": 0.5446,
+    "n_rows": 31569
+   },
+   "ar1_monthly": {
+    "U_listed": 0.1993,
+    "U_unlisted": 0.2304,
+    "U_orphan": 0.1153,
+    "U_held": 0.2163
+   }
+  },
+  "cohort_carry_neutral": {
+   "mean_6m_%": 0.3899,
+   "ann_%": 0.7798,
+   "t_nw": 1.7915,
+   "n_dates": 48
+  }
+ },
+ "n_variants_tried": 5,
+ "runtime_s": 299.9724,
+ "holdout_2026": {
+  "X3_sector_proxy": {
+   "exCDI": 0.9206,
+   "vs_P4Q": 0.8406,
+   "t": 2.6726,
+   "vs_P7": 0.162,
+   "t_vs_P7": 1.244
+  },
+  "X6_cascade": {
+   "exCDI": 0.8695,
+   "vs_P4Q": 0.7895,
+   "t": 4.0815,
+   "vs_P7": 0.1109,
+   "t_vs_P7": 0.2744
+  },
+  "P7": {
+   "exCDI": 0.7586,
+   "vs_P4Q": 0.6786,
+   "t": 2.2481
+  },
+  "P4Q_exCDI": 0.08,
+  "P4Q_unlisted_minus_listed": {
+   "diff": 1.9904,
+   "t": 2.2365
+  }
+ }
+}

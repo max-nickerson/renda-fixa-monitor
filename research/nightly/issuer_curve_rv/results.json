@@ -1,0 +1,884 @@
+{
+ "slug": "issuer_curve_rv",
+ "harness_version": 4,
+ "convergence_13w": {
+  "cross": {
+   "resid_bps": {
+    "beta_mean": -0.113,
+    "beta_t_nw": -5.59,
+    "r2_mean": 0.056,
+    "r2_pooled": 0.0214
+   },
+   "e_iss": {
+    "beta_mean": -0.233,
+    "beta_t_nw": -11.37,
+    "r2_mean": 0.0796,
+    "r2_pooled": 0.0529
+   },
+   "e_grp": {
+    "beta_mean": -0.233,
+    "beta_t_nw": -11.83,
+    "r2_mean": 0.0811,
+    "r2_pooled": 0.0548
+   },
+   "e_isec": {
+    "beta_mean": -0.231,
+    "beta_t_nw": -11.69,
+    "r2_mean": 0.0782,
+    "r2_pooled": 0.0533
+   },
+   "r_sec": {
+    "beta_mean": -0.105,
+    "beta_t_nw": -6.27,
+    "r2_mean": 0.0482,
+    "r2_pooled": 0.0207
+   },
+   "e_slope": {
+    "beta_mean": -0.231,
+    "beta_t_nw": -11.3,
+    "r2_mean": 0.0779,
+    "r2_pooled": 0.0517
+   },
+   "cdi_bps": {
+    "beta_mean": -0.074,
+    "beta_t_nw": -3.66,
+    "r2_mean": 0.0637,
+    "r2_pooled": 0.0158
+   }
+  },
+  "within": {
+   "resid_bps": {
+    "beta_mean": -0.372,
+    "beta_t_nw": -13.79,
+    "r2_mean": 0.1462,
+    "r2_pooled": 0.1183
+   },
+   "e_iss": {
+    "beta_mean": -0.306,
+    "beta_t_nw": -14.28,
+    "r2_mean": 0.1446,
+    "r2_pooled": 0.1177
+   },
+   "e_grp": {
+    "beta_mean": -0.315,
+    "beta_t_nw": -14.38,
+    "r2_mean": 0.1436,
+    "r2_pooled": 0.1171
+   },
+   "e_isec": {
+    "beta_mean": -0.306,
+    "beta_t_nw": -14.27,
+    "r2_mean": 0.1446,
+    "r2_pooled": 0.1177
+   },
+   "r_sec": {
+    "beta_mean": -0.373,
+    "beta_t_nw": -13.83,
+    "r2_mean": 0.1464,
+    "r2_pooled": 0.1186
+   },
+   "e_slope": {
+    "beta_mean": -0.301,
+    "beta_t_nw": -13.98,
+    "r2_mean": 0.1404,
+    "r2_pooled": 0.1138
+   },
+   "cdi_bps": {
+    "beta_mean": -0.276,
+    "beta_t_nw": -9.56,
+    "r2_mean": 0.1421,
+    "r2_pooled": 0.0977
+   }
+  },
+  "n_obs": 88267,
+  "note": "13-week change in the bond's own CDI+ spread regressed on the residual (per date; 'within' = both demeaned by issuer-date). beta=-1 means full convergence to fair value within 13 weeks. Sample: universe bonds whose issuer has >=2 fresh bonds, fresh again 13 weeks later."
+ },
+ "ic": {
+  "fwd_63": {
+   "resid_bps": {
+    "ic": 0.1744,
+    "t": 10.69,
+    "n": 55
+   },
+   "e_iss": {
+    "ic": 0.1459,
+    "t": 10.42,
+    "n": 55
+   },
+   "e_grp": {
+    "ic": 0.1433,
+    "t": 12.96,
+    "n": 55
+   },
+   "e_isec": {
+    "ic": 0.15,
+    "t": 17.6,
+    "n": 55
+   },
+   "r_sec": {
+    "ic": 0.1432,
+    "t": 15.66,
+    "n": 55
+   },
+   "e_slope": {
+    "ic": 0.1446,
+    "t": 12.11,
+    "n": 55
+   },
+   "cdi_bps": {
+    "ic": 0.0995,
+    "t": 1.43,
+    "n": 55
+   },
+   "resid_bps|multi": {
+    "ic": 0.1555,
+    "t": 7.82
+   },
+   "resid_bps|within_issuer": {
+    "ic": 0.1189,
+    "t": 7.9
+   },
+   "e_iss|multi": {
+    "ic": 0.1459,
+    "t": 10.42
+   },
+   "e_iss|within_issuer": {
+    "ic": 0.119,
+    "t": 8.03
+   },
+   "e_grp|multi": {
+    "ic": 0.147,
+    "t": 12.45
+   },
+   "e_grp|within_issuer": {
+    "ic": 0.1193,
+    "t": 8.04
+   },
+   "e_isec|multi": {
+    "ic": 0.1386,
+    "t": 11.93
+   },
+   "e_isec|within_issuer": {
+    "ic": 0.119,
+    "t": 8.03
+   },
+   "r_sec|multi": {
+    "ic": 0.1248,
+    "t": 12.64
+   },
+   "r_sec|within_issuer": {
+    "ic": 0.1189,
+    "t": 7.9
+   },
+   "e_slope|multi": {
+    "ic": 0.1446,
+    "t": 12.11
+   },
+   "e_slope|within_issuer": {
+    "ic": 0.1217,
+    "t": 8.63
+   },
+   "cdi_bps|multi": {
+    "ic": 0.0863,
+    "t": 1.14
+   },
+   "cdi_bps|within_issuer": {
+    "ic": 0.0939,
+    "t": 1.89
+   }
+  },
+  "fwd_126": {
+   "resid_bps": {
+    "ic": 0.2091,
+    "t": 11.53,
+    "n": 52
+   },
+   "e_iss": {
+    "ic": 0.1662,
+    "t": 8.42,
+    "n": 52
+   },
+   "e_grp": {
+    "ic": 0.1651,
+    "t": 11.83,
+    "n": 52
+   },
+   "e_isec": {
+    "ic": 0.1753,
+    "t": 12.39,
+    "n": 52
+   },
+   "r_sec": {
+    "ic": 0.1764,
+    "t": 11.96,
+    "n": 52
+   },
+   "e_slope": {
+    "ic": 0.1622,
+    "t": 9.76,
+    "n": 52
+   },
+   "cdi_bps": {
+    "ic": 0.1416,
+    "t": 1.49,
+    "n": 52
+   },
+   "resid_bps|multi": {
+    "ic": 0.1859,
+    "t": 7.54
+   },
+   "resid_bps|within_issuer": {
+    "ic": 0.1299,
+    "t": 6.38
+   },
+   "e_iss|multi": {
+    "ic": 0.1662,
+    "t": 8.42
+   },
+   "e_iss|within_issuer": {
+    "ic": 0.1297,
+    "t": 6.48
+   },
+   "e_grp|multi": {
+    "ic": 0.1668,
+    "t": 10.78
+   },
+   "e_grp|within_issuer": {
+    "ic": 0.1295,
+    "t": 6.5
+   },
+   "e_isec|multi": {
+    "ic": 0.1558,
+    "t": 9.17
+   },
+   "e_isec|within_issuer": {
+    "ic": 0.1297,
+    "t": 6.48
+   },
+   "r_sec|multi": {
+    "ic": 0.1527,
+    "t": 13.63
+   },
+   "r_sec|within_issuer": {
+    "ic": 0.1299,
+    "t": 6.38
+   },
+   "e_slope|multi": {
+    "ic": 0.1622,
+    "t": 9.76
+   },
+   "e_slope|within_issuer": {
+    "ic": 0.1269,
+    "t": 7.22
+   },
+   "cdi_bps|multi": {
+    "ic": 0.1262,
+    "t": 1.22
+   },
+   "cdi_bps|within_issuer": {
+    "ic": 0.1236,
+    "t": 1.86
+   }
+  }
+ },
+ "pair_trades": {
+  "resid_bps|fwd_63": {
+   "all": {
+    "ann_%": 1.434,
+    "t_nw": 8.69,
+    "n_pairs": 5947,
+    "hit": 0.585,
+    "h1_%": 1.473,
+    "h2_%": 1.371,
+    "mean_gap_bps": 76.4,
+    "mean_carry_diff_bps": 55.3
+   },
+   "curve": {
+    "ann_%": 1.494,
+    "t_nw": 5.18,
+    "n_pairs": 4034,
+    "hit": 0.592,
+    "h1_%": 1.784,
+    "h2_%": 1.025,
+    "mean_gap_bps": 64.9,
+    "mean_carry_diff_bps": 59.0
+   },
+   "xidx": {
+    "ann_%": 1.413,
+    "t_nw": 2.47,
+    "n_pairs": 1746,
+    "hit": 0.572,
+    "h1_%": 0.984,
+    "h2_%": 2.107,
+    "mean_gap_bps": 94.7,
+    "mean_carry_diff_bps": 46.2
+   },
+   "xinc": {
+    "ann_%": -2.064,
+    "t_nw": -0.76,
+    "n_pairs": 167,
+    "hit": 0.557,
+    "h1_%": -2.028,
+    "h2_%": -2.143,
+    "mean_gap_bps": 165.3,
+    "mean_carry_diff_bps": 61.7
+   }
+  },
+  "resid_bps|fwd_126": {
+   "all": {
+    "ann_%": 0.833,
+    "t_nw": 6.44,
+    "n_pairs": 5499,
+    "hit": 0.589,
+    "h1_%": 0.738,
+    "h2_%": 1.012,
+    "mean_gap_bps": 75.7,
+    "mean_carry_diff_bps": 54.7
+   },
+   "curve": {
+    "ann_%": 0.827,
+    "t_nw": 5.48,
+    "n_pairs": 3738,
+    "hit": 0.593,
+    "h1_%": 0.847,
+    "h2_%": 0.79,
+    "mean_gap_bps": 64.1,
+    "mean_carry_diff_bps": 58.4
+   },
+   "xidx": {
+    "ann_%": 1.025,
+    "t_nw": 3.18,
+    "n_pairs": 1595,
+    "hit": 0.587,
+    "h1_%": 0.791,
+    "h2_%": 1.467,
+    "mean_gap_bps": 93.8,
+    "mean_carry_diff_bps": 45.1
+   },
+   "xinc": {
+    "ann_%": -2.355,
+    "t_nw": -1.25,
+    "n_pairs": 166,
+    "hit": 0.53,
+    "h1_%": -2.202,
+    "h2_%": -2.715,
+    "mean_gap_bps": 164.7,
+    "mean_carry_diff_bps": 62.2
+   }
+  },
+  "e_slope|fwd_63": {
+   "all": {
+    "ann_%": 1.437,
+    "t_nw": 7.07,
+    "n_pairs": 5947,
+    "hit": 0.588,
+    "h1_%": 1.536,
+    "h2_%": 1.277,
+    "mean_gap_bps": 96.0,
+    "mean_carry_diff_bps": 54.7
+   },
+   "curve": {
+    "ann_%": 1.451,
+    "t_nw": 4.73,
+    "n_pairs": 4052,
+    "hit": 0.595,
+    "h1_%": 1.813,
+    "h2_%": 0.866,
+    "mean_gap_bps": 83.3,
+    "mean_carry_diff_bps": 58.4
+   },
+   "xidx": {
+    "ann_%": 1.528,
+    "t_nw": 2.67,
+    "n_pairs": 1723,
+    "hit": 0.571,
+    "h1_%": 1.125,
+    "h2_%": 2.182,
+    "mean_gap_bps": 115.6,
+    "mean_carry_diff_bps": 45.2
+   },
+   "xinc": {
+    "ann_%": -1.876,
+    "t_nw": -0.7,
+    "n_pairs": 172,
+    "hit": 0.593,
+    "h1_%": -1.963,
+    "h2_%": -1.67,
+    "mean_gap_bps": 201.2,
+    "mean_carry_diff_bps": 60.9
+   }
+  },
+  "e_slope|fwd_126": {
+   "all": {
+    "ann_%": 0.851,
+    "t_nw": 6.6,
+    "n_pairs": 5499,
+    "hit": 0.589,
+    "h1_%": 0.814,
+    "h2_%": 0.921,
+    "mean_gap_bps": 95.4,
+    "mean_carry_diff_bps": 54.1
+   },
+   "curve": {
+    "ann_%": 0.817,
+    "t_nw": 4.85,
+    "n_pairs": 3746,
+    "hit": 0.592,
+    "h1_%": 0.934,
+    "h2_%": 0.596,
+    "mean_gap_bps": 82.5,
+    "mean_carry_diff_bps": 57.7
+   },
+   "xidx": {
+    "ann_%": 1.132,
+    "t_nw": 3.51,
+    "n_pairs": 1582,
+    "hit": 0.588,
+    "h1_%": 0.876,
+    "h2_%": 1.618,
+    "mean_gap_bps": 114.5,
+    "mean_carry_diff_bps": 44.6
+   },
+   "xinc": {
+    "ann_%": -2.335,
+    "t_nw": -1.24,
+    "n_pairs": 171,
+    "hit": 0.538,
+    "h1_%": -2.043,
+    "h2_%": -3.075,
+    "mean_gap_bps": 200.6,
+    "mean_carry_diff_bps": 61.5
+   }
+  },
+  "cdi_bps|fwd_63": {
+   "all": {
+    "ann_%": 0.941,
+    "t_nw": 2.4,
+    "n_pairs": 5957,
+    "hit": 0.58,
+    "h1_%": 1.108,
+    "h2_%": 0.671,
+    "mean_gap_bps": 98.9,
+    "mean_carry_diff_bps": 98.9
+   },
+   "curve": {
+    "ann_%": 1.665,
+    "t_nw": 4.07,
+    "n_pairs": 3573,
+    "hit": 0.615,
+    "h1_%": 1.849,
+    "h2_%": 1.366,
+    "mean_gap_bps": 67.2,
+    "mean_carry_diff_bps": 67.2
+   },
+   "xidx": {
+    "ann_%": -0.27,
+    "t_nw": -0.2,
+    "n_pairs": 2247,
+    "hit": 0.521,
+    "h1_%": -0.18,
+    "h2_%": -0.415,
+    "mean_gap_bps": 144.3,
+    "mean_carry_diff_bps": 144.3
+   },
+   "xinc": {
+    "ann_%": 3.575,
+    "t_nw": 1.96,
+    "n_pairs": 137,
+    "hit": 0.642,
+    "h1_%": 2.965,
+    "h2_%": 4.918,
+    "mean_gap_bps": 181.3,
+    "mean_carry_diff_bps": 181.3
+   }
+  },
+  "cdi_bps|fwd_126": {
+   "all": {
+    "ann_%": 0.57,
+    "t_nw": 1.43,
+    "n_pairs": 5509,
+    "hit": 0.593,
+    "h1_%": 0.6,
+    "h2_%": 0.514,
+    "mean_gap_bps": 97.5,
+    "mean_carry_diff_bps": 97.5
+   },
+   "curve": {
+    "ann_%": 0.928,
+    "t_nw": 2.72,
+    "n_pairs": 3316,
+    "hit": 0.624,
+    "h1_%": 0.868,
+    "h2_%": 1.041,
+    "mean_gap_bps": 66.5,
+    "mean_carry_diff_bps": 66.5
+   },
+   "xidx": {
+    "ann_%": -0.263,
+    "t_nw": -0.17,
+    "n_pairs": 2058,
+    "hit": 0.535,
+    "h1_%": -0.212,
+    "h2_%": -0.359,
+    "mean_gap_bps": 142.1,
+    "mean_carry_diff_bps": 142.1
+   },
+   "xinc": {
+    "ann_%": 3.801,
+    "t_nw": 3.17,
+    "n_pairs": 135,
+    "hit": 0.704,
+    "h1_%": 3.681,
+    "h2_%": 4.086,
+    "mean_gap_bps": 180.2,
+    "mean_carry_diff_bps": 180.2
+   }
+  },
+  "resid_bps_gap50|fwd_126": {
+   "ann_%": 1.151,
+   "t_nw": 5.98,
+   "n_pairs": 3029
+  },
+  "placebo_random_pair_fwd126": {
+   "mean_ann_%": -0.006,
+   "p95": 0.15,
+   "p5": -0.18
+  }
+ },
+ "pair_trades_note": "Gross, unhedged-for-credit (same issuer both legs), rate-hedged returns; the short leg is NOT implementable for debentures - read as the value of a SWITCH (sell rich, buy cheap bond of the same issuer) per unit swapped, before 2x cost (~0.25-0.5%/switch).",
+ "basis_timing": {
+  "basis_ipca_di": {
+   "basis_first_bps": -110.1,
+   "basis_last_pre2026_bps": -145.4,
+   "basis_min": -159.3,
+   "basis_max": -51.7,
+   "corr_expanding_z_vs_fwd126": -0.069,
+   "sign_trade_ann_%": 0.991,
+   "sign_trade_t_nw": 0.98,
+   "n_months": 44
+  },
+  "basis_inc_tax": {
+   "basis_first_bps": -101.0,
+   "basis_last_pre2026_bps": -110.8,
+   "basis_min": -241.0,
+   "basis_max": -43.0,
+   "corr_expanding_z_vs_fwd126": 0.116,
+   "sign_trade_ann_%": -0.898,
+   "sign_trade_t_nw": -1.18,
+   "n_months": 44
+  }
+ },
+ "backtests_25bps": [
+  {
+   "variant": "P4Q_issrich",
+   "exCDI_%": 2.2265,
+   "exU_%": 1.1248,
+   "t_vsU": 2.436,
+   "vs_bench_%": 0.0083,
+   "t_vs_bench": 0.494,
+   "p_vs_bench": 0.6213,
+   "vol_%": 1.0387,
+   "sharpe": 2.1436,
+   "maxDD_%": -1.3889,
+   "h1_vs_bench": 0.0105,
+   "h2_vs_bench": 0.0061,
+   "turnover": 2.9554,
+   "n_avg": 100.8125,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4Q_bothrich",
+   "exCDI_%": 2.2264,
+   "exU_%": 1.1246,
+   "t_vsU": 2.4356,
+   "vs_bench_%": 0.0081,
+   "t_vs_bench": 0.4846,
+   "p_vs_bench": 0.628,
+   "vol_%": 1.0387,
+   "sharpe": 2.1433,
+   "maxDD_%": -1.3889,
+   "h1_vs_bench": 0.0105,
+   "h2_vs_bench": 0.0058,
+   "turnover": 2.9549,
+   "n_avg": 100.7917,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4Q_secrich",
+   "exCDI_%": 2.2244,
+   "exU_%": 1.1227,
+   "t_vsU": 2.4369,
+   "vs_bench_%": 0.0062,
+   "t_vs_bench": 0.6141,
+   "p_vs_bench": 0.5392,
+   "vol_%": 1.0375,
+   "sharpe": 2.1441,
+   "maxDD_%": -1.3563,
+   "h1_vs_bench": 0.0052,
+   "h2_vs_bench": 0.0072,
+   "turnover": 2.9696,
+   "n_avg": 101.0417,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4Q_switch_resid",
+   "exCDI_%": 2.2099,
+   "exU_%": 1.1081,
+   "t_vsU": 2.6094,
+   "vs_bench_%": -0.0083,
+   "t_vs_bench": -0.1825,
+   "p_vs_bench": 0.8552,
+   "vol_%": 1.0526,
+   "sharpe": 2.0995,
+   "maxDD_%": -1.394,
+   "h1_vs_bench": -0.0509,
+   "h2_vs_bench": 0.0342,
+   "turnover": 2.9875,
+   "n_avg": 103.2917,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4Q_switch_eslope",
+   "exCDI_%": 2.1977,
+   "exU_%": 1.096,
+   "t_vsU": 2.5976,
+   "vs_bench_%": -0.0205,
+   "t_vs_bench": -0.4247,
+   "p_vs_bench": 0.6711,
+   "vol_%": 1.0669,
+   "sharpe": 2.0598,
+   "maxDD_%": -1.4016,
+   "h1_vs_bench": -0.06,
+   "h2_vs_bench": 0.019,
+   "turnover": 2.9916,
+   "n_avg": 103.2917,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4Q_switch_carry",
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": NaN,
+   "p_vs_bench": NaN,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": NaN
+  },
+  {
+   "variant": "tilt_carry+0.5eiss",
+   "exCDI_%": 2.2446,
+   "exU_%": 1.1428,
+   "t_vsU": 2.5964,
+   "vs_bench_%": 0.0264,
+   "t_vs_bench": 0.6509,
+   "p_vs_bench": 0.5151,
+   "vol_%": 1.0296,
+   "sharpe": 2.1801,
+   "maxDD_%": -1.3502,
+   "h1_vs_bench": 0.0152,
+   "h2_vs_bench": 0.0375,
+   "turnover": 2.9647,
+   "n_avg": 104.0417,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "tilt_carry+1.0eiss",
+   "exCDI_%": 2.2338,
+   "exU_%": 1.132,
+   "t_vsU": 2.714,
+   "vs_bench_%": 0.0156,
+   "t_vs_bench": 0.2357,
+   "p_vs_bench": 0.8137,
+   "vol_%": 1.0428,
+   "sharpe": 2.1421,
+   "maxDD_%": -1.3167,
+   "h1_vs_bench": 0.007,
+   "h2_vs_bench": 0.0241,
+   "turnover": 3.009,
+   "n_avg": 103.6042,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "RV_top20_e_iss_z",
+   "exCDI_%": 1.2381,
+   "exU_%": 0.1363,
+   "t_vsU": 0.6186,
+   "vs_bench_%": -0.9802,
+   "t_vs_bench": -1.969,
+   "p_vs_bench": 0.0489,
+   "vol_%": 1.6998,
+   "sharpe": 0.7283,
+   "maxDD_%": -3.6389,
+   "h1_vs_bench": -1.2248,
+   "h2_vs_bench": -0.7355,
+   "turnover": 2.9572,
+   "n_avg": 103.0833,
+   "p_holm": 0.5379
+  },
+  {
+   "variant": "RV_top20_e_isec_z",
+   "exCDI_%": 1.7913,
+   "exU_%": 0.6895,
+   "t_vsU": 4.5286,
+   "vs_bench_%": -0.4269,
+   "t_vs_bench": -0.9881,
+   "p_vs_bench": 0.3231,
+   "vol_%": 1.5698,
+   "sharpe": 1.1411,
+   "maxDD_%": -2.8581,
+   "h1_vs_bench": -0.9325,
+   "h2_vs_bench": 0.0787,
+   "turnover": 2.7558,
+   "n_avg": 139.8333,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "RV_top20_r_sec_z",
+   "exCDI_%": 1.9881,
+   "exU_%": 0.8864,
+   "t_vsU": 2.7538,
+   "vs_bench_%": -0.2301,
+   "t_vs_bench": -0.6179,
+   "p_vs_bench": 0.5366,
+   "vol_%": 1.5183,
+   "sharpe": 1.3094,
+   "maxDD_%": -1.8007,
+   "h1_vs_bench": -0.2408,
+   "h2_vs_bench": -0.2193,
+   "turnover": 2.6359,
+   "n_avg": 139.8542,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "RV_top20_resid_z",
+   "exCDI_%": 1.9285,
+   "exU_%": 0.8268,
+   "t_vsU": 2.0179,
+   "vs_bench_%": -0.2897,
+   "t_vs_bench": -0.9198,
+   "p_vs_bench": 0.3577,
+   "vol_%": 1.4089,
+   "sharpe": 1.3688,
+   "maxDD_%": -1.5088,
+   "h1_vs_bench": -0.164,
+   "h2_vs_bench": -0.4155,
+   "turnover": 2.4984,
+   "n_avg": 139.8333,
+   "p_holm": 1.0
+  },
+  {
+   "variant": "P4",
+   "exCDI_%": 1.8897,
+   "exU_%": 0.7879,
+   "t_vsU": 1.588,
+   "vs_bench_%": -0.3286,
+   "t_vs_bench": -2.2746,
+   "p_vs_bench": 0.0229,
+   "vol_%": 1.0464,
+   "sharpe": 1.8058,
+   "maxDD_%": -1.5639,
+   "h1_vs_bench": -0.2956,
+   "h2_vs_bench": -0.3615,
+   "turnover": 2.738,
+   "n_avg": 129.5208,
+   "p_holm": NaN
+  },
+  {
+   "variant": "P4Q",
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": NaN,
+   "p_vs_bench": NaN,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": NaN
+  },
+  {
+   "variant": "U",
+   "exCDI_%": 1.1018,
+   "exU_%": 0.0,
+   "t_vsU": NaN,
+   "vs_bench_%": -1.1165,
+   "t_vs_bench": -2.4091,
+   "p_vs_bench": 0.016,
+   "vol_%": 1.498,
+   "sharpe": 0.7355,
+   "maxDD_%": -3.5071,
+   "h1_vs_bench": -1.6292,
+   "h2_vs_bench": -0.6037,
+   "turnover": 1.6738,
+   "n_avg": 698.5,
+   "p_holm": NaN
+  }
+ ],
+ "n_variants_tried": 12,
+ "best_variant": "tilt_carry+0.5eiss",
+ "best_sensitivities": {
+  "50bps": {
+   "exCDI_%": 1.861,
+   "vs_P4Q_%": 0.024,
+   "t": 0.59
+  },
+  "rec40": {
+   "exCDI_%": 2.213,
+   "vs_P4Q_%": 0.027,
+   "t": 0.67
+  },
+  "hold63": {
+   "exCDI_%": 2.318,
+   "vs_P4Q_%": 0.054,
+   "t": 1.02
+  },
+  "P4Q_switch_resid_50bps": {
+   "vs_P4Q_%": -0.014,
+   "t": -0.31
+  },
+  "P4Q_issrich_50bps": {
+   "vs_P4Q_%": 0.007,
+   "t": 0.41
+  }
+ },
+ "best_placebo": {
+  "actual": 2.245,
+  "random_mean": 0.741,
+  "random_p95": 0.978
+ },
+ "holdout_2026": {
+  "tilt_carry+0.5eiss": {
+   "exCDI_%": 0.035,
+   "vs_P4Q_%": -0.045,
+   "t": -1.99,
+   "vs_U_%": 3.296,
+   "months": 9
+  },
+  "P4Q_switch_resid": {
+   "exCDI_%": -0.097,
+   "vs_P4Q_%": -0.177,
+   "t": -2.76,
+   "vs_U_%": 3.164,
+   "months": 9
+  },
+  "P4Q_issrich": {
+   "exCDI_%": 0.149,
+   "vs_P4Q_%": 0.069,
+   "t": 1.81,
+   "vs_U_%": 3.41,
+   "months": 9
+  }
+ },
+ "runtime_min": 14.9
+}

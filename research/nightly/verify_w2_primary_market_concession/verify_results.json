@@ -1,0 +1,142 @@
+{
+ "V1_A2_vsP4Q": {
+  "ann_excess_%": 3.531,
+  "diff_ann_%": 1.313,
+  "diff_t_nw": 2.983,
+  "diff_p": 0.003,
+  "diff_h1_%": 0.959,
+  "diff_h2_%": 1.667,
+  "vol_%": 1.747,
+  "max_dd_%": -2.095
+ },
+ "V1_A2_vsU": {
+  "ann_excess_%": 3.531,
+  "diff_ann_%": 2.429,
+  "diff_t_nw": 4.368,
+  "diff_p": 0.0,
+  "diff_h1_%": 2.588,
+  "diff_h2_%": 2.271,
+  "vol_%": 1.747,
+  "max_dd_%": -2.095
+ },
+ "V1_A1_prim_conc0_scr": {
+  "ann_excess_%": 2.92,
+  "diff_ann_%": 0.702,
+  "diff_t_nw": 1.646,
+  "diff_p": 0.1,
+  "diff_h1_%": 0.079,
+  "diff_h2_%": 1.325,
+  "vol_%": 1.558,
+  "max_dd_%": -2.191
+ },
+ "V1_A6_prim_conc0_scr_noprint_cash": {
+  "ann_excess_%": 1.695,
+  "diff_ann_%": -0.524,
+  "diff_t_nw": -1.091,
+  "diff_p": 0.275,
+  "diff_h1_%": -0.541,
+  "diff_h2_%": -0.506,
+  "vol_%": 0.619,
+  "max_dd_%": -0.235
+ },
+ "V2_A2_unprinted_cohort_mark_vsP4Q": {
+  "ann_excess_%": 3.448,
+  "diff_ann_%": 1.23,
+  "diff_t_nw": 2.639,
+  "diff_p": 0.008,
+  "diff_h1_%": 1.607,
+  "diff_h2_%": 0.852,
+  "vol_%": 1.157,
+  "max_dd_%": -0.701
+ },
+ "V2_A2_unprinted_cohort_mark_vsU": {
+  "ann_excess_%": 3.448,
+  "diff_ann_%": 2.346,
+  "diff_t_nw": 3.239,
+  "diff_p": 0.001,
+  "diff_h1_%": 3.236,
+  "diff_h2_%": 1.456,
+  "vol_%": 1.157,
+  "max_dd_%": -0.701
+ },
+ "V3_A2_unprinted_issuer_else_cohort_vsP4Q": {
+  "ann_excess_%": 3.437,
+  "diff_ann_%": 1.218,
+  "diff_t_nw": 2.772,
+  "diff_p": 0.006,
+  "diff_h1_%": 1.593,
+  "diff_h2_%": 0.844,
+  "vol_%": 1.192,
+  "max_dd_%": -0.701
+ },
+ "V5_A2_cohort_replica_vsP4Q": {
+  "ann_excess_%": 2.729,
+  "diff_ann_%": 0.511,
+  "diff_t_nw": 0.98,
+  "diff_p": 0.327,
+  "diff_h1_%": 1.505,
+  "diff_h2_%": -0.484,
+  "vol_%": 1.256,
+  "max_dd_%": -0.905
+ },
+ "V5_A2_model_minus_cohort_replica": {
+  "ann_excess_%": 3.531,
+  "diff_ann_%": 0.802,
+  "diff_t_nw": 1.246,
+  "diff_p": 0.213,
+  "diff_h1_%": -0.546,
+  "diff_h2_%": 2.15,
+  "vol_%": 1.747,
+  "max_dd_%": -2.095
+ },
+ "V5_A2_cohortmark_minus_cohort_replica": {
+  "ann_excess_%": 3.448,
+  "diff_ann_%": 0.719,
+  "diff_t_nw": 2.28,
+  "diff_p": 0.023,
+  "diff_h1_%": 0.102,
+  "diff_h2_%": 1.336,
+  "vol_%": 1.157,
+  "max_dd_%": -0.701
+ },
+ "V2_A1_unprinted_cohort_mark_vsP4Q": {
+  "ann_excess_%": 2.993,
+  "diff_ann_%": 0.775,
+  "diff_t_nw": 2.291,
+  "diff_p": 0.022,
+  "diff_h1_%": 0.864,
+  "diff_h2_%": 0.686,
+  "vol_%": 1.044,
+  "max_dd_%": -0.747
+ },
+ "V4_selection_overlap": {
+  "n_old": 1064,
+  "n_new": 1057,
+  "common": 1053
+ },
+ "V4_A2_noLA_dur_model_vsP4Q": {
+  "ann_excess_%": 3.237,
+  "diff_ann_%": 1.019,
+  "diff_t_nw": 1.867,
+  "diff_p": 0.062,
+  "diff_h1_%": 0.969,
+  "diff_h2_%": 1.069,
+  "vol_%": 1.786,
+  "max_dd_%": -2.391
+ },
+ "V4_A2_noLA_dur_cohort_vsP4Q": {
+  "ann_excess_%": 3.43,
+  "diff_ann_%": 1.212,
+  "diff_t_nw": 2.514,
+  "diff_p": 0.012,
+  "diff_h1_%": 1.641,
+  "diff_h2_%": 0.783,
+  "vol_%": 1.163,
+  "max_dd_%": -0.71
+ },
+ "A2_unprinted_share": 0.6926691729323309,
+ "A2_mean_s_iss_printed_vs_unprinted": [
+  316.4890217247787,
+  309.9157088284101
+ ]
+}

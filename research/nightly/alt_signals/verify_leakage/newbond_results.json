@@ -1,0 +1,23 @@
+{
+ "flagged_p4q_rows": 909,
+ "flagged_share_new_bond": 0.33443344334433445,
+ "unflagged_share_new_bond": 0.2207952580884169,
+ "supply_seasoned_only": {
+  "diff_ann_%": 0.1219,
+  "diff_t_nw": 1.1594,
+  "diff_h1_%": -0.0926,
+  "diff_h2_%": 0.3365
+ },
+ "supply_new_only": {
+  "diff_ann_%": 0.0638,
+  "diff_t_nw": 0.9109,
+  "diff_h1_%": 0.1458,
+  "diff_h2_%": -0.0182
+ },
+ "ex_all_new_bonds": {
+  "diff_ann_%": 0.0519,
+  "diff_t_nw": 0.383,
+  "diff_h1_%": 0.1107,
+  "diff_h2_%": -0.0068
+ }
+}

@@ -1,0 +1,1267 @@
+{
+ "wave1": [
+  {
+   "slug": "fund_flows",
+   "headline": "Credit-fund flows (CVM inf_diario) and fund holdings (CDA) are clearly visible but do not beat P4+Q. Flows follow returns rather than lead them, so flow-timing overlays lose 0.06–0.54%/yr. The only real cross-sectional effect, fire-sale pressure, is gone within about a month and costs erase it. The best variant, dropping bonds held by few credit funds, adds +0.08%/yr (t 0.86, Holm p=1) and is flat in the 2026 holdout.",
+   "beats": false,
+   "verified": false,
+   "best": "X4_ex_low_credit_share: P4+Q minus the bottom quintile of cshare (share of a bond's fund-held value owned by PIT credit funds), monthly decisions, 126-bday tranches",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.083,
+    "excess_vs_universe_ann_pct": 1.199,
+    "t_vs_p4q": 0.86,
+    "holm_p": 1,
+    "sharpe": 2.17,
+    "max_dd_pct": -1.43,
+    "n_variants_tried": 15,
+    "net50_diff_vs_p4q_ann_pct": 0.078
+   },
+   "insights": [
+    "Flows follow returns: the 21d credit-fund flow correlates +0.41 with P4+Q's previous-month return (+0.60 for IDA-DI). In a regression of next-month return on flow plus own lagged return, flow is never significant (t 0.6 for af21, 1.4 for af5, 0.07 for af63).",
+    "The 2023 wave took out about 5.5% of credit-fund PL per month. It began after the Americanas event (Feb 2023) and ended (net inflows again from about Aug 2023) while the universe median spread was still near its 200 bps peak. Flow overlays therefore exit late and re-enter late: in P4+Q if af21>0 is -0.47%/yr (t -1.2), af63>0 is -0.54 (t -1.7), and out if af21<-2% is -0.06 pre-2026 and -1.89 (t -3.1) in the 2026 holdout.",
+    "Fire-sale pressure (holders' 21d outflow weighted by holding) is real but lasts about a month. Dropping the bottom quintile adds +0.32%/yr vs P4+Q at a 1-month cohort horizon (t 2.3), -0.03 at 3m and -0.11 at 6m, which fits Coval-Stafford pressure followed by reversal. Harvesting it with weekly 21d tranches means about 14x turnover: -0.11 at 25bps and -0.26 at 50bps (t -2.1).",
+    "'Orphan' debentures that no investment fund holds are 6% of the universe and 9% of P4+Q, and they outperform. Removing them costs -0.16%/yr (t -2.4; 6m cohort t -3.5), and this survives the rec40 scenario. Their raw fwd_126 is 2.0% vs 1.15% for held bonds, with lower carry (110 vs 118 bps). This looks like a neglect premium, but these are the stale-mark/survivorship names.",
+    "Credit-fund ownership share is a carry proxy. Within DI-spread bonds its 3m IC is +0.13 (t 5.4), but carry-neutral it is +0.01 (t 0.8). P4+Q already captures it, so all three cshare book variants (X4, F3, X7) land at +0.01 to +0.08.",
+    "Funds' net buying (CDA buys-sells), changes in holder count and quantity, and holder concentration carry no information (|IC| <= 0.03, insignificant raw or carry-neutral).",
+    "Structural boom: debenture-heavy funds (>=25% of PL) grew from 597 to 2,005 and from about R$0.25tn to R$1.1tn PL (2022-01 to 2025-12), and CDA debenture positions per month grew from 44k to over 200k. Credit-fund investor counts fell 14% in Q1 2026, the redemption wave that is now in the holdout."
+   ],
+   "signals": [
+    "press21 / press63: holding-weighted holder net flow, a short-horizon (<=1 month) fire-sale avoid signal. Load with features.signals(panel) in research/nightly/fund_flows/features.py or from data/history/nightly/fund_flows/bond_signals_M.pkl.",
+    "stress63: share of a bond's fund holders with 63d outflows above 10% (same sources)",
+    "nh / lnh: number of fund holders; nh==0 flags 'orphan' bonds, a candidate positive tilt pending a survivorship check (same sources)",
+    "cshare, hhi, dnh3, dq3, nb3: ownership structure and fund net trading, which showed no alpha (same sources)",
+    "af21 / af63 / dcot63: aggregate credit-fund flow regime, usable as a descriptor or conditioning variable but not as a timing rule. Load with features.agg_flows() or data/history/nightly/fund_flows/agg_flows_export.pkl.",
+    "features.fund_class(): PIT credit-fund classification per CDA month; features.fund_flow_ratios(W): per-fund flow ratios (not lagged; shift 5 days before use)"
+   ],
+   "caveats": [
+    "CVM rewrites CDA files: 2023 data was regenerated in 2024, so it may include positions that were confidential or filed late at the time. The 60-day availability lag mitigates this but does not remove it, and the most recent vintages are visibly incomplete (2026-07 has 1,272 credit funds vs about 2,300).",
+    "Flows are measured at the funds that directly hold debentures (masters). Feeder (FIC) flows only reach them through master subscriptions and redemptions. Mergers and incorporations create spikes: fund flow ratios are clipped to +/-100% and funds with PL below R$5m are ignored.",
+    "Harness caveats apply: smooth, stale marks inflate t and Sharpe. The orphan effect sits in the stale-mark/survivorship zone, even though it survives rec40.",
+    "Overlays switch instantly at the mark (optimistic) and still lose."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The CDA holdings use a 60-day lag, but CVM keeps positions confidential for about 90 days. I used the 2026-07 file as downloaded on 2026-09-28, about 60 days after month-end. Its debenture positions (BLC_4) show only R$310bn by bond. Another R$500bn (2,520 funds, about 62% of value) sits in cda_fi_CONFID_202607.csv with no bond code; the confidentiality end dates (DT_CONFID_APLIC) run from 2026-10-29 to 2027-01-27. By comparison, 2026-04 (about 150 days old) shows R$767bn visible and only R$0.7bn still confidential. build_data.py reads only BLC_4 from files CVM has already regenerated. So the backtest's 60-day vintages include positions that were hidden in real time. This is look-ahead: the README calls it a mitigated caveat, but it is a real leak.",
+      "With a realistic lag, X4's edge shrinks steadily. vs P4+Q it is +0.083 (t 0.86) at 60 days, reproduced exactly; +0.032 (t 0.43) at 90; +0.013 (t 0.23) at 120; and -0.035 (t -0.66) at 180. At 50 bps it is +0.006 at 120 days. The 2022–23 half is negative at every lag.",
+      "The orphan insight (X5, about -0.16%/yr, t -2.4, 'survives rec40') is weaker than stated and also depends on the lag. It is -0.12 (t -1.5) at 120 days and -0.05 (t -0.37) at 180. The 'orphan' flag is also polluted by newly issued bonds whose holdings have no vintage yet: the orphan share grows from 5.9% at a 60-day lag to 16.6% at 180. It is not a clean neglect premium."
+     ],
+     "corrected": 0.013
+    },
+    {
+     "refuted": true,
+     "severity": "minor",
+     "problems": [
+      "X4's +0.08%/yr reproduces exactly (t 0.86; 50 bps +0.078), but it is not robust. Removing the 5 issuers whose exclusion helped most gives +0.005 (t 0.07), and removing the top 10 gives -0.012. One issuer (cnpj8 12104241, only 5 excluded obs) contributes about -1.5 of summed relative fwd_126, so X4 mostly dodged one or two blow-ups.",
+      "Excluding the 3 best months of X4 vs P4+Q leaves -0.015%/yr (excluding the best one leaves +0.05). By year: 2022 +0.02, 2023 -0.18, 2024 +0.33, 2025 +0.16, so the gain is concentrated in 2024.",
+      "X4 is sensitive to parameters. Quintile cut: q=0.10 gives +0.01, 0.15 gives +0.02, 0.25 gives +0.11, 0.30 gives +0.17 (t 1.4), 0.40 gives +0.16. Holding period: 63d gives +0.14, 252d gives -0.01, quarterly rebalance gives +0.04. Credit-fund threshold: 10% gives -0.00, 50% gives +0.04, 75% gives +0.07. All are insignificant, and the sign flips in several cells."
+     ],
+     "corrected": 0.005
+    }
+   ]
+  },
+  {
+   "slug": "macro_cycle",
+   "headline": "None of the 20 macro or credit-cycle timing and sizing overlays beats P4+Q before 2026; macro-to-credit links flip sign between 2010–21 and 2022–25, and switching costs eat what timing skill is left.",
+   "beats": false,
+   "verified": true,
+   "best": "ov_mom63_inout: IDA-DI 63-day excess momentum > 0, in or out, checked at each Friday close and applied to the whole P4+Q book. It came out +0.02%/yr vs P4+Q (t 0.05, Holm p 1.0) and cut maxDD from −1.39% to −0.50%. It then lost 1.04%/yr vs P4+Q in the 2026 holdout (t −2.28).",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.018,
+    "excess_vs_universe_ann_pct": 1.135,
+    "holm_p": 1,
+    "max_dd_pct": -0.5,
+    "n_variants_tried": 20,
+    "net50_diff_vs_p4q_ann_pct": -0.2,
+    "sharpe": 2.72,
+    "t_vs_p4q": 0.05
+   },
+   "insights": [
+    "Macro signals flip sign across regimes. Non-overlapping monthly Spearman correlation with IDA-DI's forward 21d excess, 2010–21 vs 2022–25: VIX level +0.18 vs −0.34; Brazil country-risk proxy +0.10 vs −0.37; USD/BRL 63d −0.23 vs +0.20; EMB/IEF +0.24 vs −0.10; IDA-DI vol63 +0.43 vs −0.12. Only the index's own momentum (x5 +0.43/+0.44, x21 +0.40/+0.36), Brent 63d (+0.24/+0.32) and US HY via HYG/IEF (+0.32/+0.18) keep their sign. As a result the walk-forward ridge and GBM, trained on 2010–21, have timing alpha of −1.6 to −2.2%/yr (t −3.7 to −3.9) against an exposure-matched static book.",
+    "The pre-declared primary, an ensemble sizing 0–1.5× (logit + ridge + GBM + HMM + mom21), lost 0.97%/yr vs P4+Q (t −2.7), and 2.11%/yr at 50 bps. In the 2026 holdout it lost 0.12%/yr vs P4+Q. Continuous sizing makes 13–27 switches a year, which costs 0.5–2%/yr; every 'size' variant is worse than in/out.",
+    "The current P4 regime overlay (IDA21) costs 0.48%/yr on P4+Q (1.19%/yr at 50 bps). Its exposure-matched timing alpha is −0.01, so the loss comes from lower average exposure (0.79) plus costs. It does beat random timing: 200 circular shifts average −1.15, p = 0.00.",
+    "Slow momentum is the only rule that works on the long IDA-DI sample. Over 2012–21 out of sample, mom63 in/out had Sharpe 1.61 vs 0.39 buy-and-hold and maxDD −0.83% vs −5.9%, with 1.2 switches a year. On P4+Q it had timing alpha +0.51 (t 1.8), vol 0.82 vs 1.04 and maxDD −0.50 vs −1.39. But almost all of its gain vs P4+Q came from one episode (Americanas, Jan–Feb 2023), and it lost 1.04%/yr in the 2026 holdout. Treat it as drawdown insurance with one good episode, not alpha.",
+    "The implementable version scales only NEW monthly tranches with no forced selling. This removes most of the cost damage: entry_ens_size and entry_gbm_size came out −0.10%/yr vs P4+Q with timing alpha +0.13 to +0.19 (t < 0.8). It is the right way to express a macro view in an illiquid book, but there is no view worth expressing.",
+    "Leaning into wide spreads did not pay. Sizing up when the universe's median CDI+ spread is high (expanding z-score) lost 1.09%/yr as an overlay and 0.63%/yr at entry; carry-level timing alpha was about 0.",
+    "Static leverage is the only thing that 'beats' P4+Q, and it is carry scaling, not skill. With funding at CDI + 50 bps, 1.25× gave +0.44%/yr (t 2.5) and 1.5× gave +0.88%/yr, but maxDD grew to −1.78% and −2.16%. This depends entirely on repo funding for debentures near CDI + 50, which is not realistic for most HY names.",
+    "Debenture primary issuance (CVM registrations, 91d, year-on-year) and IPCA surprises vs the Focus survey show no timing value: correlations stay within about 0.04 in both periods, except issuance yoy at +0.15 in 2022–25.",
+    "Adding a 5–10 day extra lag makes IDA21 a further 0.08–0.24%/yr worse. Part of the momentum edge is autocorrelation from smooth, stale marks, which a real illiquid book cannot trade at those marks."
+   ],
+   "signals": [
+    "macro_overlay_signals.pkl (data/history/nightly/macro_cycle/): date index; columns ens_size, ens_inout, gbm_size, hmm_inout, logit_inout, spread_size, ens_pct. Each is a book-level exposure known at the close of that date. Pass it to harness.backtest(overlay=series).",
+    "research/nightly/macro_cycle/data.py:build(): the point-in-time macro panel (market-level features for any combiner; join on date <= decision day).",
+    "research/nightly/macro_cycle/run.py:apply_overlay(base_result, exposure_series, cost_bps, fund_bps, extra_lag): the harness overlay semantics plus funding on the levered part.",
+    "research/nightly/macro_cycle/run.py:entry_sized(signal, exposure_series): scales only new 126d tranches; the implementable way to apply an exposure.",
+    "IDA-DI 63d excess momentum (macro_daily.pkl column IDADI_x63 > 0): a slow drawdown-control flag."
+   ],
+   "caveats": [
+    "Only about 2 credit episodes fall in the 48 pre-2026 months (Americanas in Q1-2023 and late 2025). The long IDA-DI sample (2012–21) adds 2015–16 and 2020, but that is the index, not the book.",
+    "The ov_* overlays (including the harness IDA21 regime) switch the whole book instantly at the mark, which is optimistic for illiquid debentures. The entry_* variants are the implementable ones.",
+    "Smooth, stale marks inflate Sharpe and t, and momentum rules partly exploit their autocorrelation.",
+    "Funding for leverage at CDI + 50 bps (100 bps as a sensitivity) is an assumption; no debenture repo market was modelled."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "net50_diff_vs_p4q_ann_pct = -0.2 in the claimed metrics does not appear anywhere in results.json, because mom63 is missing from the robustness keys. When I recomputed it, 50 bps with a 50 bps base gave -0.06%/yr (t -0.16). The number is misreported, although the conclusion (about zero) still holds.",
+      "The circular-shift placebo was never run for the chosen best variant (mom63). I ran it: 200 shifts give a mean of -0.64 and a p95 of -0.34, against an actual +0.02 (p = 0.02). So mom63 has real timing information compared with random timing, but it adds nothing over always-invested P4+Q.",
+      "The best variant is a selection artifact. Neighbouring momentum windows on the same overlay all do worse vs P4+Q: 21d -0.50, 84d -0.31, 126d -0.52. Only 42d (+0.02) is about the same. The +0.02 is the maximum of 17 non-static variants and should be read as 0."
+     ],
+     "corrected": 0.018
+    },
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "My reproduction matches ov_mom63_inout exactly at 25 bps: +0.018%/yr vs P4+Q (NW t 0.05), halves +0.39 / −0.35, vol 0.82, maxDD −0.50. It adds nothing over P4+Q, which is what the agent claims.",
+      "The headline's net50 figure of −0.20%/yr has no source in the agent's code. mom63 is not in run.py's robustness list, so it was never computed at 50 bps there. I re-ran it at 50 bps (with the 50 bps baseline) and got −0.06%/yr (t −0.16). The conclusion is the same but the number is wrong.",
+      "The value comes from one episode, and the months differ from the README. The biggest gains are Feb and Mar 2023 (+0.62% and +0.31%), not Jan–Feb as the README says; Jan 2023 is slightly negative (−0.06%). Excluding Jan–Mar 2023 gives −0.21%/yr (t −0.74). Excluding all of 2023 gives −0.24%/yr. Dropping the 5 best months gives −0.47%/yr (t −1.35). Jan–Mar 2025 alone cost about −1.5% cumulative."
+     ],
+     "corrected": 0.018
+    }
+   ]
+  },
+  {
+   "slug": "factor_zoo",
+   "headline": "Among 110 point-in-time factors, only a small composite led by equity momentum and volatility adds to P4+Q, and only as a screen inside the top-carry bucket. Dropping the worst 20% of P4+Q names by the composite adds +0.36%/yr (NW t 2.5, positive in both halves, placebo p≈0), but that is not significant after Holm (p 0.13), and the gain shrank to +0.12%/yr (t 1.3) in the 9-month 2026 holdout.",
+   "beats": false,
+   "verified": true,
+   "best": "zoo_screen20: P4+Q minus the worst 20% (within P4+Q) of an equal-weight normal-score composite of 8 survivors chosen on 2021-03..2023-06 data: ds_5(-), days_since_distress(-), eq_r21(+), eq_r126(+), bond_age_y(+), dres_21(-), age/days_since_trade(+), eq_vol63(-)",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.356,
+    "excess_vs_universe_ann_pct": 1.473,
+    "holm_p": 0.133,
+    "max_dd_pct": -0.77,
+    "n_variants_tried": 11,
+    "net50_diff_vs_p4q_ann_pct": 0.325,
+    "sharpe": 2.94,
+    "t_vs_p4q": 2.54
+   },
+   "insights": [
+    "Equity momentum is the only factor block that is clearly incremental. Holding carry, RV, duration, IPCA and incentivada fixed, eq_r126 has a 6m IC of +0.107 (NW t 6.8), +0.117 in the 2024-25 validation period and +0.18 inside P4+Q (t 7.4). Its raw IC is only about 0.04, so it is invisible without conditioning on carry. The equity-only sub-composite delivers +0.29 of the +0.36%/yr.",
+    "eq_vol63 works as a risk flag and is orthogonal to momentum (a separate cluster). Its IC after controls is -0.09 at 6m and -0.14 at 12m.",
+    "Short-horizon mark momentum: a spread that widened over the last week (ds_5) predicts 6-12m underperformance (IC after controls -0.048, t -5.5), and so does a rising residual over 21 days (dres_21, -0.036). Spread momentum over 63-252 days is about 0 once carry is controlled. This looks like slow price discovery in stale marks. As a screen it adds only +0.09 to +0.12%/yr.",
+    "Decay rises with horizon for nearly every survivor. For eq_r126 the IC after controls is 0.03/0.07/0.11/0.13 at 21/63/126/252 bdays; for eq_vol63 it is -0.02/-0.05/-0.09/-0.14. These are slow credit-drift factors, which is consistent with 'reacting fast doesn't pay'.",
+    "Many factors look strong in raw IC but vanish after carry and RV. Residual smoothings (rz_ma5/21, resid_bps) have a raw IC of +0.21 (t 11) but only 0.03-0.06 after controls. The issuer-average residual goes from a raw IC of +0.18 to -0.01. Liquidity (Amihud, volume, trade counts), guarantee type, 476 vs 400 offerings, call clause, coupon frequency and issue size have |t| < 2 or flip sign across periods.",
+    "Several selection-period winners flipped sign in validation: days_since_distress (t -7.5, then IC +0.04), bond_age_y (t +3.5, then -0.01) and is_476 (t +4.5, then -3.7). A 2.5-year selection window picks up regime artefacts.",
+    "Carry cannot be replaced. Tilting the carry rank with the composite loses -0.11%/yr vs P4+Q. The composite only helps as a screen inside the top-30% carry bucket, and without the fundamentals quality screen (P4 minus the composite) the gain falls to +0.11. Quality and the zoo composite are complementary.",
+    "zoo_screen20 before 2026: 2.58%/yr over CDI, +1.47 vs universe (t 2.9), +0.36 vs P4+Q (t 2.54; +0.32 in 2022-23 and +0.39 in 2024-25), vol 0.88, max drawdown -0.77%, 82 names. Robustness vs P4+Q: 50 bps +0.33 (t 2.3), rec40 +0.36, hold 63 +0.43, weekly tranches +0.40 (t 2.7). A placebo that drops 20% of P4+Q at random gives a mean of -0.04 and a p95 of +0.01.",
+    "Sealed holdout, 2026-01..09: +0.20%/yr over CDI, +0.12 vs P4+Q (t 1.3, ahead in 8 of 9 months) and +3.46 vs universe (t 4.2)."
+   ],
+   "signals": [
+    "zoo composite: research/nightly/factor_zoo/features.py::signals(panel) returns (day, codigo, value), higher is better, with the spec frozen in results.json 'composite_spec'. The cached version is data/history/nightly/factor_zoo/zoo_composite.pkl with columns day, codigo, cnpj8, value, freq M|W, covering universe rows through 2026-09.",
+    "all zoo features: features.py::build_features() returns (day, codigo, ~60 features); features.py::attach(panel) merges them into a harness panel and adds is_ipca, eq_idio63, eq_mom_12_1, eq_vol_trend, rat_down_365, ds_63_vs_peer, sec_ds_63, sec_resid.",
+    "Most robust single overlays: eq_r126(+), eq_r21(+) and eq_vol63(-), which are harness panel columns, and ds_5(-) (1-week CDI+ spread change) from features.py. Use them as a bottom-20% screen inside P4+Q."
+   ],
+   "caveats": [
+    "After Holm across the 11 variants tried (plus P4), the result is not significant: p 0.13 for the best variant, raw p 0.011. In the 9-month holdout the increment shrank to +0.12%/yr, t 1.3.",
+    "Survivors were chosen from only 28 monthly dates, and 4 of the 8 were unstable in validation (days_since_distress, bond_age_y, age, and also is_476 among the candidates). The equity block is the only robust part.",
+    "Smooth and stale marks inflate the t-stats and Sharpe ratios. The 'age' (days since last trade) survivor may be partly a mark-staleness artefact.",
+    "SND registry fields come from a 2026-09 snapshot, so repactuated bonds carry their current terms. Outstanding-quantity and redemption fields were deliberately excluded because they are look-ahead."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "days_since_distress uses a 9999 sentinel for 'never distressed'. That covers at least 50% of universe rows (the median is 9999). With sign -1, the composite gives recently distressed issuers a positive score and puts the tied sentinel mass in the middle. The 'single_days_since_distress_screen20' variant (16 names, +0.30) is a bug artefact: its bottom 20% quantile falls on the tied value, so it drops nearly all P4+Q names and keeps only the recently distressed ones. The claim that it 'flips sign' is also partly a tie artefact. Removing the factor from the composite gives +0.31%/yr (t 2.3) instead of +0.36.",
+      "The 2022-23 half is not out-of-sample. Survivors were picked on decisions from 2021-03 to 2023-06, which overlap the 2022-23 book. Within that window the diff is +0.32 (t 1.24). The truly out-of-selection months, 2024-25, give +0.39 (t 3.4), so evidence outside the selection window does exist. But 'positive in both halves' overstates it, because one half is in-sample.",
+      "The signal decays quickly, which contradicts the insight that these are 'slow credit-drift factors'. Using the composite from the previous monthly decision (information one month staler) roughly halves the increment, to +0.18%/yr (t 1.6). A good part of the gain comes from the fresh short-horizon components (ds_5, dres_21, eq_r21). This is not leakage: entry is strictly at a trade after the decision close."
+     ],
+     "corrected": 0.31
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "The gain comes from a few issuer blowups. Excluding the top 2 avoided issuers (00776574, the Americanas CNPJ, in Jan 2023 and 12104241, a listed healthcare name, in late 2024) cuts the gain to +0.21%/yr (t 2.2). Excluding the top 3 gives +0.16 (t 1.4), the top 5 +0.12 (t 1.1) and the top 10 +0.04 (t 0.5). Excluding the top 5 or 10 kept winners changes nothing (+0.35).",
+      "Three months (2024-12, 2023-01, 2024-04) drive the result. Without them the gain is +0.13%/yr (t 1.2).",
+      "'Positive in both halves' is partly in-sample. The survivors were chosen on decisions from 2021-03 to 2023-06, whose 6m labels overlap most of the 2022-23 half, including Americanas. The clean out-of-sample window (decisions from 2023-07, P&L 2024-25) gives +0.39 (t 3.4). Removing the single issuer 12104241 makes it +0.23 (t 1.8), and excluding the top 3 makes it +0.11 (t 0.8)."
+     ],
+     "corrected": 0.2
+    }
+   ]
+  },
+  {
+   "slug": "ml_ranking",
+   "headline": "None of the 51 model variants tried (9 learners plus 2 ensembles plus 2 non-ML controls, 4 portfolio forms each) beats P4+Q after multiple-testing correction. The best one tilts P4+Q weights using a LightGBM model trained on each bond's excess over its peer group: it adds +0.17%/yr pre-2026 (t 2.2, Holm p 1.0, all of it in 2024–25) and +0.11%/yr in the sealed 2026 holdout. On their own, all the ML rankers lose 0.5–1.5%/yr to P4+Q, and none ranks bonds better than carry (cdi_bps) or the richness measure resid_z.",
+   "beats": false,
+   "verified": true,
+   "best": "lgb_peer:tilt (P4+Q with weights proportional to 0.5 + the percentile of a LightGBM score whose target is fwd_126 minus the same-date peer-group mean; walk-forward, embargo 126 bdays, 25 bps)",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.1716,
+    "t_vs_p4q": 2.18,
+    "holm_p": 1,
+    "n_variants_tried": 51,
+    "excess_vs_universe_ann_pct": 1.29,
+    "sharpe": 2.21,
+    "max_dd_pct": -1.38,
+    "net50_diff_vs_p4q_ann_pct": 0.17
+   },
+   "insights": [
+    "The raw-target models (LGBM, monotone LGBM, elastic net, hierarchical shrinkage, CatBoost) have universe IC of about 0 (-0.05 to +0.07). Trained on 2021 labels, they learned 'low carry is good' and posted ICs of -0.4 to -0.65 from 2022-03 to 2022-10, when carry alone had +0.6 to +0.7. Demeaning the target within the peer group (lgb_peer) fixes this: IC 0.16, NW t 4.8, the only model positive in every sub-period. The lesson is to predict within-peer excess, not raw return, because the ranking across peer groups is regime-driven and flips sign.",
+    "No model matches single raw columns. cdi_bps has IC 0.25 in the universe and 0.33 inside P4+Q (t 11.2). resid_z has IC 0.23 with NW t 14.6, the most stable signal. The best model inside P4+Q reaches 0.25.",
+    "As overlays inside P4+Q the models are weakly positive: lgb_peer:tilt +0.17 (t 2.18), stack:tilt +0.16, stack:veto20 +0.15 (t 2.89, Holm 0.18), lgb_peer:veto20 +0.12. The tilt also holds at 50 bps (+0.17), under rec40 (+0.17), at hold 63 (+0.23) and at cohort level (+0.14, t 1.9). It beats all 30 random-tilt placebos (placebo p95 +0.06). But the gain is +0.01 in 2022–23 and +0.33 in 2024–25.",
+    "The one Holm-significant result is a trivial non-ML control. Tilting P4+Q weights by carry percentile (ctrl_carry:tilt) gives +0.06%/yr with t 5.22 and Holm p < 0.001. The size is tiny and the t is inflated by a very low tracking error, but it is a free refinement for a combiner.",
+    "As standalone top-20% books every ML model loses to P4+Q, by -0.5 (lgb_peer) to -1.5%/yr, mostly in 2022–23 (-1.5 to -2.9). This confirms the earlier deep lab.",
+    "The large-loss classifier (P(fwd_126 < -3%), about 7% base rate) is useless as a veto. Its IC is about 0 and changes sign by year. As a veto it adds +0.08 (t 1.4), entirely in 2022–23.",
+    "Learning-to-rank objectives (LightGBM LambdaRank, XGBoost pairwise, CatBoost YetiRank) are no better than L2 regression as overlays (within ±0.05%/yr). They optimise the top of the list, while an overlay needs the full ordering inside P4+Q. Monotone constraints change nothing. Hierarchical issuer and sector shrinkage on past residuals hurts (IC inside P4+Q 0.09), so past issuer alpha does not persist.",
+    "NNLS stacking on past out-of-sample predictions converges to 92% lgb_peer and 8% lgb_rank by 2025-12.",
+    "SHAP of lgb_peer (fit 2025-10, 2025 out-of-sample rows): the top drivers are carry x duration, carry vs the kind median, equity drawdown vs its 252d high (a smaller drawdown raises the score), years to maturity, raw carry, duration, IDA-DI 63d momentum, carry vs sector, fundamental quality (+), equity 252d return (+) and equity vol (-). In short: carry within peers, adjusted for duration, plus the issuer's equity health.",
+    "Sealed holdout, looked at once with the variant frozen (2026-01 to 2026-09): lgb_peer:tilt +0.11%/yr vs P4+Q (t 1.2, 7 of 9 months positive). Excess over CDI was +0.19 vs +0.08 for P4+Q."
+   ],
+   "signals": [
+    "ml_lgb_peer_pct: walk-forward per-date percentile of the LightGBM peer-excess model (best). Load with research/nightly/ml_ranking/run.py::signals(panel=None, name='ml_lgb_peer_pct'), which returns (codigo, cnpj8, date, value); monthly dates 2022-01..2025-12, known at the close of date.",
+    "ml_stack_pct, ml_ens_pct, ml_lgb_rank_pct, ml_hier_pct, ml_lgb_loss_pct (higher = safer): same function and cache, data/history/nightly/ml_ranking/signals_ml_ranking.pkl",
+    "Raw walk-forward predictions per model: data/history/nightly/ml_ranking/pred_<model>.pkl (keys pred [day,dpos,codigo,cnpj8,pred,fit_pos] and params)",
+    "20 new PIT features (bond path: br_21/63/126, bvol_63, bmdd_126, bstale_63, bmin_126; carry vs sector/kind medians; issuer aggregates iss_*; sector momentum sec_br63_mean): research/nightly/ml_ranking/features.py::build('M'), cached at data/history/nightly/ml_ranking/features_M.pkl",
+    "ctrl_carry tilt: P4+Q weights proportional to 0.5 + the cdi_bps percentile (non-ML, +0.06%/yr, t 5.2); defined in run.py stage_eval together with overlay_signals()"
+   ],
+   "caveats": [
+    "Smooth, stale debenture marks inflate every t-stat, especially paired t-stats at tracking errors around 0.1%/yr (the carry tilt's t of 5.2). The ML overlay gains appear only in 2024–25.",
+    "The best variant is the maximum of 51 pre-2026 results, so its Holm p is 1.0. The 9-month holdout agrees in sign (+0.11) but is not significant.",
+    "The first models (2022) train on only 5 to 10 labelled monthly dates, which drives the 2022 inversion of the raw-target models.",
+    "The compute budget was cut on the shared machine (LightGBM with 2 threads ran 3x slower than with 1): one nested optuna tuning point (2024-01) with 6 trials, reused for 2025; 2022–23 on defaults; CatBoost YetiRank on defaults only; refits every 6 months instead of monthly."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "No leakage found. The claim reproduces exactly from the cached walk-forward predictions: lgb_peer:tilt vs P4+Q is +0.1716%/yr, NW t 2.18, 2022-23 +0.01, 2024-25 +0.33 (script verify_leakage/v1_repro.py).",
+      "Embargo check: every training row satisfies lab_end_126 <= fit_pos <= decision dpos, but with zero slack. The label is realised at the close of the refit day and used at that same close. This is valid, yet the margin is thin. Adding an extra embargo of 21 bdays gives +0.169 (t 2.09). Adding 63 bdays gives +0.138 (t 1.92), with 2022-23 turning negative (-0.02). The veto20 form roughly halves under the 63-bday embargo (+0.12 to +0.07).",
+      "One residual look-ahead remains in the shared harness: spike cleaning (ratio_c) uses the next trade, so it feeds the R-derived path features. Dropping all 11 R-derived features (br_*, bvol, bstale, bmdd, bmin, iss_br*, sec_br63, iss_worst_bmdd) leaves the tilt unchanged at +0.173 (t 2.08). This channel does not drive the result."
+     ],
+     "corrected": 0.17
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "Concentration: 5 issuers produce 58% of the tilt's cohort-level gain (cnpj8 12104241, 12647827, 61486650, 12979552, 09074183). Dropping the top-5 contributing issuers from both books cuts the gain from +0.17 to +0.07%/yr (t 1.47). Dropping the top 10 cuts it to +0.05 (t 1.04). This exclusion is selected in-sample, so it is a harsh test, but it shows the edge is not broad.",
+      "Time concentration: +0.01 in 2022-23, +0.54 in 2024 (t 5.1, 12/12 months positive), +0.12 in 2025 (t 1.7). Five of the top 6 months are in 2024 or 2025. Removing the best 3 months leaves +0.11 (t 1.99). Excluding 2023 or the 2023H1 crisis actually helps (+0.23 / +0.19), so this is not a crisis artefact. It is a single-year effect.",
+      "The ML adds little over one-line non-ML tilts. Paired against the tilted-carry control the ML tilt is +0.11 (t 1.41). Against carry x duration it is +0.07 (t 2.05); against carry vs kind median +0.08 (t 1.41); against carry vs peer median +0.10 (t 1.40); against resid_z +0.10 (t 1.17); against peer-carry+resid +0.10 (t 1.31). None of these survives any multiplicity correction. The non-ML tilts earn +0.06 to +0.10 vs P4+Q with higher t (2.9-5.2)."
+     ],
+     "corrected": 0.07
+    }
+   ]
+  },
+  {
+   "slug": "structural_credit",
+   "headline": "Dropping the P4+Q names with the worst equity-implied credit risk adds about +0.35%/yr vs P4+Q (t 1.65) and nearly halves max drawdown, but this is not significant after Holm correction, and a plain 52-week equity-drawdown filter does just as well as the Merton/CreditGrades models.",
+   "beats": false,
+   "verified": true,
+   "best": "A3_P4Q_avoid_CGworstQ: P4+Q minus the worst quintile (per date, among universe rows with a signal) of the CreditGrades 5-year equity-implied spread. A1, which removes the worst Merton distance-to-default quintile instead, is almost identical.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.35,
+    "t_vs_p4q": 1.645,
+    "holm_p": 0.998,
+    "excess_vs_universe_ann_pct": 1.467,
+    "sharpe": 2.76,
+    "max_dd_pct": -0.736,
+    "n_variants_tried": 12,
+    "net50_diff_vs_p4q_ann_pct": 0.34
+   },
+   "insights": [
+    "Raw distance to default has no predictive power (IC -0.035) because it mostly stands in for carry. Once carry is held fixed it does predict: partial IC +0.054 (t 5.1) for 6-month returns. Carry only partly pays for the risk the equity market signals.",
+    "Avoid rules inside P4+Q, pre-2026: removing the worst CreditGrades quintile gives +0.35%/yr vs P4+Q (t 1.65), and removing the worst distance-to-default quintile gives +0.34 (t 1.62). Both halves are positive (+0.17 in 2022-23, +0.53 in 2024-25). Volatility falls from 1.00 to 0.93 and max drawdown from -1.32% to -0.74%. The result holds at 50 bps (+0.34) and under the 40%-recovery scenario (+0.34). The removed names earned 0.92% less over 6 months than the kept names (t 2.0).",
+    "Random-exclusion placebo (the same number of listed P4+Q names dropped at random, 20 draws): mean +0.14, 95th percentile +0.19. The actual +0.35 beats all 20. Part of the placebo gain comes from tilting the book toward unlisted names.",
+    "The structural model adds almost nothing over simple equity measures. Removing the worst 52-week equity drawdown quintile gives +0.34 (t 1.84, Holm 0.72), and removing the worst 63-day equity volatility quintile gives +0.29. Their Spearman correlations with distance to default are 0.60 and -0.87. Market leverage alone has zero IC.",
+    "Distance to default complements the fundamentals quality filter rather than replacing it. Using it instead of that filter (P4 minus the worst distance-to-default quintile) is +0.12 below... correction: +0.12 above P4 minus quality baseline only; it trails P4+Q by 0.23. Stacking both beats P4+Q by about +0.35.",
+    "The bond-vs-equity divergence works only on the short side and only when measured inside the book. Dropping in-book names whose bond spread is tight relative to the equity-implied spread gives +0.26%/yr (t 2.58, raw p 0.010, Holm p 0.14, both halves positive). Buying names whose bond is wide relative to equity loses: -0.03 as an add-on and -0.06 standalone, with a sign flip across halves.",
+    "Early warning inside P4+Q: distance to default separates big losers well. Its AUC is 0.91 for 6-month losses below -10% (17 events) and 0.83 for losses below -5% (50 events). By comparison, carry scores 0.59, fundamentals quality 0.80 and 63-day equity return 0.83. The worst distance-to-default quintile caught 94% of the events held in P4+Q.",
+    "Issuer level: 50% of the 30 issuers with a first loss below -10% were in the worst distance-to-default quintile at decision time. Americanas (AMER3) was at the 0.9th percentile (distance to default 1.57) in November 2022, two months before the fraud disclosure. Casas Bahia (BHIA3), Oncoclinicas (ONCO3), KRSA3 and Simpar (SIMH3) were at the 2nd-3rd percentile.",
+    "Blind spot: only 52% of all losses below -10% have a distance to default, and 72% of those issuers are listed at all. The unlisted special-purpose-vehicle and water-utility tail cannot be seen through equity.",
+    "Lead-lag on weekly data, with week fixed effects and issuer-clustered errors: issuer equity returns lead bond spread changes by 1-4 weeks. Coefficients are -14.7, -12.5, -10.8 and -8.0 bps per 100% equity return at lags 0-3 (t -3.0 to -2.0), so a -10% equity week means about +4.6 bps of widening over the next month. The effect exists only for direct listings (-19, t -3.4) and not for parent listings (t 0.4). Bond spreads do not lead equity (t 0.5), and model distance-to-default changes add nothing (t -0.7). The effect is economically too small to trade after costs.",
+    "Sealed holdout, run once for the frozen best variant (Jan-Sep 2026): +0.39%/yr vs P4+Q (t 3.1 over 9 months), +3.7%/yr vs universe."
+   ],
+   "signals": [
+    "research/nightly/structural_credit/signals.py: signals(panel) adds these columns to any harness panel: sc_dd (Merton distance to default), sc_dd_naive, sc_pd, sc_cg (CreditGrades bps), sc_lcg, sc_mlev, sc_dd_chg21, sc_dd_chg63, sc_lcg_chg63, sc_mcap, sc_sigE, sc_div (rank of cdi_bps minus rank of CreditGrades spread) and sc_div_res (residual of log cdi_bps on log CreditGrades spread and duration; positive means the bond is wide relative to equity).",
+    "Cached versions of the same columns: data/history/nightly/structural_credit/signals_M.pkl and signals_W.pkl, keyed by (codigo, cnpj8, day).",
+    "Recommended overlay: avoid the worst quintile of sc_cg or sc_dd inside P4+Q, e.g. p4q & ~(sc_cg >= per-date 80th percentile). Alternatively, the inside-book divergence avoid rule: the bottom 20% of sc_div_res among listed P4+Q names (run.py in_book_worst).",
+    "Underlying daily table with one row per (ticker, date): data/history/nightly/structural_credit/structural_daily.pkl, loaded via signals.load_daily()."
+   ],
+   "caveats": [
+    "No variant survives Holm correction across the 12 variants tried; the lowest adjusted p is 0.14. Marks are smooth and stale, which inflates the t-statistics.",
+    "Only 40% of P4+Q exposure has an equity-implied signal. The rules only ever remove listed names, so the book tilts toward unlisted, rarely-marked issuers, which is where survivorship bias lives. The placebo's +0.14 partly reflects this tilt.",
+    "The market-cap reconstruction is approximate. It anchors to today's brapi market cap and brapi's split adjustments, which are price-neutral but not strictly as-of. A few serial recapitalizers (SEQL3, AMER3 in 2024, AMBP3) remain noisy. Banks and insurers are excluded because they have no debt field.",
+    "For parent-listed issuers, the distance to default is the parent group's risk, not the issuer's. Gross debt excludes IFRS-16 leases, so the default point is understated for retailers with heavy lease obligations."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "No look-ahead or data-leakage defect was found. Every leakage probe left A3 at +0.33 to +0.35%/yr vs P4+Q, so leakage does not refute the result.",
+      "The gain depends on a few issuers. Forcing AMER3 back into the book cuts A3 to +0.26 (t 1.40), and the 2022-23 half goes to -0.01. Forcing ONCO3 back cuts it to +0.22 (t 1.17). Keeping the 3 worst dropped issuers (AMER3, ONCO3, AERI3) cuts it to +0.13 (t 0.89). In effect the rule mostly means 'avoided Americanas and Oncoclinicas'. This is a real equity-market signal (it was PIT, and AMER3's DD was already low in Nov 2022), but it amounts to only 2 or 3 independent events.",
+      "A3 was picked as the maximum of 12 variants. At t 1.65 (raw p about 0.10) with Holm p 0.998, the +0.35 point estimate carries winner's-curse upward bias. Their own model-free control C2 (52-week equity drawdown) gives +0.34 (t 1.84), so the structural model adds nothing."
+     ],
+     "corrected": 0.33
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "The gain comes almost entirely from 2024. By year, A3 vs P4+Q is -0.04 in 2022, +0.38 in 2023, +1.33 in 2024 and -0.26 in 2025. Leaving out 2024 drops the full-period figure to +0.02 (t 0.09). The claim that 'both halves are positive' hides that 2 of the 4 years are flat or negative.",
+      "The gain is concentrated in a few months. Dropping the 3 best months (2024-12 +0.76%, 2023-01 +0.36%, 2024-04 +0.20%) leaves +0.02%/yr (t 0.18). Only 60% of months are positive.",
+      "The gain is concentrated in a few issuers. Excluding the top 1, 3, 5 and 10 contributing issuers from both books gives +0.24, +0.13, +0.07 and +0.01. The top 5 are ONCO3, AMER3, DASA3, AERI3 and CSNA3, all well-known 2023-24 blowups, so the result is about 4-5 tail avoidances, not a broad cross-sectional effect. That is plausible for a tail filter, but those names are exactly the ones a researcher would have in mind when designing it (a soft look-ahead in model or parameter choice)."
+     ],
+     "corrected": 0.35
+    }
+   ]
+  },
+  {
+   "slug": "text_nlp",
+   "headline": "Text from CVM filings and news headlines, even with multilingual embeddings, zero-shot classes and full PDF text, does not beat P4+Q: the best overlay (drop names with a zero-shot credit-negative document in the last 90 days) adds +0.27%/yr before 2026 (t 1.28, Holm p=1), and filings do not lead spread moves; they follow them.",
+   "beats": false,
+   "verified": false,
+   "best": "V4: P4+Q excluding issuers with any zero-shot credit-negative document (IPE or news, cosine > 0.55 to the rj/default/liab-mgmt/rating-down/guidance-cut/litigation/ofício prototypes) in (d-90, d-1]",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.267,
+    "t_vs_p4q": 1.28,
+    "holm_p": 1,
+    "n_variants_tried": 9,
+    "excess_vs_universe_ann_pct": 1.383,
+    "net50_diff_vs_p4q_ann_pct": 0.243,
+    "sharpe": 2.52,
+    "max_dd_pct": -0.9
+   },
+   "insights": [
+    "Disclosure lags the market. In the 60 days before the filing, liability-management filings see -1.2% abnormal bond return (t -2.7) and PDF-body hard events hidden behind clean titles see -5.1% (t -3.1, n=36). Returns after the filing are about 0 or positive.",
+    "Lead time is zero. Before 368 spread blow-outs (>=150 bps relative widening in 4 weeks), text flags appeared in the prior 13 weeks no more often than in random issuer-weeks: lift 0.91-1.04 for keyword, zero-shot, sentiment and Fato Relevante flags. 18-25% of blow-outs are flagged only during or after the widening.",
+    "The one post-event drift comes from event-risk corporate actions, not distress filings. M&A filings: -0.28% over 60 days (t -2.4), issuer spread +16 bps at 13 weeks (t 2.9). Guidance cut/impairment: -0.54% (t -2.2). CVM ofício: -0.24% (t -2.0). Placebo random dates: +0.16%. This is too small and rare to move a 100-name book.",
+    "Any news is bad news. The top-5% most POSITIVE sentiment docs underperform like the negative ones (-0.24% over 60 days, t -2.4). Generic filing counts have ICs as strong as the credit classes: ipe_one_90 IC -0.064, burst_30 -0.054, ipe_new_debt_180 -0.050, versus neg_kw_90 -0.044 and zs_neg_90 -0.047. The text signal is mostly issuer visibility or size, not meaning.",
+    "Liability-management filings mark the bottom: ipe_liab_mgmt_180 has a POSITIVE IC (+0.025, t 3.1 at 63 days), so it should not be used as an exclusion filter.",
+    "The most specific news signals are news_neg_kw_90 (IC -0.041, t -5.1), news_litigation_90 (-0.032, t -4.1) and news_rj_90 (-0.026, t -3.5). As overlays they still do not beat P4+Q after Holm.",
+    "A walk-forward ridge on 768-d mean embeddings (IPE + news, 90 days) has out-of-sample IC -0.006 (t -0.2). Supervised learning on text embeddings finds nothing.",
+    "Full text vs title (700 CVM PDFs, 98% extracted): 7.2% of filings with clean titles have hard credit-event language in the body, and 88% of hard titles are confirmed by the body. Title and body sentiment correlate 0.45. Reading bodies adds information, but the market has already priced it.",
+    "V4 is consistent across costs and scenarios: +0.24%/yr at 50 bps, +0.25 under rec40. The gain is concentrated in 2024-25 (+0.48 vs +0.06 in 2022-23). The names it removes still beat the universe (+0.46%/yr cohort). Sealed holdout 2026-01..09 (read once): +0.33%/yr vs P4+Q, t 1.53, 9 months. The sign is consistent but it is not significant."
+   ],
+   "signals": [
+    "features.signals(panel) in research/nightly/text_nlp/features.py -> DataFrame[cnpj8, day, features] for any harness panel (M or W); join on (cnpj8, day). Cached for the monthly panel in data/history/nightly/text_nlp/text_signals_M.pkl.",
+    "zs_neg_90: count of zero-shot credit-negative docs in (d-90, d-1]. Best overlay: exclude from P4+Q when > 0.",
+    "neg_kw_90 / ipe_neg_kw_90 / news_neg_kw_90: keyword credit-negative counts. news_neg_kw_90 has IC -0.041 (t -5.1).",
+    "news_litigation_90 (IC -0.032, t -4.1) and news_rj_90 (IC -0.026, t -3.5).",
+    "ipe_liab_mgmt_180: positive IC (+0.025, t 3.1). A post-reprofiling recovery signal, not an exclusion.",
+    "ipe_mna_180 / ipe_guidance_cut_180 / ipe_oficio_90: event-risk flags with slow post-event drift.",
+    "ipe_one_90 / burst_30: filing-activity (visibility) proxies, IC -0.064 / -0.054.",
+    "sent_news_30 / sent_hot_30: embedding sentiment of news (weak).",
+    "txt_ml in data/history/nightly/text_nlp/txt_ml_M.pkl [cnpj8, day, codigo, txt_ml]: walk-forward ridge text score. IC about 0, not useful."
+   ],
+   "caveats": [
+    "The news corpus comes from negative-keyword Google News queries: recall is relevance-capped, density rises strongly in 2025-26, and some headlines are off-topic.",
+    "IPE covers only CVM-registered issuers (384 of 775 grid issuers, about 83% of universe rows). Unlisted SPVs have no filings, so 'no text' does not mean 'clean'.",
+    "About 9 overlay variants, about 40 event classes and about 30 IC features were examined. Holm is applied across the overlays only, so treat event and IC t-stats below 3 as exploratory.",
+    "Marks are smooth and stale, which inflates Sharpe and t. Some event paths (RJ, n=11) are dominated by a few gap jumps, so medians are reported alongside means."
+   ],
+   "verdicts": [
+    {
+     "refuted": true,
+     "severity": "minor",
+     "problems": [
+      "There is no look-ahead or holdout leakage. V4 reproduces exactly: +0.267%/yr vs P4+Q, t 1.28. Adding 1, 3 or 7 extra days of availability lag to every document does not hurt it (+0.29, +0.30, +0.29), so the result does not depend on same-day information. The run only loads documents dated before 2026, and IPE availability uses Data_Entrega with the first delivery kept per protocol.",
+      "The value attributed to text meaning is mostly issuer filing activity. A content-shuffle placebo kept each embedded document's issuer and date but randomly permuted the zero-shot-negative flags (20 draws). It averages +0.18%/yr (p95 +0.30), and 15% of draws beat V4. Only about +0.09%/yr of V4 comes from what the documents say.",
+      "A control with no content at all beats V4. Excluding P4+Q issuers with any Fato Relevante, Comunicado, debenture notice or news item in the last 90 days gives +0.64%/yr (t 1.36; 43 names, all of it in 2024-25). Excluding issuers with any Fato Relevante gives +0.19%/yr. So the overlay works as a 'drop listed, visible, frequently-filing issuers' tilt, which confirms the README's own 'any news is bad news' insight."
+     ],
+     "corrected": 0.09
+    },
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The +0.27%/yr for V4 is concentrated in a few issuers. Leave-one-issuer-out shows one issuer (cnpj8 12104241) supplies +0.14 of the 0.27. Not excluding the top 3 contributing issuers leaves +0.009 (t 0.05); the top 5 gives -0.03 and the top 10 gives -0.08. The ranking is outcome-selected, so this test is harsh, but the V4 edge is not broad-based.",
+      "Removing the 5 best months turns it negative: without the top 3 months it is -0.06, without the top 5 it is -0.16. Only 52% of months are positive. By year: 2022 -0.28, 2023 +0.39, 2024 +1.03, 2025 -0.08, so the whole result is 2024, mainly Dec-2024 (+0.68% in one month). Without 2023 it is +0.23 (t 1.0).",
+      "Parameters were chosen on noise. By window at T=0.55: 30d +0.02, 60d +0.12, 90d +0.27, 180d +0.40. By threshold at 90d: T 0.50 +0.41, 0.55 +0.27, 0.60 +0.09, 0.65 +0.13. The gain grows with how many names are excluded, not with how precise the classification is."
+     ],
+     "corrected": 0.009
+    }
+   ]
+  },
+  {
+   "slug": "marks_liquidity",
+   "headline": "Filtering the marks (a Kalman filter per issuer, and volume-weighted clean prints) leaves the relative-value signal unchanged, so it is not a print-noise artifact; the real limit is execution: realistic costs by liquidity bucket cut P4+Q from +2.2 to about +1.2%/yr over CDI, and it falls to about +0.4 at R$500m and about 0 at R$2bn.",
+   "beats": false,
+   "verified": false,
+   "best": "P4Q_gapfilter: P4+Q, skipping bonds whose last print is more than 2 sd rich versus the bond's own Kalman fair spread",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.047,
+    "excess_vs_universe_ann_pct": 1.163,
+    "t_vs_p4q": 1.09,
+    "holm_p": 1,
+    "n_variants_tried": 7,
+    "sharpe": 2.25,
+    "max_dd_pct": -1.24,
+    "net50_diff_vs_p4q_ann_pct": 0.035
+   },
+   "insights": [
+    "Relative value survives better marks, and the noise part predicts nothing. Spearman IC of resid_bps against fwd_126: 0.209 (t 11.5) on raw marks, 0.208 (t 15.1) on Kalman marks, 0.207 on volume-weighted marks. The noise component (raw minus Kalman resid) has IC 0.006 (t 0.3). RV is as strong in illiquid bonds (IC 0.19) as in liquid ones (0.21), and much stronger in DI (0.38) than in IPCA (0.16).",
+    "IPCA debenture prints come in two price tiers. Measured against the Kalman one-step prediction, tickets under R$200k print about 7-9 bps of price below fair (close to fair), while R$1-5m blocks print about 38 bps below and blocks over R$5m about 60 bps below (medians). DI floaters show under 1 bp. The typical IPCA print noise is about 75 bps of price, against about 4 bps for DI floaters.",
+    "The harness's 25 bps round trip is 2 to 5 times too low. Roll half-spreads on institutional-size prints are about 23 bps of price for DI and about 77 bps for IPCA/PRE. Round trips by ADV quintile are 45-65 bps for DI and 136-169 bps for IPCA. Taking all prints, the round trip is about 1.75 times higher.",
+    "Under liquidity-bucket costs with no size limit, P4+Q earns +1.16%/yr over CDI instead of +2.22, against +0.32 for the universe. With the all-prints Roll as an upper-bound cost, it earns +0.20 against -0.32.",
+    "Capacity, with fills capped at 20% of the bond's actual SND volume plus square-root impact: P4+Q earns +0.82%/yr over CDI at R$100m with 87% of the target filled, +0.41 at R$500m with 77% filled, and +0.04 at R$2bn with 59% filled. Its edge over the universe shrinks from +0.53 to +0.23 to +0.06. Total SND volume is about R$2.1-2.4bn per business day, and the median bond trades about R$0.9m a day.",
+    "P4+Q leans toward illiquid bonds: 27% of it sits in the least-liquid ADV quintile against 20% of the universe, and its median bond prints on 29% of days against 44%.",
+    "Liquidity-aware sizing (planned from past 63-day ADV, with the overflow going to the next-best carry names) adds +0.035, +0.10 (t 1.1) and +0.09%/yr at R$100m, R$500m and R$2bn. That is not significant.",
+    "Getmansky-Lo-Makarov de-smoothing (MA(2) on monthly excess): about 30-35% of monthly returns show up with a 1-2 month lag. Observed Sharpe falls from 2.13 to 1.57 for P4+Q, 1.81 to 1.31 for P4, 0.74 to 0.51 for the universe and 0.81 to 0.52 for the IDA-DI index. True volatility is about 1.4-1.5 times the observed. The P4+Q minus universe spread is much less smoothed (1.06 to 0.94).",
+    "Dropping the least-liquid quintile costs -0.14%/yr at 25 bps and is neutral under bucket costs. Ranking carry net of estimated cost helps only when costs are realistic (+0.21, t 0.8) and flips sign between the halves (+0.31 in 2022-23, -0.44 in 2024-25)."
+   ],
+   "signals": [
+    "research/nightly/marks_liquidity/signals.py: signals(panel) adds point-in-time columns to any harness panel.",
+    "kf_s / kf_sd: Kalman fair CDI+ spread and its uncertainty.",
+    "kf_gap / kf_gap_z: last print minus fair value; the P4Q_gapfilter variant drops kf_gap_z < -2.",
+    "kf_resid_bps / kf_resid_z: relative value against the peer curve, computed on Kalman marks.",
+    "vw_resid_bps / vw_resid_z: relative value computed on volume-weighted clean marks.",
+    "adv63, tdays63, ticket63, liq_q (ADV quintile within the universe), roll_hs.",
+    "cost_rt_bps: estimated round-trip cost (all-prints Roll by indexer group x ADV quintile; multiply by results.json costs.inst_scale for the institutional tier).",
+    "Raw cache: data/history/nightly/marks_liquidity/marks.pkl with (codigo, day, values).",
+    "run.py: tranche_book(T, aum=..., hs_b=..., sigma_b=..., adv_b=..., cumV=...), a harness-identical tranche engine with per-bond costs, square-root impact and volume-participation fills, for capacity tests."
+   ],
+   "caveats": [
+    "SND only publishes daily aggregates per bond (average price, quantity, number of trades), with no intraday high/low or bid/ask. Corwin-Schultz therefore cannot be computed, and the Roll estimate mixes the retail/institutional price tiers with the true bid-ask spread. The institutional cost scale (0.57 for DI, 0.62 for IPCA) is a single pooled ratio.",
+    "The impact coefficient (1.0 x daily sigma x sqrt(trade / 63-day ADV)) is assumed, not estimated. Exits are assumed filled. Fills use the bond's actual volume in the entry window, as a simulation of what would have executed.",
+    "The IPCA CDI-equivalent spreads use a static duration factor and today's contract terms, so part of the large IPCA print noise may be a conversion artifact.",
+    "Kalman parameters are pooled by indexer group (issuer-common share fixed at 0.8 for DI, which is a cap, and 0.15 for IPCA) and estimated only on prints before 2024."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The gap filter's edge is statistically and economically nil. It reproduces at +0.047%/yr vs P4+Q (t 1.09, Holm p 1.0) and +0.035 at 50 bps (t 0.81). It should not be read as adding value, and the agent does not claim significance.",
+      "The filter is fragile to its threshold. Cutoffs of -1.5, -2 and -2.5 give +0.06, +0.05 and +0.04, while -3 gives +0.02 (t 0.5).",
+      "The economic story does not hold. The mirror filter (skip bonds whose last print is >2 sd CHEAP vs fair) does better, at +0.096 (t 1.76), than the claimed rich-print filter. So what helps is removing noisy outlier prints in either direction, not specifically skipping rich prints."
+     ],
+     "corrected": 0.047
+    },
+    {
+     "refuted": true,
+     "severity": "minor",
+     "problems": [
+      "The headline number reproduces exactly: P4Q_gapfilter beats P4+Q by +0.047%/yr (NW t 1.09, p 0.28, Holm p 1.0 across 7 variants). Statistically and economically this is zero, and the author says so.",
+      "The gain comes from 5 issuers. Excluding the top-5 contributing issuers (cnpj8 00776574, 12104241, 09527023, 44507288, 12528708) from both books turns the diff to -0.006 (t -0.2). Excluding the top 10 gives -0.030 (t -1.2).",
+      "It is not stable by year: 2022 +0.00, 2023 +0.08, 2024 +0.13, 2025 -0.03 (cumulative %). Excluding 2023 gives +0.036 (t 1.1)."
+     ],
+     "corrected": -0.006
+    }
+   ]
+  },
+  {
+   "slug": "event_driven",
+   "headline": "Buying new issues, upgraded names or redemption candidates does not pay, but dropping from P4+Q the issuers that just had an M&A filing, a downgrade, a debenture-holder meeting, a redemption notice or a recovery filing adds about +0.30%/yr (t 1.95, random-drop placebo 0 of 40, holdout +0.42). It does not survive Holm (p 0.51).",
+   "beats": false,
+   "verified": false,
+   "best": "P4Q_exNegEvents: P4+Q minus issuers with an M&A/reorganisation filing or rating downgrade in the last 180d, a debenture-holder meeting (AGD) in the last 180d, an early-redemption notice in the last 126d, or a recovery (RJ) filing in the last 365d. All events are dated by CVM Data_Entrega and used strictly after that date.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.3,
+    "excess_vs_universe_ann_pct": 1.42,
+    "holm_p": 0.507,
+    "max_dd_pct": -0.97,
+    "n_variants_tried": 12,
+    "net50_diff_vs_p4q_ann_pct": 0.27,
+    "sharpe": 2.49,
+    "t_vs_p4q": 1.95
+   },
+   "insights": [
+    "Credit-event drift is slow. Carry-adjusted, the issuer's universe bonds lose -1.54% over 126d after a rating downgrade (t -3.2, n=60) and -0.64% after an M&A, reorganisation or control-change filing (t -2.8, n=358). Most of the loss comes after day 21, so the edge is in staying out for months, not in trading fast.",
+    "Abstaining beats adding. All five exclusion overlays improve P4+Q (+0.03 to +0.17 on their own, +0.30 combined, halves +0.13 / +0.47). Every addition hurts: new issues -0.12, incentivised new issues -0.04, upgrades -0.02.",
+    "Placebo: dropping the same number of randomly chosen P4+Q issuers each date gives -0.02%/yr (p95 +0.10), and 0 of 40 draws beat the real +0.30. The gain comes from which names are dropped, not from concentrating the book.",
+    "Robustness of the exclusion overlay vs P4+Q: 50bps +0.27, rec40 +0.32 (t 2.0), hold63 +0.39, hold252 +0.28, cap5% +0.28, weekly tranches +0.32. On the sealed 2026 holdout (9 months) it was +0.42%/yr vs P4+Q (t 2.2), while P4+Q itself earned only +0.08 exCDI.",
+    "The new-issue premium is real but about the size of costs. Over the first weeks on the grid it is +0.24% carry-adjusted at 63d (t 2.9, n=1,486) and gone by 126d (+0.07). Only incentivised IPCA new issues keep +0.44% at 126d (t 3.7). Standalone new-issue sleeves lose to the universe (-0.21%/yr) and lost -4.2%/yr vs P4+Q in the 2026 holdout.",
+    "Buying redemption or call candidates does not pay on SND marks. After a redemption notice the bonds show -0.35% at 126d. Below-par bonds of issuers announcing redemptions show -1.15% (n=68), with no pull-to-par gain. Callable bonds above par show no negative-convexity penalty (+0.07, t 1.6).",
+    "A new bond from the same issuer (supply) does not cheapen its existing bonds: about 0 at every horizon, n=798. Equity raises are neutral for bondholders (+0.18 at 63d, -0.01 at 126d).",
+    "Seasoning: bonds more than 48 months after issue earn +0.45% carry-adjusted over 126d (t 6.0). These are low-carry bonds (~60 bps) near maturity, so this is likely pull-to-par or a misspecified carry control, not an event effect. It is flagged for the combiner, not traded.",
+    "The SND registry cannot date early exits, because 'Data de Vencimento' is overwritten with the exit date. None of the 130 registry-flagged 'RESGATE TOTAL ANTECIPADO' bonds since 2021 ever traded on SND, so redemption must be studied through the CVM IPE announcements."
+   ],
+   "signals": [
+    "research/nightly/event_driven/run.py::signals(panel) returns [codigo, day, cnpj8, ev_<etype>_days for agd, agd_waiver, resgate, deb_buyback, equity_raise, ma, rj, rating_up, rating_down, ipe_new_deb, supply_new_issue; months_since_issue; new_issue_3m; callable]. Each ev_*_days is days since the issuer's last event of that type, strictly before day. Cached at data/history/nightly/event_driven/event_signals_{M,W}.pkl.",
+    "research/nightly/event_driven/run.py::neg(x): bool exclusion mask (M&A 180d, downgrade 180d, AGD 180d, resgate 126d, RJ 365d). run.RULES['P4Q_exNegEvents'] is the best overlay.",
+    "research/nightly/event_driven/events.py::build() returns (bonds_ref, events_issuer)."
+   ],
+   "caveats": [
+    "Not significant after Holm: p 0.51 across the 12 variants tried. The unadjusted p is 0.05. Treat it as a candidate overlay, not a proven edge.",
+    "Events are classified by regex on CVM IPE filing titles. The M&A and equity-raise sets are noisy, and IPE covers only CVM-registered issuers.",
+    "Rating events are sparse: 60 downgrades and 75 upgrades in the universe, taken from news and Fitch Wayback pages, so coverage is incomplete.",
+    "The callable flag, incentivised flag and distribution start come from a static SND registry snapshot dated 2026-09."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "I found no look-ahead leak. The number reproduces exactly (+0.2996%/yr, t 1.95, halves +0.13/+0.47) from the cached signals, from signals rebuilt fresh, and from my own independent reimplementation. There are 0 mismatched cells between cached and fresh signals.",
+      "The event-timing mechanism does not hold up. I kept each issuer's own neg events and shifted all of them by one random offset per issuer (20 draws). That gives +0.22%/yr on average (p95 +0.33, max +0.41), and 3 of 20 draws reach the real +0.30. Only about +0.08%/yr can be attributed to the timing of events. The author's placebo drops random P4+Q issuers, so it does not control for the kind of issuer that files many CVM IPE documents, and it overstates the evidence (0 of 40).",
+      "Stale-event test, which is point-in-time: dropping issuers whose neg events are 365-730 days old, not recent, gives +0.33 (t 1.41). Dropping issuers that ever had a neg event before the decision date gives +0.54 (t 1.70). An issuer trait (frequent-filer, listed or complex groups) explains the gain as well as or better than the 126-365 day post-event drift the README claims."
+     ],
+     "corrected": 0.27
+    },
+    {
+     "refuted": true,
+     "severity": "material",
+     "problems": [
+      "The number reproduces exactly (vs P4+Q +0.2996%/yr, NW t 1.95, p 0.051; 50 bps +0.27, t 1.79), but the event-timing mechanism does not hold up. A placebo that keeps the same issuers and the same count of negative events per issuer, but assigns uniformly random dates, gives +0.43%/yr on average (p95 +0.52, max +0.59). The real rule, at +0.30, sits at the bottom of that distribution: 95% of the 20 draws are at least as good. Event timing adds nothing over issuer identity.",
+      "Point-in-time placebos match the real rule. Using only STALE events (every event shifted +365d, so the window covers events 1 to 1.5 years old) still gives +0.25 (t 1.47). Using 'neutral' events that should not predict losses (equity raise, new debenture offer, same-issuer supply, 180d) gives +0.40 (t 1.63). The overlay acts as a persistent 'active CVM filer / complex issuer' filter, not as a slow credit-event drift. The author's random-issuer-drop placebo (0/40) only shows that the dropped issuers differ from random P4+Q names, not that the events matter.",
+      "A few issuers drive it. Americanas (00776574) is by far the largest contributor. It was excluded before its January 2023 collapse because of AGD and M&A filings. Removing the top-5 contributing dropped issuers (Americanas, 38482780, Aeris, Oncoclinicas, Simpar) from BOTH books cuts the edge to +0.18%/yr (t 1.28, p 0.20), and the 2022-23 half turns negative (-0.06). Top-10 removed: +0.16 (t 1.17)."
+     ],
+     "corrected": 0.18
+    }
+   ]
+  },
+  {
+   "slug": "issuer_curve_rv",
+   "headline": "An issuer-aware fair value is a 2.5x better spread model, and within-issuer cheap-vs-rich switches pay about +0.8%/yr per pair (t 6.4), but neither improves P4+Q: P4+Q already holds each issuer's cheap bonds, and the issuer part of resid_z is carry premium that pays. The best variant adds +0.03%/yr (t 0.65, Holm p=1), and the holdout gives -0.05.",
+   "beats": false,
+   "verified": false,
+   "best": "tilt_carry+0.5eiss: P4+Q-style book (top 30% by score, not rich, no negative press, not worst quality quintile) ranked on cdi_bps + 0.5 x e_iss, where e_iss is the leave-one-out issuer-curve residual",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.026,
+    "t_vs_p4q": 0.65,
+    "holm_p": 1,
+    "excess_vs_universe_ann_pct": 1.143,
+    "sharpe": 2.3,
+    "max_dd_pct": -1.3,
+    "n_variants_tried": 12,
+    "net50_diff_vs_p4q_ann_pct": 0.024
+   },
+   "insights": [
+    "The peer residual resid_bps has two parts. The issuer component is persistent credit/carry premium: it pays and does not converge. The bond-within-issuer component is true relative value: its 13-week convergence beta is -0.37 (t -13.8, R2 12%), a half-life of about 20 weeks.",
+    "The issuer-aware fair value (e_iss, leave-one-out issuer mean) roughly doubles cross-sectional spread convergence: beta -0.23 vs -0.11, pooled R2 5.3% vs 2.1%. Its return IC is lower, though: fwd_126 IC 0.166 vs 0.209 for resid_bps. A better spread model is a worse return signal.",
+    "A sector-aware peer curve (r_sec) adds nothing over the kind x Lei 12.431 peer curve. Economic-group keys (e_grp) and an issuer slope correction (e_slope) are about equal to plain issuer keys.",
+    "Within-issuer switch, long the cheap and short the rich bond of the same issuer: +0.83%/yr at 126d (t 6.4, hit 59%, n=5,499) and +1.43%/yr at 63d (t 8.7). The random-pair placebo gives -0.01 (p95 +0.15). The halves are +0.74 (2022-23) and +1.01 (2024-25). The carry gap is 55 bps, so only about 0.3%/yr is convergence beyond carry.",
+    "Cross-indexer switches (DI+ vs IPCA+, compared in CDI+ equivalents) work as well as same-curve ones: +1.03%/yr, t 3.2.",
+    "Incentivada vs taxable within an issuer: the higher-spread, usually taxable, bond outperformed (+3.8%/yr, t 3.2), but on only 135 pairs. The residual sort fails there (-2.4).",
+    "Why books do not improve: the curve-residual switch changes only 4% of P4+Q slots (about 4 names a month), because P4+Q's carry ranking already picks each issuer's cheap bonds; the carry-switch control reproduces P4+Q exactly. The issuer-aware rich flag disagrees with resid_z on only about 5 top-carry bonds per date.",
+    "Pure RV books lose to P4+Q: top 20% by e_iss_z scores -0.98%/yr vs P4+Q (t -2.0), since stripping out the issuer carry premium removes the return.",
+    "Market-level basis timing does not work: IPCA-vs-DI basis t 1.0, incentivada basis t -1.2, over 44 months."
+   ],
+   "signals": [
+    "e_iss / e_iss_z: bond residual vs the leave-one-out mean of the issuer's other bonds, shrunk with k=1. Best spread fair value. signals.py:signals(panel) or load_cached('W'|'M').",
+    "e_grp / e_grp_z: the same by economic group (parent ticker root). signals.py.",
+    "e_isec / e_isec_z: issuer effect shrunk toward the sector mean, defined for all bonds. signals.py.",
+    "r_sec / r_sec_z: sector-aware peer residual. signals.py.",
+    "e_slope / e_slope_z: issuer residual with a pooled within-issuer duration-slope correction. signals.py.",
+    "has_curve_pair / has_xidx_pair / has_xinc_pair, n_iss_other: pair-type flags. signals.py.",
+    "signals.attach(panel): joins every column above onto a harness panel on (day, codigo)."
+   ],
+   "caveats": [
+    "Marks are smooth and stale, so part of the within-issuer convergence may be mark noise, and t-stats are inflated.",
+    "Pair trades need a short leg that debentures do not allow. They measure the value of a switch, gross of the roughly 2x cost of switching.",
+    "Kind, incentive flag, maturity and group mapping come from static reference data: today's SND table and equity_map.csv.",
+    "No point-in-time rating levels exist, so a truly rating-aware curve could not be tested. Sector plus issuer effects were used as the proxy."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The book-level claim is itself negative, and it reproduces exactly. tilt_carry+0.5eiss vs P4+Q gives +0.026%/yr (t 0.65), and +0.024 (t 0.59) at 50 bps. Against its own lambda=0 control it gives +0.032 (t 0.79). Permuting e_iss within each date gives -0.011 (t -0.23). Using e_iss one month stale gives +0.024 (t 0.94). No look-ahead or holdout leak was found in signals.py or run.py: the signals are same-day leave-one-out cross-sections, execution is at the harness's next trade, and the best variant was chosen on pre-2026 data only.",
+      "The tilt book is not exactly P4+Q at lambda=0. With lambda=0 it cuts on a cdi_bps quantile instead of cdi_pct, and that control trails P4+Q by -0.006%/yr (t -2.8). This is small and mechanical, but part of the reported difference is a change in how the book is defined, not the e_iss signal.",
+      "The within-issuer switch alpha is front-loaded, which looks like mark noise rather than 20-week convergence. On the same sample, ranking on a one-month-stale residual cuts the 126d switch return from +0.76 to +0.37%/yr (t 5.4 to 2.7). The 63d result is also larger per year than the 126d one. A 20-week half-life would keep about 85% after one month, so the 'true RV, half-life ~20w' reading, and the -0.37 within-issuer convergence beta, are likely inflated by mark noise and regression to the mean in the 13-week spread-change regression."
+     ],
+     "corrected": 0.026
+    },
+    {
+     "refuted": true,
+     "severity": "minor",
+     "problems": [
+      "Nothing in the book level holds up. I reproduced tilt_carry+0.5eiss exactly: +0.026%/yr vs P4+Q, t 0.65, and +0.024 (t 0.59) at 50 bps. Dropping 2023 cuts it to +0.001 (t 0.01). Taking the top-5 contributing issuers out of the universe and re-running both books flips it to -0.038 (t -0.86). Those five issuers account for 165% of the attributed positive difference.",
+      "The λ grid is flat noise: 0.25 gives +0.027 (t 1.2), 0.5 gives +0.026, 0.75 gives +0.034, 1.0 gives +0.016, 1.5 gives -0.029 and 2.0 gives +0.005. The best variant was picked after the fact, and the λ=0 control (same quantile rule) sits at -0.006 vs P4+Q (t -2.8). About half of the 'gain' is just the quantile-vs-cdi_pct construction difference.",
+      "In a placebo where e_iss is shuffled within each date (20 draws), the null averages -0.016 with p95 +0.018, against the actual +0.026 (5% of draws at or above). That is marginal at best, and it disappears once you drop 2023 or the top-5 issuers. The tilt changes only about 4.75 of roughly 104 names per date."
+     ],
+     "corrected": 0
+    }
+   ]
+  },
+  {
+   "slug": "network_contagion",
+   "headline": "No network filter beats P4+Q: contagion from shocked neighbours (group mates, sibling bonds, sector, similar exposures, common fund holders) barely shows up inside P4+Q. The best filter adds +0.07%/yr (t 0.9, Holm p 1.0) and loses 0.06%/yr in the 2026 holdout. The one robust effect is sector 3-month momentum across the whole universe (t -4.3), which does not add value on top of P4+Q.",
+   "beats": false,
+   "verified": true,
+   "best": "avoid_exposure_stress_q5: P4+Q minus the top-quintile names by exposure-similar neighbour stress (4-week return of issuers in other sectors with cosine similarity >= 0.5 on macro and commodity exposures)",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.068,
+    "excess_vs_universe_ann_pct": 1.184,
+    "t_vs_p4q": 0.92,
+    "holm_p": 1,
+    "sharpe": 2.06,
+    "max_dd_pct": -1.43,
+    "n_variants_tried": 12,
+    "net50_diff_vs_p4q_ann_pct": 0.039
+   },
+   "insights": [
+    "Group contagion is not there. Non-shocked bonds whose group mate had a hard shock earn -0.56%/yr over 63 days (t -0.5, n=4,041), and -1.17%/yr (t -0.7) when the mate's spread blew out. Brazilian corporate families are mostly ring-fenced concession special-purpose companies (Energisa 14 issuers, Motiva 15, Ecorodovias 14, Equatorial 14, EDP 10), and the market prices them as separate credits.",
+    "P4+Q already does the avoiding. The group-shock filters remove only 1-2 of about 100 P4+Q names per date, because the no-negative-press rule, rich exit and quality screen have already removed stressed networks. Most of the universe-level signals weaken or vanish inside P4+Q.",
+    "Sector 3-month momentum is the robust finding. Bonds in sectors whose other issuers fell over the last 13 weeks keep underperforming. The top-minus-bottom rank slope is -1.60%/yr at 63 days (Fama-MacBeth NW t -4.3), with t -3.0 in 2022-23 and -3.5 in 2024-25.",
+    "Sector momentum survives the obvious checks. Controlling for the bond's own 13-week return it is t -4.6. Skipping the first month (days 21 to 63) it is still -1.34%/yr (t -4.2). It fades by 126 days (t -1.3), so it is a 1-3 month lead-lag between sector mates, not own-bond momentum. Inside P4+Q it is only t -1.4 and as a filter it adds +0.00%/yr, including with 63-day tranches (+0.04, t 0.4).",
+    "The fund fire-sale channel points the wrong way. Bonds whose holding funds had the worst 21-day outflows did slightly better (+0.38%/yr at 63 days, t 0.9), and avoiding them costs -0.08%/yr (t -1.5). Holder exposure to spread shocks predicts nothing. Only the broad measure, holders exposed to any shock including press, is negative in the universe (t -2.4), and it disappears inside P4+Q.",
+    "Sibling-bond lead-lag appears only in 2024-25. When another bond of the same issuer falls 3% while this bond's mark is flat, the flat bond does -0.92%/yr over 63 days (t -2.1). The halves disagree: positive in 2022-23 and t -3.2 in 2024-25. As a filter it adds +0.01%/yr.",
+    "Stress among issuers with similar macro and commodity exposure in other sectors is the best lead inside P4+Q (Fama-MacBeth t -2.8). As a filter it gives +0.07%/yr vs P4+Q (t 0.92), +0.04 at 50 bps and +0.06 under the 40% recovery scenario. It beats randomly dropping the same number of names by about +0.10%/yr (random p95 +2.28 against +2.29), but it fails the sealed holdout at -0.06%/yr.",
+    "Randomly dropping about 22 names from P4+Q lowers returns (+2.19 on average vs +2.22). Any avoid filter should be judged against this drop-placebo, not against P4+Q itself."
+   ],
+   "signals": [
+    "research/nightly/network_contagion/features.py::signals(panel) merges point-in-time network features on (day, codigo). Cache: data/history/nightly/network_contagion/features_v1.pkl.",
+    "i_sec_r13 / i_sec_r4m: sector-mate 13-week / 4-week median return, own issuer excluded. Sector-momentum lead-lag, t -4.3 at 63 days in the universe.",
+    "i_exp_any / i_exp_r4: stress among issuers with similar macro and commodity exposure in other sectors.",
+    "i_hold_any / i_hold_ret: fire-sale exposure through common fund holders (holdings snapshot + 100 days). i_flow21: holder-weighted 21-day net fund flows, 2-business-day lag.",
+    "i_grp_hard / i_grp_hard_n / i_grp_r4: corporate-group mate stress. sib_min_r4 / sib_gap: sibling-bond lead-lag within the same issuer.",
+    "i_ret, i_down, i_press, i_cvm, i_eq, i_any, i_hard: point-in-time issuer node-shock flags.",
+    "research/nightly/network_contagion/net.py: groups_asof(day), affiliates_asof(day), exposure_sim(), cda_holdings()."
+   ],
+   "caveats": [
+    "Group, sector and exposure maps are static and carry today's structure back in time. Only the controller links from the CVM annual reference forms (FRE) and the fund holdings are dated.",
+    "Fund holdings for 2021-22 come from the CVM annual history files. They are used only from the reference date + 100 days, and confidential positions may be missing.",
+    "Marks are smooth and stale, so every t-stat is inflated. The sector-momentum lead-lag is partly a stale-mark effect and cannot be traded as a short, because debentures cannot be shorted.",
+    "12 variants were tried (10 in run.py plus 2 with 63-day tranches), and none survives Holm. The best variant was picked in-sample, so its +0.07 is biased upward, and it is -0.06 vs P4+Q in the sealed holdout (Jan-Sep 2026, run once)."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The best filter's +0.07%/yr over P4+Q is not a directional signal. Flipping the sign (dropping the LEAST exposure-stressed quintile) gives +0.076%/yr (t 0.8), slightly more than the claimed filter. The 'best' variant is a drop-any-quintile artefact, not contagion avoidance.",
+      "It is fragile. Using features one panel date staler (>= 1 week lag) gives -0.02%/yr (t -0.3). Quintile cutoffs 0.7 and 0.9 give +0.03%/yr each. It survives only at the exact cutoff that was picked.",
+      "Exposure-similarity is built from static sector-level exposure vectors, so the feature has only ~23 distinct values per date inside P4+Q. It works as a coarse sector filter, and today's exposure and sector maps are carried back in time (static-map look-ahead, which the README discloses)."
+     ],
+     "corrected": -0.02
+    },
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The multiple-testing count of 12 is understated. The portfolio filters were chosen after running a Fama-MacBeth screen on 13 features x (fwd_21, fwd_63, within-P4+Q) and a 7-event study, and some untried nearby specifications do just as well (exp_any q0.8 gives +0.09, t 1.26). The negative conclusion is unaffected.",
+      "Insight 6 does not match the filter it describes. It cites the within-P4+Q Fama-MacBeth t of -2.8, but that t belongs to exp_any (share of exposure-similar issuers shocked). The filter actually used, avoid_exposure_stress_q5, is built on exp_r4, whose within-P4+Q Fama-MacBeth t is only -0.9.",
+      "The drop-placebo is a weak null. Randomly dropping the same number of names from P4+Q lowers the return (60 draws average +2.16 against +2.22 for P4+Q), so beating random drops (1.7% of draws at or above the variant; the original 20 draws gave 5%) mostly reflects the cost of dropping names. It is not evidence of a signal. The right comparison is the paired test against P4+Q, which is insignificant."
+     ],
+     "corrected": 0.04
+    }
+   ]
+  },
+  {
+   "slug": "portfolio_construction",
+   "headline": "Almost all of the value from portfolio construction comes from concentrating on the highest-carry P4+Q names (top-25 by carry: +1.76%/yr over P4+Q, t 4.7, Holm p<0.001), and risk models add nothing. But that premium sits in illiquid bonds: once positions are capped at liquidity, the edge drops to about +0.2 to +0.6%/yr at R$500m and disappears by R$1bn.",
+   "beats": true,
+   "verified": true,
+   "best": "top25_carry_cap5: equal weight over the 25 highest-carry P4+Q names, issuer cap 5%, monthly 126-day tranches. It is statistically equivalent to mv_emp_g20 / mv_emp_g20_durband. It is NOT feasible for a R$500m fund. The recommended fund book is mv_emp_g20_fund500m: +0.57%/yr vs P4+Q, t 2.5, Holm p 0.30, so not significant after correction.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 1.761,
+    "excess_vs_universe_ann_pct": 2.878,
+    "holm_p": 0.0001,
+    "max_dd_pct": -0.339,
+    "n_variants_tried": 34,
+    "net50_diff_vs_p4q_ann_pct": 1.729,
+    "sharpe": 3.546,
+    "t_vs_p4q": 4.737
+   },
+   "insights": [
+    "Within P4+Q, carry still strongly predicts 6-month returns (Spearman IC +0.33, t 11). Equal weight throws that away. Top-25-by-carry scores +1.76%/yr vs P4+Q: +1.42 in 2022-23, +2.11 in 2024-25, +1.73 at 50 bps, +1.68 in rec40.",
+    "A mean-variance optimizer with de-smoothed empirical covariance (+1.62, t 4.1) ends up holding essentially the same book as top-25-by-carry. Measured correlations are close to zero, so the optimizer reduces to 'max carry subject to caps'. The risk model adds nothing.",
+    "Stale marks crush measured correlations: same-issuer bond pairs average only 0.18, sector 0.12 and market 0.09, even on 4-week sums. That is why empirical covariance models need structural floors (DTS model floors: issuer 0.8, sector 0.35, market 0.2) plus a default copula to see concentration risk.",
+    "Every risk-based construction loses to equal weight: min-var -0.33, inverse-vol DTS -0.43, max-diversification -0.41, issuer risk parity -0.20, CVaR with default scenarios -0.19 / -0.33 %/yr vs P4+Q. They underweight high-DTS carry and only modestly cut drawdown (min-var -0.84 vs P4+Q -1.39).",
+    "Duration x spread (DTS) predicts rate-hedged returns negatively (IC -0.23, t -3.2) while carry predicts them positively. The efficient tilt is high spread at short or neutral duration: the MV book held within a duration band was the best in-sample (+1.84, t 4.7).",
+    "The ex-ante tail model and realised history disagree. The default-scenario model (PD from spreads, 40% recovery, Gaussian copula) gives the concentrated books a 6-month CVaR99 of 9.7% vs 6.1% for P4+Q, yet realised max drawdown was smaller (-0.15 to -0.34 vs -1.39). In-sample default losses were far below even half of the risk-neutral PDs, so the premium is partly short default-cluster risk.",
+    "Capacity curve for the top-25-carry book with each position capped at 25% of the bond's 91-day SND volume, vs P4+Q: R$50m +0.99, R$100m +0.83, R$250m +0.46, R$500m +0.21, R$1bn -0.09, R$2bn -0.18 %/yr. At R$500m the unconstrained MV book would need a median of 174 days to build a position at 20% participation, and 50% of its weight breaches the liquidity cap.",
+    "The engine choice is purely a cost question. Replacing the book costs weekly -1.42 (14.5x/yr turnover, 1.8%/yr cost) and monthly -0.30 vs P4+Q. Bands and a 45% hysteresis buffer barely help (-0.02 / +0.02). Quarterly replace (+0.29) and 252-day tranches (+0.15) are the cheapest ways to hold P4+Q.",
+    "Issuer cap 5% vs 10% and a 25% sector cap cost nothing (+0.01). Full fund constraints on an equal-weight book (liquidity, duration band, min lot) cost -0.10 at R$500m and -0.23 at R$2bn.",
+    "Sealed holdout, 2026-01 to 2026-09, run once after freezing the recommendation. The universe returned -3.26%/yr and P4+Q +0.08. The recommended mv_emp_g20_fund500m returned +0.68 (+0.60 vs P4+Q, t 1.5). The unconstrained top-25-carry book returned +2.65 (+2.57 vs P4+Q, t 3.4). The fund-constrained equal-weight book was -0.16 vs P4+Q. CVaR lambda 5 was -0.53 vs P4+Q.",
+    "Placebo for the recommended book: the same weights on random universe names return +0.81 on average (p95 +1.04), against +2.79 actual."
+   ],
+   "signals": [
+    "liquidity (vol91_brl, adv_brl, tdays91): research/nightly/portfolio_construction/data.py build() -> data/history/nightly/portfolio_construction/liquidity.pkl",
+    "emp_vol / vol_hat / dts / carry_over_var: research/nightly/portfolio_construction/signals.py signals(panel) or cached('M') -> signals_M.pkl",
+    "risk models: research/nightly/portfolio_construction/risk.py cov(p, x, kind='emp'|'dts'), block_params(), default_scenarios() (PD from spread, 40% recovery, issuer/sector Gaussian copula), cvar()",
+    "constructors with issuer/sector/duration/liquidity/min-lot constraints: research/nightly/portfolio_construction/construct.py project, minvar, meanvar (with L1 turnover penalty), maxdiv, erc_issuer, cvar_opt",
+    "top-k carry fund book: research/nightly/portfolio_construction/run.py topk_carry(holdout, k, fund)",
+    "recommended weights: data/history/nightly/portfolio_construction/recommended_weights_pre2026.pkl (day, codigo, weight)"
+   ],
+   "caveats": [
+    "Marks are smooth, stale and survivorship-biased, so the t-stats are inflated. The concentrated high-carry books load on exactly the illiquid, less-covered, less-listed names where this bias lives: the MV book is 46% covered vs 65%, and only 86% of its weight executes vs 92%.",
+    "Only 48 pre-2026 months, with few defaults among the chosen names. The default-scenario model says the concentrated books carry about 1.6x the tail (CVaR99 9.7% vs 6.1%). rec40 only stresses the 55 known stop-trading names.",
+    "34 variants are in the Holm correction. Several were added after seeing the first results (mv_emp_g20_durband, top25_carry_*, mv_emp_g20_fund500m, carry_over_var_tilt). Only the unconstrained carry-concentration books survive Holm. The recommended fund book does not (Holm p 0.30).",
+    "The liquidity proxy is SND reported R$ volume, which includes back-to-back trades, and the 25%-of-91-day-volume participation cap is an assumption. Real capacity is likely lower. There is no market impact beyond cost_bps, so impact would hurt the concentrated books most."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "LEAKAGE (harness-wide, not specific to this agent): cdi_bps and the par accrual in the daily returns both use TODAY's SND contract spread for the whole history (rfmonitor/ml/selection.py reference() -> mkt_rate; run_selection_lab.build_returns gpar). SND pct_curve is relative to the PU-par in force at each trade date, so the spread that actually accrued can be backed out from pu_avg/pct_curve. That comparison shows 270 DI_SPREAD bonds whose accruing spread changed by more than 0.5pp over the sample (repactuations: TEND14/15, ANIM12, OUSA11, FAZE11, KRSA21, JSMLA, VLME, AERI, and others). The top-25 book is overweight these names: 15.5% of its weight has a positive look-ahead gap, versus 11.9% of P4+Q, with a weighted gap of +0.10pp versus +0.04pp. So the carry ranking and the returns are both slightly inflated. After correcting the returns and re-ranking on point-in-time implied carry, the edge is +1.61%/yr (t 4.35), against the claimed +1.76. Halves are +1.30 / +1.93, and the 50 bps edge is +1.58.",
+      "SURVIVORSHIP stress (rec40 only covers the 55 bonds whose last mark was below 0.90). If every bond that stopped trading early with a last mark below 0.98 (150 bonds) is instead marked to 40% recovery, the corrected edge falls to +1.12%/yr (t 1.5, not significant). 2024-25 falls to +0.61. The concentrated high-carry book is more exposed to this bias than P4+Q, as the README says in its caveats. This is a stress case, not the truth: many early stops are redemptions at par.",
+      "CONCENTRATION: 3 issuers (cnpj8 12647827, 09074183, 12979552) supply about 35% of the edge over P4+Q. Removing them from both books ex post leaves +1.06 (t 2.6); removing the top 10 leaves +0.74 (t 2.0). The edge is robust in sign but smaller than the headline implies."
+     ],
+     "corrected": 1.614
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "Reproduced exactly: an independent reimplementation and their own topk_carry() both give +1.761%/yr vs P4+Q (NW t 4.74). The headline number is real in this harness, but it is not new. It is the HY-lab result already published in research/out/HY_README.md: HY D10 plus the P4 filters and quality screen beat P4 by +1.6 (t 4.6). The README does not cite it.",
+      "The edge disappears in the segment where marks can be trusted. Restricted to issuers with fundamentals coverage, top-25 carry vs P4+Q is -0.02%/yr (t -0.05). Against a covered-only P4+Q it is +0.52 (t 1.36, n.s.). Listed issuers only: -0.32 vs P4+Q, and +0.28 (t 1.0) vs a listed-only P4+Q. The whole premium sits in uncovered and unlisted issuers: top-25 holds 45% covered names vs 65% for P4+Q. That is exactly where the harness README says survivorship and stale-mark bias live. rec40 only stresses 55 bonds, so it cannot clear this.",
+      "The edge is concentrated in a few issuers. On cohort labels, the top 5 issuers supply 43% of the excess contribution. Removing them from the candidate set cuts the edge to +0.86 (t 1.99, p 0.046) vs P4+Q, or +1.07 (t 2.6) vs a P4+Q that also drops them. Removing the top 10 gives +0.77 (t 2.1)."
+     ],
+     "corrected": 0.86
+    }
+   ]
+  },
+  {
+   "slug": "hedging_overlays",
+   "headline": "None of the 28 hedges or overlays beats P4+Q net of costs; the harness's 1:1 IPCA+ rate hedge over-hedges (debenture yields move only ~0.45x NTN-B), which inflates the IPCA+ sleeve's 2024-25 excess; the best realistic tool is skipping new tranches after a 63-day Ibovespa slump, which cuts maxDD from -1.39% to -1.10% for about -0.10%/yr.",
+   "beats": false,
+   "verified": false,
+   "best": "E_gate_ibov: on a monthly decision date, skip the new P4+Q tranche (it stays in cash) when the Ibovespa's 63-day excess over CDI is below -10%. 4 of 48 decisions were gated: 2022-07, 2023-01, 2024-12 and 2025-01.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": -0.1,
+    "excess_vs_universe_ann_pct": 1.016,
+    "holm_p": 1,
+    "max_dd_pct": -1.098,
+    "n_variants_tried": 28,
+    "net50_diff_vs_p4q_ann_pct": -0.08,
+    "sharpe": 2.255,
+    "t_vs_p4q": -0.87
+   },
+   "insights": [
+    "The harness's IPCA+ rate hedge over-hedges. Point-in-time trade-to-trade regressions give a yield beta of IPCA+ debentures to NTN-B of 0.37-0.55 (0.52 in 2021, about 0.40 in 2023-24). As a result, the hedged IPCA+ P4+Q sub-book has a +1.23% per +1pp beta to the 5y real yield; with no hedge it is -2.37.",
+    "At the point-in-time empirical hedge ratio, the IPCA+ sub-book's excess over CDI falls from +1.87 to -0.20%/yr, and in 2024-25 from +4.47 to +0.33. The whole P4+Q book falls from +2.22 to +1.76 (-0.45%/yr, t -1.8). Monthly regressions put the zero-beta ratio at about 0.65, so the artifact is 0.3-0.45%/yr of the book. Any nightly result that favours IPCA+ bonds or looks strong in 2024-25 is suspect.",
+    "The IPCA+ sleeve's drawdown comes from inflation carry vs CDI, not from duration. Adding an IPCA x DI carry swap to the exact hedge cuts the sub-book maxDD from -5.05% to -2.17% (vol 2.71 to 2.25) and improves its excess from +1.87 to +2.63. At book level this is +0.14%/yr (t 0.9), for about 0.10%/yr of DAP/swap cost (book DV01 about 1.3 years).",
+    "Hedging IPCA+ bonds with nominal DI1 instead of DAP/NTN-B is disastrous: sub-book vol goes from 2.7% to 6.9% and maxDD from -5% to -14%. A single-vertex duration hedge costs little against bond-by-bond key-rate hedging (book maxDD -1.56 vs -1.39). Our B3/Tesouro key-rate curve reproduces bench_rate (correlation 0.999).",
+    "The book has essentially no linear equity, bank or sovereign beta: rolling Dimson betas average 0.003 (Ibov), 0.002 (SMAL11), 0.001 (banks) and 0.011 (EMBI CDS proxy), so beta hedges change results by -0.02 to -0.04%/yr. But in the book's 6 worst months the correlation with Ibov and banks is +0.72 to +0.76: stress is shared but asymmetric, so a conditional gate helps slightly and a linear hedge does not.",
+    "1m 10%-OTM Ibovespa puts cost about 0.11% of notional per month and paid off in 2 of 48 months. At 25% notional they cost 0.10%/yr and worsen maxDD (-1.63). The 2023 debenture stress was idiosyncratic.",
+    "Book-level overlays executed at the mark lose to switching costs and whipsaw. A drawdown stop switched 76 times, lost 1.1%/yr and worsened maxDD to -3.7%. Vol targeting cut vol from 1.04 to 0.78 but Sharpe fell from 2.13 to 1.81 (-0.81%/yr, Holm-significant negative). Universe-momentum lost 1.78%/yr. A 10% cash buffer is just proportional scaling (-0.22%/yr).",
+    "E_gate_ibov lost -0.10%/yr (t -0.9; -0.08 at 50 bps) for maxDD -1.10 vs -1.39 and worst month -0.53 vs -0.62. Only 7.5% of 40 random 4-gate placebos match that maxDD. In the sealed holdout (2026-01..09, evaluated once) it beat P4+Q by +0.12 (t 0.75), with maxDD -0.62 vs -0.78.",
+    "Bond-level stops: selling after a -3% 4-week drop gives vol 0.80 and maxDD -0.95 but costs 0.25%/yr, all of it in 2024-25. Selling below 95% of par costs 0.44%/yr. The weekly 'sell when rich' exit is the only exit that adds anything (+0.06, t 0.8).",
+    "Long-short within peers (theoretical; we found no organised debenture borrow market on B3): long P4+Q vs short the lowest-carry 30% of the same peers gives about 0 excess (-0.01%/yr at 2% borrow, -2.9% at 5%), with -0.58 correlation to the universe. The carry premium is on the long side only."
+   ],
+   "signals": [
+    "ipca_yield_beta: data/history/nightly/hedging_overlays/ipca_yield_beta.pkl (pd.Series month-end -> PIT yield beta of IPCA+ debentures to NTN-B; apply from the next day); built by research/nightly/hedging_overlays/hedge_ratio.py:yield_beta()",
+    "overlay_signals: data/history/nightly/hedging_overlays/overlay_signals.pkl (DataFrame by grid day with columns D_voltarget, D_ddstop, D_umom, D_ibovstress, D_cash10, D_distress; each value known at close t, pass as H.backtest(..., overlay=col))",
+    "E_gate_ibov entry gate: Ibov 63d excess over CDI < -10% on the decision day (research/nightly/hedging_overlays/run.py GATES['E_gate_ibov'], ex_daily(IBOV).shift(1).rolling(63).sum())",
+    "rate hedge variants: research/nightly/hedging_overlays/rates.py build()['mats'][raw|vertex|keyrate|di1_ipca|swap] with the use_R(adj) context manager to run any harness backtest under an alternative rate/inflation hedge"
+   ],
+   "caveats": [
+    "Smooth, stale SND marks inflate Sharpe and t-stats and understate drawdowns. Book-level overlays are executed at the mark for the whole book, which is optimistic because debentures cannot be sold that way.",
+    "48 months with one idiosyncratic credit stress (2023) and no market-wide crash. Tail hedges are designed for a 2020-type event, which is absent from the sample.",
+    "The EMBI+ Brazil series (Ipeadata) ends 2024-07-30, so the CDS proxy has no hedge after that and ignores the USD quanto effect. Put pricing is Black-Scholes with IV = max(realised 63d, 15%) x 1.25.",
+    "The carry swap uses a daily-reset fixed leg at the NTN-B real yield; a real IPCA x DI swap locks the coupon at inception."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "No look-ahead in E_gate_ibov. Decisions are made at the close of day d and use Ibovespa closes up to d; execution starts at d+1. Ibov dates are correctly aligned (for example, the 2022-06-16 holiday is absent), and all decision dates are on the grid. The result reproduces exactly: -0.10%/yr (t -0.87), maxDD -1.099, and -0.08 at 50 bps.",
+      "The drawdown benefit rests on one gate, the 2023-01-02 decision. Gating only that decision gives maxDD -1.14 and +0.05%/yr. Leaving it out gives maxDD -1.37 (about the same as P4+Q's -1.39) and -0.16%/yr. That day's signal is -12.0%, set by the Ibovespa close on the decision day itself (inauguration-day drop). The rest of P4+Q's peak-to-trough (Dec-22 to Apr-23, Americanas/Light) is idiosyncratic.",
+      "Knife-edge timing. Adding one extra day of lag drops the 2023-01 gate and gates 2023-05 instead. The result becomes -0.22%/yr (t -2.69) with maxDD -1.37, so the drawdown gain disappears. A 5-day lag gives -0.32%/yr (t -2.62) and maxDD -1.35."
+     ],
+     "corrected": -0.1
+    },
+    {
+     "refuted": true,
+     "severity": "material",
+     "problems": [
+      "The numbers reproduce exactly with an independent reimplementation of E_gate_ibov (pre-2026, harness v4): diff vs P4+Q is -0.10%/yr (t -0.87) at 25 bps and -0.08 at 50 bps, maxDD is -1.099 vs -1.393, and the same 4 decisions are gated (2022-07, 2023-01, 2024-12, 2025-01). The headline that nothing beats P4+Q net of costs is CONFIRMED.",
+      "The maxDD benefit of the 'best realistic tool' comes from a single decision. Gating only 2023-01 gives maxDD -1.137 and +0.05%/yr. Gating only 2022-07, 2024-12 or 2025-01 gives maxDD -1.37 to -1.39, i.e. no drawdown gain, and costs -0.03 to -0.09%/yr each. So in effect this is one lucky skip of the tranche opened just before Americanas. That followed the post-election Ibov slump, which was a political equity move, not a credit signal.",
+      "The gate is not robust to small parameter changes. At a -12.5% or -15% threshold only 2022-07 is gated and maxDD is -1.367, so the gain is gone. At -7.5% the cost is -0.34%/yr (t -2.0). With an 84d window the cost is -0.37 (t -3.5) with maxDD -1.31; with a 126d window it is -0.58 (t -3.5) with maxDD -1.37; with a 21d window there is no DD gain. If the signal is 5 business days stale, the cost is -0.32%/yr (t -2.6) and maxDD is -1.35. Only the 42d window (maxDD -1.07, -0.04%/yr) reproduces the effect, and it also depends on gating 2023-01."
+     ],
+     "corrected": -0.1
+    }
+   ]
+  },
+  {
+   "slug": "universe_expansion",
+   "headline": "Adding NTN-B, listed CRI funds, FIDC or CDI sleeves to P4+Q did not beat P4+Q: the best mix (80% P4+Q, 20% FIDC senior P4Q) adds only +0.14%/yr (t 0.7, Holm p 1.0). The FIDC returns it relies on are self-reported and not investable. In the one market-priced CRI vehicle (listed FII de papel), the P4 carry rule loses 4%/yr against that sleeve's own universe, and loses more in 2026.",
+   "beats": false,
+   "verified": false,
+   "best": "MIX_80deb_20fidc (80% P4+Q debenture tranche book + 20% FIDC senior quotas picked P4Q-style: top 30% by trailing 3-report excess return, minus worst-quintile delinquency)",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.144,
+    "excess_vs_universe_ann_pct": 1.26,
+    "holm_p": 1,
+    "max_dd_pct": -0.86,
+    "n_variants_tried": 28,
+    "net50_diff_vs_p4q_ann_pct": 0.22,
+    "sharpe": 2.83,
+    "t_vs_p4q": 0.7
+   },
+   "insights": [
+    "P4 carry logic transfers only where marks are smooth and self-reported. FIDC senior P4Q beats the FIDC universe by +4.1%/yr (t 4.9, positive in both halves, above the placebo p95 of -0.3%, and +3.0%/yr in the 2026 holdout). The same rule on listed CRI funds priced on B3 (FII de papel) loses -4.0%/yr against the FII universe (t -1.9), sits below its random-book placebo (p = 0.77), and loses -12.2%/yr in the 2026 holdout. The losers are CACR11 (-60%), HCTR11 (-36%) and DEVA11 (-32%). High trailing yield there signals distress, not carry. This suggests part of the debenture/FIDC P4 edge is a mark-smoothing artefact.",
+    "FII price-to-NAV is not a value signal. Cheap-to-NAV CRI funds returned -9.7%/yr excess over CDI against -5.2 for the FII universe: discounts come before NAV write-downs.",
+    "NTN-B has about zero monthly correlation with P4+Q (0.01) but cost 2.6%/yr against CDI over 2022-25 (IMA-B5 after a 0.20% ETF fee; IMA-B -4.3, IDKA-2A -2.7). An 80/20 P4+Q/IMA-B5 mix is -0.97%/yr vs P4+Q (t -4.1). A 126-day trend filter on the NTN-B leg recovers +0.38%/yr, but the mix is still -0.59 (t -4.0).",
+    "After Geltner de-smoothing, P4+Q's Sharpe is still 1.55 (AR1 0.31), well above any market-priced sleeve. Inverse-vol or risk-parity mixing of P4+Q, IMA-B5 and FII only dilutes it (-2.76%/yr vs P4+Q).",
+    "Using CRI/CRA arrears (CVM securitisation reports) as an exclusion filter on debentures does nothing. 303 debtor/cedent issuers were ever flagged, but on average only 0.21 bonds in the debenture universe and 0.02 in P4+Q belong to them, so the two credit universes barely overlap.",
+    "Data feasibility. Free point-in-time market prices do not exist for CRI/CRA (ANBIMA public files 404, the Feed API is not approved, B3 has no free trade file), LF/CDB (CVM CDA holdings give accrual only; R$621bn of LF held by funds, median LF DI+ spread 0.99%) or eurobonds (FRED keeps ICE BofA EM/LatAm corporate indices only from 2023-09-29). Fiagro history on brapi is under 1 year, and FI-Infra distributions on brapi are incomplete. CVM securitisation reports cover 4,628 CRI/CRA certificates with a 58-day filing lag, but their values are book values (20% unchanged month on month)."
+   ],
+   "signals": [
+    "signal_crisec_arrears: data/history/nightly/universe_expansion/signal_crisec_arrears.pkl, columns (cnpj8, date = Data_Entrega, value = 1): the issuer is debtor or cedent of a CRI/CRA reported in arrears. Built in run.py crisec_flags() / crisec_signal_table().",
+    "FIDC senior sleeve: research/nightly/universe_expansion/run.py fidc_series(rule in {'U','P4','P4Q','Qonly'}, holdout=False, missing='cdi'|'zero') returns a daily excess series on the harness grid.",
+    "FII-CRI sleeve: run.py fii_targets(rule) + sleeve_book(fii_matrix(), targets); features in data/history/nightly/universe_expansion/fii_panel.pkl as (ticker, day, dy12, pnav, nav_chg6, nav_chg12, mom126, vol63, adtv).",
+    "Rates sleeves: run.py index_sleeves() returns the NTN-B, pre and LFT index excess over CDI (after ETF fee) on the grid; raw series in data/history/nightly/universe_expansion/index_sleeves.pkl.",
+    "Pre-2026 daily series of all sleeves and mixes: data/history/nightly/universe_expansion/series_pre2026.pkl ({'S': sleeves, 'A': allocations})."
+   ],
+   "caveats": [
+    "FIDC returns are self-reported and smooth. About 84% of FIDCs are closed-end, and senior quotas are mostly untradeable, so the best mix is a paper result.",
+    "Open FIDC data has no delivery date, so availability was assumed at reference month-end + 45 days. Treating a missing monthly report as earning CDI is optimistic: if it earns 0% instead, FIDC P4Q is -0.9%/yr vs P4+Q.",
+    "FII-CRI universe = tickers brapi still resolves today, so it is survivorship-biased upward (and still negative). Distribution units and splits were repaired heuristically. Returns are pre-tax, although FII distributions are tax-exempt for individuals.",
+    "Index sleeves are ETF proxies: a 0.20%/yr fee is deducted, but tracking error and bid/ask are ignored. Mixes use fixed daily weights as an approximation to monthly rebalancing."
+   ],
+   "verdicts": [
+    {
+     "refuted": true,
+     "severity": "material",
+     "problems": [
+      "The code does not use the availability lag the README states. build.py and run.py say a FIDC report is available at ref month-end + 45 days, but fidc_series uses ref <= m-2 at the start of month m. That is only about 31 days after month-end: the November report is used on 1 January but, under their own rule, would only be available on 14 January. With a lag of m-3, which matches the stated 45 days, the best mix's diff vs P4+Q goes from +0.14 to -0.11%/yr (t -0.46; 2024-25 half -0.32). FIDC P4Q ex-CDI falls from 2.95 to 1.67, and FIDC P4Q vs the FIDC universe from +4.06 to +3.17.",
+      "The FIDC sleeve pays no transaction costs, while the debenture book it is compared with pays 25 or 50 bps. The claimed '+0.22 at 50 bps' therefore improves only because P4+Q gets more expensive. Charging 25 bps on sum|dw| of the FIDC book gives a mix diff of -0.01. With both the m-3 lag and 25 bps it is -0.27 (t -1.03).",
+      "Implausible 'senior' returns, most likely data errors, drive the within-FIDC carry result. Selected classes include trailing excess over CDI of up to 14.5%/month. On average 4.6 selected classes a month have more than 2%/month excess. Examples: 29.492.605 Senior 1 reports 4-5%/month; 45.207.484 Senior 1 reports 5-7%/month with -103% unit-error rows. An ex-ante plausibility screen that drops classes with any trailing |excess| >= 2%/month cuts 'FIDC P4Q vs FIDC universe' from +4.06 to +2.23%/yr. With a 1%/month screen it is +1.56. So the '+4.1%/yr, t 4.9' insight is overstated by roughly half."
+     ],
+     "corrected": -0.27
+    },
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "The FIDC sleeve (fidc_series in run.py) charges no transaction costs, even though the P4Q-style picks turn over every month, and mix() adds nothing because its weights are constant. Charging 25 bps on the FIDC turnover moves the best mix from +0.144 to -0.011%/yr vs P4+Q (t -0.05).",
+      "The reported '+0.22 vs P4+Q at 50 bps (t 1.06)' is an artefact of that. Only the debenture leg paid 50 bps; the FIDC leg stayed free. With 50 bps on both legs the mix is -0.09%/yr vs P4+Q at 50 bps (t -0.40).",
+      "The availability rule is not enforced as documented. The README says FIDC data is available at ref month-end + 45 days, and the panel's own 'avail' column is about ref + 75 days. The code uses ref <= m-2 months, i.e. a report is used about 15 days before its stated availability date. Enforcing it (lag 3 months) gives -0.11%/yr vs P4+Q (t -0.46), and the second half 2024-25 turns to -0.32. The real CVM filing deadline (about 15 days) is probably shorter, so this is a documentation inconsistency more than true look-ahead."
+     ],
+     "corrected": -0.01
+    }
+   ]
+  },
+  {
+   "slug": "bias_audit",
+   "headline": "Under conservative assumptions P4+Q falls from +2.22 to about +1.20%/yr over CDI, but its edge over the universe mostly survives: +1.12 becomes +0.95%/yr (t 2.05), with the same assumptions applied to both books.",
+   "beats": false,
+   "verified": true,
+   "best": "honest_P4Q: holiday-accrual fix, 40% recovery for bonds of distressed issuers that went silent, execution at raw prints, exits only at real trades, liquidity-bucket costs, fundamentals lagged 90 days. It is a bias-adjusted baseline, not a strategy.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": -1.018,
+    "excess_vs_universe_ann_pct": 0.953,
+    "holm_p": 0,
+    "max_dd_pct": -1.7,
+    "n_variants_tried": 162,
+    "net50_diff_vs_p4q_ann_pct": -0.381,
+    "sharpe": 1.23,
+    "t_vs_p4q": -7.59
+   },
+   "insights": [
+    "New bug in run_selection_lab.build_returns (patched returns used by the harness). Carry accrues over np.busday_count, which counts weekdays, but the SND par curve accrues over B3 business days. Each weekday holiday therefore adds about 0.9 bp (DI), 2.7 bp (IPCA) or 5.4 bp (PRE) of fake return. That is 48 holidays and 54,610 rows. It inflates every book level by about 0.13%/yr and cancels in P4+Q−U.",
+    "Costs drive the level haircut. Liquidity-bucket institutional round trips (DI 45-65 bps, IPCA 136-169 bps) cut P4+Q by 0.81 and U by 0.64. P4+Q−U falls only 0.18, from 1.12 to 0.94. An independent ANBIMA bid/ask cross-section (10k quotes, DI 64-77 bps, IPCA 82-185 bps) gives nearly the same answer: P4+Q 1.37, P4+Q−U 0.85.",
+    "The Q filter is the fragile part. A 90-day lag on fundamentals cuts P4+Q−P4 from 0.33 to 0.26 alone, and to 0.20 (t 1.4) in the honest stack. Removing brapi rows or using non-strict dates changes nothing, so staleness hurts and restatement leakage does not.",
+    "No meaningful parameter snooping. P4 sits at the 54th percentile and P4+Q at the 57th of 72 neighbouring rules (carry cut, rich threshold, press filter, worst-Q quantile). The median neighbour P4+Q−U is 1.05 against 1.12 for the chosen rule, and the 10th percentile is 0.78.",
+    "Engine timing optimism is small or reversed. Forcing exits at real trades raises P4+Q by 0.05. Executing at raw rather than spike-cleaned prints is neutral. Entry latency of +1 day costs nothing and +5 days costs 0.08. The edge does not rely on same-day information.",
+    "Survivorship is small for P4+Q. P4+Q held 12 of 33 PIT distress issuers at their event (Dasa, Giga+, Oncoclinicas, Aeris, Ambipar, Americanas). Most kept trading, so the losses are already in the marks: Oncoclinicas bonds -28% around the event. The real hole is bonds that print near par and then go silent (Americanas LAMEA4/5). A 40% recovery on those costs only 0.07. The harsh variant, every stop below 0.98 set to 40%, costs 0.38 on the level and 0.23 on P4+Q−U.",
+    "7.3% of SND volume (527 codes) never reaches the grid. 226 of these codes have no % PU da Curva: %CDI, IGP-M or TR bonds, including Americanas LAME29/LAMEA1-3, CVC, Oi and Azul11. Off-grid bonds crash below 70% of par more often (6.6% vs 4.1%). This mildly flatters U but cannot flatter P4.",
+    "The P4+Q−U spread is barely smoothed (GLM theta0 0.92, Sharpe 0.96 observed vs 0.92 de-smoothed). Honest P4+Q's own Sharpe falls from 1.23 to 0.87 once de-smoothed. Random books with the same churn lose 1.23%/yr to honest U, because U's tranche book turns over about 1.7x/yr against about 3x for P4+Q.",
+    "Buy-at-PU-max / sell-at-PU-min is not a valid cost model for IPCA bonds. The SND intraday range grows with liquidity (median round trip 525 bps in the top IPCA quintile) because retail and institutional prints mix, while DI floaters show about 1 bp. It punishes the IPCA-heavy universe and artificially inflates P4+Q−U.",
+    "Sealed holdout (2026-01 to 2026-09, reported once): honest P4+Q -1.44%/yr vs honest U -3.96%/yr, so P4+Q−U is +2.52 (t 2.8). The relative edge held and the level did not. It is 9 months only."
+   ],
+   "signals": [
+    "build.R_hol(R): holiday-accrual-corrected return matrix (research/nightly/bias_audit/build.py)",
+    "engine.tranche_book(T, R=, cost_b=, entry_delay=, pen_buy=, pen_sell=, exit_fresh=): harness-identical tranche engine with realism hooks (research/nightly/bias_audit/engine.py)",
+    "run.cost_vectors(liq, anbima_tab, range_tab): per-bond round-trip cost in bps under three models (liq_inst, anbima_ba, snd_range)",
+    "run.worstq_variant(panel, lag_days=90, strict=True, drop_brapi=False, q=0.2): lagged worst-quality flag, PIT",
+    "distress_events_pit.csv (cnpj8, event_date, name): PIT issuer credit events",
+    "honest_daily.pkl: honest baseline series to benchmark against"
+   ],
+   "caveats": [
+    "The ANBIMA bid/ask comes from a single Sep-2026 cross-section (historical files return 404) and is applied back to 2022 by liquidity bucket. Liquidity quintiles use lifetime ADV (mild look-ahead, acceptable for a cost haircut but not for a signal).",
+    "The distress recovery rule is a judgement call and some of the 25 bonds hit were probably redeemed at par, which makes it conservative. A first, over-inclusive list (cdi_bps>1000, i.e. IPCA-conversion noise flagging 83 issuers and 199 bonds) was rejected and documented.",
+    "Not fixed: static contract terms (repactuations), the static duration factor in cdi_bps and the hedge, IPCA 'hedged' returns that keep NTN-B-vs-CDI carry, and the IDA overlay (not audited). Capacity is excluded (see marks_liquidity).",
+    "The honest P4+Q vs v4 P4+Q comparison (-1.02, t -7.6) is a mechanical haircut, not a strategy test. 162 backtests were run including the 72-rule neighbourhood, and Holm was applied across the 21 compared rows."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "It does not claim to add value over P4+Q, and it does not. diff_vs_p4q = -1.018 (t -7.6) is a haircut: the same book under harsher assumptions, not a new strategy. Holm p ≈ 0 is trivially true here because costs are deterministic and add up.",
+      "The empirical holiday check in results.json points the wrong way. With clipping, DI rows that cross a holiday average 0.37 bp, while rows that don't cross average 1.26 bp. That is noisy return data, not evidence for the bug. The bug itself is real: a direct test of the par curve (below) confirms it.",
+      "Liquidity quintiles use lifetime ADV, which is look-ahead (the audit discloses this). It is immaterial. With flat per-group costs, P4Q-U is 0.959. With quintiles from each bond's first 126 business days of ADV, it is 0.944. With lifetime ADV, it is 0.953."
+     ],
+     "corrected": -1.018
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "Nothing here adds value over P4+Q, and the audit never claimed it did. Its diff_vs_p4q of -1.018 is a haircut: the honest stack against v4 P4+Q. It reproduces exactly: -1.0178, NW t -7.59, h1 -1.20, h2 -0.83, and every year from 2022 to 2025 is negative.",
+      "The claim that the edge over the universe 'mostly survives (+0.95, t 2.05)' is fragile under the robustness lens. Excluding 2023: +0.90, t 1.61. Excluding the top-5 contributing issuers from both books: +0.74, t 1.54 (P4+Q only: +0.67, t 1.46). Institutional bucket costs x1.5: +0.78, t 1.67. Only the three most liquid ADV quintiles tradable (capacity proxy): +0.73, t 1.71. By year: 2022 +1.82, 2023 +1.12, 2024 -0.06, 2025 +0.93. Only the base case clears t = 2.",
+      "The relative edge exists only because the universe benchmark pays tranche-turnover costs of about 0.65%/yr. Against a costless universe tranche book (a passive index proxy), honest P4+Q earns +0.10%/yr, t 0.19, with h2 -0.21. 'Edge over the universe survives' therefore depends on assuming the benchmark itself trades at institutional costs."
+     ],
+     "corrected": -1.018
+    }
+   ]
+  },
+  {
+   "slug": "alt_signals",
+   "headline": "Two new signals helped P4+Q before 2026: excluding names whose issuer just launched a new debenture offer (from the CVM offers registry), or whose sector's commodity nowcast is bad, added +0.34%/yr (t 2.9, both halves positive). But this combination was chosen after seeing the ICs, the Holm-adjusted p across all 20 variants tried is 0.064, and it did -0.09 vs P4+Q in the short 2026 holdout. It is a borderline candidate, not a proven improvement.",
+   "beats": false,
+   "verified": true,
+   "best": "P4Q_ex_supply_or_nc_expo: P4+Q minus names whose issuer filed a debenture offer at CVM in the last 90 days, or whose sector's exposure-weighted commodity nowcast is below -1 (126-bday monthly tranches, 25 bps)",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.336,
+    "t_vs_p4q": 2.94,
+    "holm_p": 0.064,
+    "excess_vs_universe_ann_pct": 1.453,
+    "sharpe": 2.61,
+    "max_dd_pct": -0.94,
+    "n_variants_tried": 20,
+    "net50_diff_vs_p4q_ann_pct": 0.31
+   },
+   "insights": [
+    "Issuer's own recent debenture issuance (CVM offers registry, ICVM 400/476 plus RCVM 160, point-in-time by filing date) is the strongest new alternative signal. Within P4+Q, the IC on the 6-month forward return is -0.090 (NW t -4.8), and names flagged in the last 90 days underperform the rest of P4+Q by -1.68%/yr (t -2.5). Across the whole universe the effect is weak (-0.22%/yr).",
+    "The supply effect exists only outside regulated infrastructure. Excluding only non-infra issuers gives +0.21 vs P4+Q (t 2.2); excluding only infra issuers (power, sanitation, toll roads) gives -0.02. For concession companies and their project vehicles, repeat issuance is routine capex funding.",
+    "The gain grows with the look-back window: 30d +0.14, 60d +0.26, 90d +0.34, 180d +0.48 (62 names), 365d +0.63 (only 37 names). The event study backs this reading: across 850 offers, the issuer's existing bonds lose only -0.14% in the 63 days before and -0.30% in the 126 days after (about 0 after for P4+Q issuers). So it behaves like a 'frequent borrower / growing debt' quality signal, not short-term supply pressure. Shifting the offer dates by one year either way flips the effect to about -0.10.",
+    "Sector commodity nowcasts only matter among high-carry names. A 6-month commodity move below -1 standard deviation predicts -1.6%/yr for P4+Q names in exposed sectors (t -2.4 to -2.9), while the universe-wide IC is about 0. As an overlay alone it adds +0.09 (t 1.5), which beats every one of 20 placebos that reshuffle which nowcast goes with which sector (their p95 is +0.067).",
+    "The combined rule is robust across settings: +0.33 with weekly tranches, +0.40 at hold 63, +0.14 at hold 252, cohort 6m +0.43 (t 6.0), +0.31 at 50 bps, +0.32 in the rec40 recovery scenario. Leaving the 5 most-excluded issuers in the book still gives +0.28. Excluding the same number of random P4+Q names averages -0.03 (p95 +0.07). Max drawdown improves from -1.39 to -0.94.",
+    "Several signals came out null as overlays: rating and outlook changes (+0.00 to +0.03; too rare in P4+Q, and mostly already captured by the rich and quality filters), sector-level supply momentum (-0.05), ANEEL distribution tariff resets (+0.00), the hand-built margin nowcast alone (+0.02), and adding carry names with strong nowcasts (-0.01).",
+    "Sealed holdout (2026-01 to 2026-09, run once at the end): -0.09 vs P4+Q (t -0.7) and +3.25 vs the universe. Too short to confirm or refute."
+   ],
+   "signals": [
+    "research/nightly/alt_signals/signals.py::signals(panel): adds sup_iss_90d, sup_iss_365d, sup_sec_mom, sup_mkt_mom, sup_inc_mom, rat_neg_180d, rat_out_neg_180d, rat_pos_180d, nc_margin, nc_expo, tar_adj_last, tar_days_since to any harness panel, point-in-time.",
+    "sup_iss_90d / sup_iss_365d (issuer new debenture offers, count): the negative signal; use it outside regulated infrastructure.",
+    "nc_expo (sector commodity nowcast z-score; below -1 is bad), via signals.sector_nowcasts().",
+    "signals.load_offers() (CVM offers with availability date) and signals.issuer_event_counts(panel, events, windows) for any window.",
+    "Cached: data/history/nightly/alt_signals/alt_signals_M.pkl"
+   ],
+   "caveats": [
+    "The best rule combines two signals, and that combination was added after looking at the IC stage. Holm p is 0.042 within the 11-variant main family but 0.064 across all 20 variants tried, which is why beats_p4q is false.",
+    "The holdout is only about 9 months and slightly negative (-0.09 vs P4+Q).",
+    "Debenture marks are smooth and stale, which inflates every t-stat and Sharpe. The exclusion also shrinks the book from 103 to 79 names (37 to 62 names with the longer windows), which adds concentration.",
+    "Pre-2023 offers are dated start date + 7 days, since the rules require a start notice within 5 business days. The offer values are filled in later, so only offer counts are used."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "No leakage found. The headline reproduces exactly: +0.3365%/yr vs P4+Q, t 2.94, halves +0.35/+0.33, 78.8 names. The recomputed supply flags match the cached panel on 100% of rows.",
+      "The legacy ICVM 476 availability date is Data_Inicio_Oferta + 7d. It is plausible, but whether it was public by then is not verifiable. Moving it to the last CVM comunicado (median 27d later) keeps the result: +0.33, t 3.8.",
+      "The RCVM 160 availability date is Data_requerimento + 1d, which assumes the filing is public at once. Using Data_Registro gives +0.36, t 3.2. Using Data_Encerramento gives +0.32. Shifting every offer by +30d gives +0.31, t 3.3. Including expired requests changes nothing."
+     ],
+     "corrected": 0.33
+    },
+    {
+     "refuted": false,
+     "severity": "material",
+     "problems": [
+      "The gain is highly concentrated. On a 6-month cohort attribution, the top 5 issuers supply about 81% of the benefit of the exclusion: Americanas 25%, Oncoclinicas 24%, Dasa 13%, and two wind SPVs about 18%. Removing the top-5 contributor issuers from BOTH books (P4+Q and the variant) cuts the gain to +0.14%/yr (t 1.87); for the top 10 it is +0.07 (t 0.84). Keeping the top-5 contributors in the book (never flagged) leaves only +0.04 (t 0.75). The README's 'keep the 5 most-excluded issuers, +0.28 (t 2.8)' test ranks issuers by how often they were excluded, not by how much they contributed, so it misses where the gain actually comes from.",
+      "The Americanas collapse dominates. Americanas was in P4+Q on only 3 dates (2022-11 to 2023-01), and the supply leg flagged all 3 after its late-2022 debenture offer. January 2023 alone is +0.35pp, about 26% of the 4-year total. Excluding 2023, the gain falls to +0.24 (t 2.06). By year: 2022 +0.06, 2023 +0.63, 2024 +0.42, 2025 +0.23.",
+      "The supply leg alone without Americanas is +0.14 (t 1.39), not significant. The combo without Americanas is still +0.27 (t 2.93), so the nowcast leg and the interaction carry part of it. But the nowcast leg alone is only +0.10 (t 1.5), and its biggest contributors are small wind SPVs (Pau Rainha, Canta, Anemus)."
+     ],
+     "corrected": 0.14
+    }
+   ]
+  }
+ ],
+ "wave2": [
+  {
+   "slug": "w2_pre2021_oos_extension",
+   "headline": "On a rebuilt, never-used 2015–2020 debenture grid, frozen P4+Q beats the universe by +1.83%/yr (t 3.7). P7's extra edge shrinks to +0.12%/yr vs P4+Q (t 0.86, Holm p 1.0), a quarter of its in-sample size, and the factor_zoo screen turns negative (−0.35).",
+   "beats": false,
+   "verified": true,
+   "best": "P7 as frozen (P4+Q minus the bottom 20% on equity health, carry weights, 5% issuer cap, R$500m liquidity cap), run out of sample on the rebuilt 2015-01..2020-12 grid. Monthly decisions, 126-bday tranches, 25 bps. Without the liquidity cap it gives +0.21 (t 1.43).",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.12,
+    "excess_vs_universe_ann_pct": 1.954,
+    "t_vs_p4q": 0.86,
+    "holm_p": 1,
+    "sharpe": 1.42,
+    "max_dd_pct": -3.12,
+    "n_variants_tried": 7,
+    "net50_diff_vs_p4q_ann_pct": 0.101
+   },
+   "insights": [
+    "The carry-selection core generalises out of sample. Over 72 never-seen months (2015-01..2020-12), P4+Q earns +2.75%/yr over CDI and beats the universe by +1.83%/yr (t 3.7), more than in-sample (+1.12). P4 beats U by +1.68 (t 3.5). A random-book placebo of the same size averages +1.03 (p95 +1.26) against P4+Q's +2.92.",
+    "The universe was a bad place in 2015–16. It earned only +0.33%/yr over CDI, while IDA-DI earned +1.15 and P4+Q beat U by +2.85%/yr (t 4.9). In 2020 the sign reverses: U beats P4+Q by +0.40, because high-carry names fell hardest in the COVID redemption crash (Mar–May 2020: P4+Q −3.4%, U −2.7%, IDA-DI −4.5%).",
+    "P7's edge over P4+Q keeps its sign but shrinks to a quarter of its in-sample size: +0.12 (t 0.86) out of sample vs +0.44 (t 2.6) in 2022–25. By period it is +0.20 in 2015–16, −0.07 in 2017–19 and +0.55 in 2020. A random-screen placebo averages +0.04 (p95 +0.105), so P7 sits just above it. Without the liquidity cap the edge is +0.21 (t 1.43), against +1.00 in-sample.",
+    "The equity-health screen carries P7's out-of-sample edge; carry weighting does not. The eqh screen alone gives +0.10 vs P4+Q, carry weights alone +0.02. The eqh score's 6m IC inside P4 is +0.135 (t 3.4, 33 dates), the only component with robust out-of-sample cross-sectional information. Carry's IC inside P4 is +0.18 (t 5.9), but equal-weight P4+Q already harvests it.",
+    "The Q screen keeps its sign but not its size. P4+Q − P4 is +0.15 (t 0.44) vs about +0.3 in 2022–25: +0.35 in 2015–16, −0.09 in 2017–19, +0.51 in 2020. The quality composite's IC inside P4 is actually negative (−0.11, t −2.6) and carry-neutral it is about 0, so 'drop the worst quintile' works only as a tail screen, not as a ranking.",
+    "The factor_zoo composite screen flips sign out of sample. It is −0.35%/yr vs P4+Q (t −1.42), negative in every sub-period (2015 −1.4). This supports the wave-1 finding that its +0.36 in 2022–25 came from dodging a few blow-ups.",
+    "The macro_cycle mom63 gate is drawdown insurance, confirmed on a new crisis. It sidestepped COVID: +3.0%/yr vs P4+Q in 2020, 2020 maxDD −0.6% vs −5.5%, Mar–May +0.5% vs −3.4%. It paid for that with −0.28 in 2015–16 and −0.54 in 2017–19 (whipsaws and switch costs), so net +0.14 (t 0.28). Across 2015–2025 it has helped in exactly two episodes, COVID and Americanas.",
+    "rec40 barely matters pre-2021: only 17 bonds stop trading below 0.90 in the rebuilt grid. The 2015–16 corporate defaults (Oi, Sete and others) were mostly not in the tradable, eligible SND universe, so the test covers a recession but few in-universe blow-ups."
+   ],
+   "signals": [
+    "Pre-2021 out-of-sample harness: inject pd.read_pickle('data/history/nightly/pre2021_oos_extension/core.pkl') into research.nightly.harness._MEM['core'] (after _MEM.clear(), and set _MEM['idx'] from harness indices.pkl). Then call H.backtest(signal, panel=pd.read_pickle(.../panel_M.pkl), start='2015-01-01'). This lets any frozen rule be tested on 2015–2020 (see research/nightly/w2_pre2021_oos_extension/run.py:books).",
+    "run.py:zoo_composite(P): the frozen factor_zoo composite on any panel with ds_5, dres_21, days_since_distress, eq_r21, eq_r126, eq_vol63, age, bond_age_y",
+    "run.py:mom63_overlay(): the macro_cycle IDA-DI 63d excess-momentum Friday-close in/out series, for any grid (2009+)",
+    "build.py:patched_returns(): patched returns with the B3-business-day holiday fix, reusable for rebuilding any grid",
+    "Equity-health score p7.eqh_score: the only component with robust out-of-sample IC inside P4 (+0.135, t 3.4)"
+   ],
+   "caveats": [
+    "Bond terms (contract, maturity, indexer, incentive flag) come from the 2026 SND registry snapshot, so repactuated bonds carry today's terms back to 2015. Duration factors come from today's ANBIMA file.",
+    "The cross-section is thin before 2018: the universe averages 78–88 bonds a month in 2015–17 and P4+Q only 16–17 names. The books are concentrated and the t-stats rest on few names.",
+    "Google-News press starts in 2020-10, so P4's no-negative-press filter is inactive before 2021. P4 flags agree with the harness on 92% of 2021-03 universe rows, and the gap is the press filter.",
+    "COTAHIST equity closes are not dividend-adjusted, and daily moves above 50% (splits) are zeroed. Listed coverage is 44–60%. Before 2021, fundamentals are CVM-only (no brapi parent history)."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "P7's +0.12%/yr edge over P4+Q is almost entirely 2020. It is +0.03%/yr (t 0.28) over 2015-2019, +0.10 (t 0.60) over 2016-2020 and +0.55 in 2020 alone. The claim that it 'keeps its sign' therefore rests on one crisis year, so the out-of-sample edge is effectively zero, not a quarter of the in-sample edge.",
+      "The P7 random-screen placebo in results.json used only 10 seeds, so its p95 is unreliable. In my 40 new seeds the mean was +0.03 and p95 +0.10, and 1 of 40 (2.5%) reached +0.12. P7 does sit around the placebo's 97th percentile, but that is one comparison inside a 7-variant family, and Holm p is 1.0 for every variant.",
+      "Carry weighting with the liquidity cap and no eqh screen gives -0.006 vs P4+Q. This supports the claim that carry weighting adds nothing out of sample."
+     ],
+     "corrected": 0.12
+    }
+   ]
+  },
+  {
+   "slug": "w2_p7_adversarial_verification",
+   "headline": "P7 is fragile rather than refuted. Its equity-health screen is not a placebo artefact: it is worth about +0.5%/yr over properly matched random drops and is even larger under honest costs. But it rests on about 10 issuers and 5 months, has an iid t of 1.7, and does not clear the t≈3.8 bar that a ~280–440-variant search requires. The realistic increment over P4+Q is about +0.25–0.35%/yr, not significant.",
+   "beats": false,
+   "verified": true,
+   "best": "P7 as published: P4+Q minus the universe-listed bottom-20% EQH composite (eq_dd252, -eq_vol63, eq_r126), weighted by carry with a liquidity cap at R$500m and an issuer cap of 5%. The pre-declared flag-vote variant FV2 (drop names with 2 or more of the EQH, zoo, NegEvents and supply flags, same construction) was +0.60 (t 4.1) vs P4+Q, but only +0.10 (t 1.3) vs P7.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.5,
+    "excess_vs_universe_ann_pct": 1.62,
+    "t_vs_p4q": 3.29,
+    "holm_p": 0.28,
+    "sharpe": 2.7,
+    "max_dd_pct": -1,
+    "n_variants_tried": 277,
+    "net50_diff_vs_p4q_ann_pct": 0.48
+   },
+   "insights": [
+    "P7's own placebo was contaminated. On average 40% of its 'random' listed drops were the EQH-flagged names themselves. Fine carry-decile × sector strata make it worse: 94–97% overlap, placebo mean +0.43, which would falsely refute P7. Zero-overlap controls (drop the same number of comparable NON-flagged listed names, same carry/liquidity construction) average -0.05 to +0.01 vs P4+Q. The 'mechanical +0.16 from dropping listed names' is therefore not real, and the placebo-adjusted screen alpha is +0.49 to +0.55 (NW t 2.3–2.4), not +0.3.",
+    "The NW t of 3.29 is flattered by a lag-2 autocorrelation of -0.47 in the monthly P7−P4+Q series, which makes the Newey-West variance smaller than the iid variance. The iid t is 1.72. The series is fat-tailed (skew 2.2, kurtosis 10.8, median month +0.02%), and the 5%-winsorised diff is +0.34 (t 1.83).",
+    "Concentration: the top 1/3/5/10 issuers account for 19/43/62/94% of the cohort gain, led by Oncoclínicas and Americanas. Dropping the top-10 issuers from both books leaves +0.10 (t 0.9). Excluding the top 3 months leaves +0.09 and the top 5 leaves 0.00. Leave-one-month-out ranges from +0.31 to +0.57, and leave-one-issuer-out (top 15 and bottom 5) from +0.39 to +0.59.",
+    "P7 is exactly additive. The EQH screen on EW P4+Q adds +0.38 (t 2.1) and the carry/liquidity construction +0.19 (t 1.5), with an interaction of -0.06. Regressing the P7 diff on the two single-component books gives betas of 1.01 and 1.00, R² 0.93 and alpha -0.07.",
+    "The construction leg is portfolio_construction's result. P7 is -0.07 vs PC's recommended mv_emp_g20_fund500m, and -0.07 vs PC top-25-carry@R$500m with the EQH screen bolted on. P7 is +0.29 (t 1.2) vs PC top-25@500m without the screen. The only new content is the EQH screen.",
+    "Multiplicity: 277 variants excluding bias_audit, 439 including it (counted from 16 results.json). Bonferroni/Holm 5% needs |t| of 3.74 or 3.86; at N=277–439, P7's p comes out at 0.28–0.44. The deflated Sharpe is 0.07 at N=277 and 0.05 at N=439.",
+    "The screen is stable across specifications. EQH q=0.1/0.2/0.3 gives +0.45/+0.50/+0.48. Single components give eq_dd252 +0.47, eq_r126 +0.42, eq_vol63 +0.35 (all t ≥ 2). A fundamentals lag of 60/90/120d on Q in both books gives +0.49/+0.49/+0.52; the lag hurts P4+Q itself (-0.04/-0.07/-0.14), not the increment.",
+    "Under honest assumptions (liquidity-bucket costs, harsh survivorship, holiday-accrual fix, lag-90 Q) the edge grows to +0.68 (NW t 4.2, iid t 2.5). P7 is +1.51 over CDI vs +0.83 for P4+Q and +0.18 for U. Minus zero-overlap placebos it is +0.69 to +0.70. Part of this is by construction: EQH avoids names that later go silent at the assumed 40% recovery.",
+    "Pre-declared flag vote: FV2 carry is +0.60 (t 4.1, 50bps +0.58), FV3 carry +0.43, FV2 EW +0.48 and FV3 EW +0.27. vs P7, FV2 is +0.10 (t 1.3) and FV3 EW is -0.23 (t -2.1). Requiring 3 flags drops too few names (about 7 of 103) to matter. Two votes is the useful setting, but the gain over EQH alone is insignificant.",
+    "The recomputed 2026 holdout matches the published figure: P7 vs P4+Q is +0.68%/yr (t 2.25, 9 months)."
+   ],
+   "signals": [
+    "lib.drop_strat_bond(seed, exclude=True, ndec, sector, target) / lib.drop_strat_issuer(seed, exclude=True): zero-overlap matched-control placebo for any avoid screen (research/nightly/p7_adversarial_verification/lib.py). Use these instead of random drops, which re-draw the flagged names.",
+    "lib.mk(drop, construct, base): generic P7-family signal for H.backtest(as_weights=True, issuer_cap=1.0).",
+    "lib.votes(x): per-row count of wave-1 avoid flags (EQH, zoo, NegEvents, supply); FV2 = votes>=2.",
+    "lib.flag_eqh_g(x, q, cols): EQH screen with configurable quantile and components.",
+    "lib.worstq_lag(panel, lag_days): worst-quintile quality flag with lagged fundamentals (copy of bias_audit's).",
+    "lib.cohort_matrix(fnA, fnB, P): issuer × date cohort attribution of a book difference."
+   ],
+   "caveats": [
+    "Verdict: FRAGILE. The corrected best-estimate increment over P4+Q is about +0.25 to +0.35%/yr (published: +0.50). It is not significant after multiplicity.",
+    "Zero-overlap control placebos cannot fully carry-match: flagged names carry about 280 bps vs about 245 for the available controls. The mismatch should favour the placebo, so it does not flatter P7, but the matching is imperfect. Placebo stages B and C (fine strata drawn from all listed names) are reported but invalid, because 94–97% of their draws are the flagged names.",
+    "The issuer-clustered bootstrap is on 126d cohort attribution (42 dates with complete labels), not on the daily book. The cohort diff (+0.64) is larger than the book diff (+0.50).",
+    "The GLM de-smoothing fit on the diff series failed (non-invertible MA). The iid t is reported as the conservative alternative to NW."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "Wrong folder name in the task: 'research/nightly/w2_p7_adversarial_verification' does not exist. The work is in research/nightly/p7_adversarial_verification/, and its README is titled w2_p7_adversarial_verification.",
+      "The kurtosis figure does not reproduce exactly. I get an excess kurtosis of 8.8 (pandas) and a skew of 2.30; the README says 10.8 and 2.2. This is probably a difference in estimator definition, and it does not change the conclusion.",
+      "The README says negative autocorrelation 'flatters' the NW t (3.29). That framing is debatable. The negative lag-2 autocorrelation (-0.47) is real: large gain months partly reverse (for example Dec-2024 +0.78, then Jan and Feb 2025 at -0.19 and -0.25). When autocorrelation is negative, a lower long-run variance is legitimate. The real problem is that NW is unstable at n=48: the t is 1.74 at lag 0, 2.45 at lag 2, 3.29 at lag 6 and 4.02 at lag 12. The iid t of 1.72 is a conservative bound, not the 'true' t."
+     ],
+     "corrected": 0.5
+    }
+   ]
+  },
+  {
+   "slug": "w2_expected_loss_carry",
+   "headline": "A point-in-time 12-month distress-hazard model (AUC about 0.69, versus 0.66 for the spread level alone) does not improve on carry. Ranking on expected-loss carry loses to P4+Q, and a PD-quintile screen does worse than Q. On top of P7 it costs about 0.12%/yr and is no better than a random screen of the same size (placebo p 0.76). The model is under-identified: fewer than 30 hard-default issuer onsets in every year of 2021–25.",
+   "beats": false,
+   "verified": true,
+   "best": "C_lgbm_P7+PDq: P7 (combined/p7.py make_signal) with issuers in the universe-top-quintile of walk-forward monotone-LightGBM 12m distress PD removed from its p4q base. It is +0.38%/yr vs P4+Q, but that comes entirely from P7: vs P7 it is -0.12 (t -1.0).",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.384,
+    "excess_vs_universe_ann_pct": 1.501,
+    "t_vs_p4q": 2.21,
+    "holm_p": 0.268,
+    "sharpe": 2.82,
+    "max_dd_pct": -0.98,
+    "n_variants_tried": 10,
+    "net50_diff_vs_p4q_ann_pct": 0.351
+   },
+   "insights": [
+    "Model quality: pooled out-of-sample AUC on debenture issuers is 0.655 (logit) and 0.686 (LGBM). Spread level alone scores 0.658, the past-event flag 0.61 and ND/EBITDA 0.61. By year, LGBM scores 0.67 / 0.66 / 0.66 / 0.81 / 0.85 for 2021–25 (2025 censored at 2025-12-31). On 'clean' issuer-months with no event in the prior year it is only 0.60, so much of the AUC is persistence of distress.",
+    "Coverage: pooled LGBM AUC is 0.69 for listed issuers (0.89–0.92 in 2024–25) and 0.67 for unlisted ones. Issuers with no fundamentals (unregistered SPVs) score 0.63, and only 0.50–0.60 in 2021–23. Fundamentals do not close the unlisted gap.",
+    "Under-identified: hard-event onsets among debenture issuers are 1 / 2 / 14 / 10 / 10 for 2021–25 (bias_audit distress, severe rating actions, CVM RJ/default filings). Adding bond-loss episodes gives 7 / 11 / 46 / 23 / 34. The PD is therefore mostly a detector of soft mark drawdowns and of RJ persistence.",
+    "The PD model sees the events but not the losses. Inside P4, the LGBM PD flag catches 37% of issuer-months with an event in the next 12m at a 16% flag rate, about the same as Q (38% at 18%) and the P7 equity-health screen (36% at 15%). But flagged names still earn +0.66% over the next 6 months, versus +0.40% for Q-flagged and -0.44% for equity-flagged names. PD catches the soft episodes that recover and misses the hard blow-ups.",
+    "Expected-loss carry is a worse ranking variable than raw carry. PD is nearly orthogonal to carry (Spearman -0.01 logit, +0.10 LGBM). IC vs fwd_126 drops from 0.25 for carry to 0.09–0.12 for EL-carry, and -PD alone has IC of about 0. The A books lose 0.25–0.33%/yr to P4+Q, including -0.9 to -1.0%/yr in 2022–23. LGD 0.4 vs 0.6 barely matters.",
+    "The PD quintile screen is weaker than Q. P4 minus the PD quintile scores -0.11 (LGBM) and -0.25 (logit) vs P4+Q; it adds only +0.08 to +0.22 over P4, against about +0.33 for Q. P4+Q minus the PD quintile adds +0.04 / +0.09 (t <= 0.55).",
+    "On top of P7 the PD screen hurts. It is -0.12 (LGBM) and -0.15 (logit) vs P7, negative in both halves (-0.20 / -0.03), at 50 bps (-0.13) and under harsh survivorship (+0.68 vs +0.76 for P7 alone). A random screen dropping the same number of names averages -0.08 (p95 +0.04), so the placebo p is 0.76.",
+    "New public data: CVM IPE 2019–26 RJ / default filings for all CVM issuers, after a counterparty-mention filter that removes Vale, Klabin, Engie, Natura and others that only mentioned someone else's RJ. Plus CVM fundamentals for all 933 filers, which gives pre-2021 training labels. The broad panel's AUC of 0.93 is RJ persistence, not prediction.",
+    "Bond-loss labels need care by kind. A -10% rate-hedged drawdown flags 220 IPCA issuers, and only 10% of them have any hard event (rate-hedge noise), vs 62% for DI+ floaters. IPCA/PRE therefore use a -20% market-neutral threshold.",
+    "Sealed holdout (2026-01 to 2026-09, read once, frozen C_lgbm): +1.11 vs P4+Q (t 2.9) against +0.68 for P7 alone, so the screen added about +0.43, the opposite sign to pre-2026. That is 9 months and one episode; the holdout PDs had learned the 2025 events (Ambipar, Braskem, Oncoclinicas). It is the only hint the model improves as labels accumulate, and it does not change the verdict."
+   ],
+   "signals": [
+    "pd_logit / pd_lgbm: 12m issuer distress PD, point-in-time. Load data/history/nightly/w2_expected_loss_carry/pd_oos.pkl and merge on (cnpj8, day), or use research/nightly/w2_expected_loss_carry/run.py:load(holdout), which also adds pdQ_{logit,lgbm} (universe top-quintile PD flag) and p4q_pd_{m}.",
+    "EL-carry: cdi_bps - pd x LGD x 1e4. Built by run.py:elc_rule(m, lgd); a negative result as a ranking variable.",
+    "events.pkl onset flags / ev_past365 / ev_days_since: issuer distress history features (model.py:build_panel).",
+    "IPE RJ filings for any CVM issuer: build_data.py:ipe_events().",
+    "Market-neutral bond-loss episodes: build_data.py:bond_loss_events(thr, win).",
+    "Broad CVM fundamentals for all filers: build_data.py:fund_all(); model.py:fundamentals() gives cleaned ratio features (f_nde, f_lcov, f_lcash_st, f_eqr, f_dmargin, f_roa, f_ebit_ta, ...).",
+    "run.py:harsh_R(): the bias_audit harsh-survivorship return matrix (stopped bonds with last mark < 0.98 jump to 40% of par). Use with bias_audit/engine.tranche_book."
+   ],
+   "caveats": [
+    "The task named both research/nightly/expected_loss_carry/ and w2_expected_loss_carry/. Everything was written to research/nightly/w2_expected_loss_carry/ and data/history/nightly/w2_expected_loss_carry/.",
+    "Hard default events are too few to identify a default model: fewer than 30 issuer onsets per year in the debenture universe. The label is mostly soft bond-loss episodes built from smooth, stale marks.",
+    "rating_events.pkl has no rating levels, so the spec's '>=3 notches' rule could not be computed. Severe downgrades are found by a text regex (to CCC/C/D/RD, calote, default, RJ).",
+    "Bond-loss thresholds deviate from the spec: -10% for DI+ and -20% market-neutral for IPCA/PRE. The IPCA threshold was chosen from its overlap with hard events."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "Look-ahead in event features. In build_data.ipe_events, the counterparty filter keeps a Fato Relevante when the issuer's own RJ document falls within ±400 days of it, and that window includes FUTURE documents. 10 of 316 facts, at 8 issuers, are kept only because of an RJ document that came later. These events feed ev_past365 and ev_days_since, and ev_days_since is the top LGBM gain feature. This leak favours the PD model, so it does not weaken the negative verdict. It does make the AUC figures (0.686 and the 0.81–0.85 for 2024–25) slightly optimistic.",
+      "The IPCA/PRE bond-loss threshold was moved from -10% to -20% after looking at how often it overlapped with hard events. bond_loss_events uses the full path including 2026 (load_panel holdout=True, _Rmat). That is a label-definition choice made partly with holdout-period data. It is disclosed but not isolated.",
+      "The placebo uses only 20 random draws, so p = 0.76 is coarse, with a minimum attainable p of about 0.048. The qualitative conclusion is unaffected."
+     ],
+     "corrected": 0.384
+    }
+   ]
+  },
+  {
+   "slug": "w2_unlisted_issuer_health",
+   "headline": "Extending the screen to unlisted issuers adds nothing detectable to P7. 64% of P7's weight has no equity series, CVM FRE parent mapping recovers only 2.5% of rows, and proxy screens beat P4+Q only as much as P7 already does (+0.02 to +0.13%/yr vs P7, t ≤ 0.9). About half of the unlisted names' outperformance disappears under harsh survivorship plus realistic liquidity costs.",
+   "beats": true,
+   "verified": true,
+   "best": "X3_sector_proxy (picked by the pre-set rule, highest t vs P4+Q): P7, with EQH (the equity-health composite) pooled over own equity plus FRE/name parent equity, and for unlisted names with no parent the bottom 20% of a listed sector-peer equity composite dropped. It beats P4+Q by +0.52%/yr (t 4.1), but that is P7's edge: vs P7 it adds only +0.02 (t 0.13). X6_cascade adds the most vs P7: +0.13 (t 0.88).",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 0.521,
+    "excess_vs_universe_ann_pct": 1.638,
+    "t_vs_p4q": 4.11,
+    "holm_p": 0.0001,
+    "sharpe": 2.89,
+    "max_dd_pct": -1.1,
+    "n_variants_tried": 5,
+    "net50_diff_vs_p4q_ann_pct": 0.473
+   },
+   "insights": [
+    "Coverage gap: before 2026, 66% of universe rows have own or harness-parent equity, but only 43% of P4+Q rows and 33% of P7's weight do. 64% of P7's weight is never screened. It sits in 343 truly unlisted issuers such as Aegea, Cagece, BRK, Iguá, Metrô SP, Solví, V2i and Transbrasiliana.",
+    "Parent mapping has a low ceiling. PIT CVM FRE control edges (participacao_sociedade and posicao_acionaria, ≥50% control, dated by DT_RECEB) map 100 issuers, but that is only +2.5% of rows (3.6% of P7's weight), mostly transmission, wind and toll SPEs of Alupar, EDP, Equatorial, ISA, Auren and Motiva. Listed parents outside the 161 series would add only about 4% of unlisted rows. Name-token matching had 45% precision (10 of 22) and added 0 priced rows.",
+    "The sector-peer equity composite is a good stand-in for true equity health on listed names (Spearman 0.66; its bottom-20% flag hits the true EQH bottom quintile 63% of the time vs 20% at random). The bond-mark proxy is not (Spearman −0.02, precision 0.26). The fundamentals proxy adds nothing because the Q filter already removes every name it would flag (X4 is identical to X1).",
+    "P7's EQH composite has no rank IC (+0.012, t 0.3 on listed rows). The screen works only through tail and blow-up avoidance, which is why proxies with decent correlation still add little.",
+    "vs P7, with 5 extensions and Holm p = 1 for all: parent equity +0.07 (t 0.72); sector proxy +0.02 (t 0.13); bond proxy +0.07; cascade +0.13 (t 0.88), still +0.12 under harsh survivorship plus liquidity costs. The cascade beats a matched random drop of unscreened names (placebo mean 0.00, p95 +0.06), but it is not significant against P7.",
+    "Unlisted minus listed in the universe is +0.89%/yr (t 1.97) at base. It falls to +0.69 under harsh survivorship, +0.66 under liquidity-bucket costs, and +0.46 (t 1.1) with both. All of it comes from 2024–25 (2022–23 is −0.24 under both). Unlisted rows are 2.8x more likely to belong to bonds that later go silent below 0.98 (1.86% vs 0.67%), trade less (41 vs 53 trades in 30 days) and carry more (141 vs 104 bps). Within carry deciles the gap is +0.78%/yr (t 1.8).",
+    "Fund_flows' universe 'orphan' premium (+0.47) turns negative under realistic costs (−0.40, −0.27 with harsh survivorship too), so it is a cost and stale-mark artefact. Inside P4+Q, orphans stay ahead (+1.5, t 1.8), but that is about 9% of the book and a few names.",
+    "In the sealed 2026 holdout (read once): P7 is +0.68 vs P4+Q; X3 is +0.84 vs P4+Q (+0.16 vs P7, t 1.2); X6 is +0.79 (+0.11 vs P7, t 0.3). Unlisted beat listed inside P4+Q by +1.99%/yr (t 2.2), because listed names were hit harder in 2026."
+   ],
+   "signals": [
+    "eq_tier / xq_dd252 / xq_vol63 / xq_r126: equity-health inputs extended with PIT FRE parent equity. Load with research/nightly/w2_unlisted_issuer_health/features.py:attach(P) or from panel_M_ext_all.pkl.",
+    "px_sector: listed sector-peer equity-health composite, usable for any issuer (Spearman 0.66 with true EQH on listed names). Same sources.",
+    "px_bond: issuer bond-mark health (issuer means of ds_63, rmom_126, ratio_from_hi_252). Same sources.",
+    "run.py:make_signal(tiers, proxy): P7 with the extended screen; proxy='cascade' is the X6 variant.",
+    "build_map.py:fre_edges() / build(): PIT CVM control graph, reusable to map any cnpj8 to its controller chain."
+   ],
+   "caveats": [
+    "The pre-set selection rule (max t vs P4+Q) picked X3, whose gain vs P7 is about zero. The 'beats P4+Q' flag is inherited from P7 and is not new alpha.",
+    "The FRE map is dated by receipt (DT_RECEB), but the content describes the group at its reference date. The ≥50% rule drops minority control-group members. One stale mapping is known (Ligga→Copel).",
+    "Sector map, name map and harness equity_map are static and hand-built. The name map needed a manual whitelist (45% raw precision).",
+    "The P7 components were chosen on the same 2022–25 sample (wave-1 search), and marks are smooth and stale, so t-stats are inflated."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "X3_sector_proxy, the variant labelled 'best', does not beat its own placebo. Randomly dropping the same number of unscreened P4+Q names gives p = 0.10 (actual +0.021 vs P7; placebo mean -0.044, p95 +0.040). Its +0.52%/yr vs P4+Q (t 4.1) is P7's edge, and the sector-proxy flags add nothing beyond random dropping. The README says so, but the 'best' framing and the headline t of 4.1 overstate the variant.",
+      "The pre-set selection rule (highest t vs P4+Q) does not fit the question, which is whether the extension adds to P7. It picked X3, whose gain vs P7 is about zero (+0.02, t 0.13; excluding the 3 best months, -0.14). The only variant whose flags beat the random-drop placebo is X6_cascade (+0.125 vs P7, placebo p95 +0.06, 20 draws), and it is still not significant vs P7 (t 0.88, Holm p 1).",
+      "X4_fund_proxy is identical to X1. I confirmed it: the px_fund bottom-20% flags 1,670 rows and 0 of them are in P4+Q. So only 4 distinct extensions exist, yet Holm counts 5 variants plus P7 and P4 as rows. Holm p is 1 for all of them anyway, so nothing changes."
+     ],
+     "corrected": 0.521
+    }
+   ]
+  },
+  {
+   "slug": "w2_primary_market_concession",
+   "headline": "Brazilian debentures in 2021–25 came with no new-issue concession: new series priced 16 bps inside the issuer's own curve, and the first print sits at the issue price. A primary sleeve of wide new issues (A2) shows +1.31%/yr vs P4+Q, but it is not significant across 30 variants (global Holm p 0.067). Half of it is carry, and it swings from −0.3 to +1.8 depending on how the 69% of bonds that never trade are marked.",
+   "beats": false,
+   "verified": true,
+   "best": "A2_prim_conc50_scr: buys new debenture series at par (the bookbuilding / SND contract rate) at settlement when the concession is above 50 bps. The concession is the issue spread (CDI+ equivalent) minus the same-day peer-curve fair value, adjusted by the issuer's curve where the issuer has fresh bonds. The issuer must also pass P4's press screen, the P4+Q worst-quintile quality screen and P7's EQH bottom-20% screen. Each bond is held 126 bdays, bonds that never trade are marked to the peer-curve model, entry costs nothing and the exit costs 25 bps/2.",
+   "metrics": {
+    "diff_vs_p4q_ann_pct": 1.313,
+    "excess_vs_universe_ann_pct": 2.429,
+    "t_vs_p4q": 2.98,
+    "holm_p": 0.067,
+    "sharpe": 2.02,
+    "max_dd_pct": -2.095,
+    "n_variants_tried": 30,
+    "net50_diff_vs_p4q_ann_pct": 1.453
+   },
+   "insights": [
+    "There is no average new-issue concession. Across 3,566 series settling 2021-06 to 2025, new issues priced 16 bps INSIDE the issuer's outstanding curve (median -9, t -4.0, n=1,331). The first SND print sits exactly at the issue spread (median move 0.0 bps) and is on average 5.7 bps wider (t 2.5). Unlike US IG, issuers in the 2021–25 inflow boom priced flat.",
+    "The 'concession' vs the peer curve (+36 bps mean, +22 median) is a carry and credit proxy. In month-clustered regressions controlling for the issue spread, it predicts neither the first-print move (t -0.9) nor the 126-bday return vs peers (t 0.0). The primary-buyer return vs peers rises steeply across concession quintiles (-2.18, -0.28, -0.14, +1.37, +2.00% over 126 bdays), but the mean issue spread rises from 65 to 384 bps along with it.",
+    "An allocation at the bookbuilding rate is worth nothing extra. The same selection bought at the first print does as well: A1 minus B1 is -0.37%/yr (t -0.5). A primary buyer at par earns +0.11% vs the peer cohort over 126 bdays (t 0.3).",
+    "There is a real but small seasoning drift. Bonds bought at the first print beat their peer cohort by +0.42% over 126 bdays (month-clustered t 5.0). It is +1.16 for Lei 12.431, +1.13 for IPCA, +0.02 for DI+, +0.97 for first-time vs +0.28 for repeat issuers. In the harness, a book of names first printed within the last 31 days is only +0.02 vs U and -1.10 vs P4+Q (cohort +0.45%/yr, t 2.2). P4+Q minus new issues is +0.07: the drift cannot be harvested in the secondary book.",
+    "Only 56% of new series ever print on SND, with a median of 23 bdays from settlement to first print; only 27% print within 21 bdays. Among A2's wide issues, 69% never print within the hold. The primary-sleeve result therefore depends on marking: A2 vs P4+Q is +1.31 with model marks, -0.29 with never-printed bonds at cash and +1.79 at par plus carry. Any primary-alpha claim must state its marking convention.",
+    "A2 (primary, concession > 50, screens) is +1.31%/yr vs P4+Q (NW t 2.98). The halves are +0.96 (2022–23) and +1.67 (2024–25); 50 bps gives +1.45, rec40 +1.35, vs P7 +0.81 (t 1.6), and excluding the top-10 issuers +1.33. About half is carry: P4+Q restricted to spreads of at least 260 bps (A2's median issue spread) earns +0.74 (t 3.5). Spread-matched random new issues earn +0.59 (p95 +0.91).",
+    "Every new issue bought blindly (A0) loses -1.39%/yr vs P4+Q (t -2.5). Random new issues, the placebo with the same count per month as A1, lose -1.47 (p95 -1.07). Being in the primary market is not an edge in itself; selection by carry is.",
+    "Realistic sizing makes it immaterial. P4+Q with a 20% A2 sleeve adds +0.27%/yr (t 2.98) at a 100% fill and only +0.08 at a 30% fill (+0.09 at 50 bps).",
+    "Sealed 2026 holdout (9 months, read once): A2 is +2.49%/yr vs P4+Q (t 4.1), and +1.48 (t 2.3) even with never-printed bonds at cash. The blend adds +0.50, P7 +0.68, and the harness all-new-issues book -2.41. In the 2026 redemption wave, bonds issued in the last 6 months held up while the seasoned book did not, consistent with a low early default hazard. It is one episode, and part of it is still model-marked.",
+    "2024 was the tight-pricing year. The average concession was 8 bps, the first print was 24 bps wider than issue, and primary buyers lost 1.12% vs peers. ICVM 400 deals (26) were the worst, at -6.4% vs peers; the RCVM 160 automatic rite was mildly positive (+0.37)."
+   ],
+   "signals": [
+    "conc / conc_peer / conc_iss / s_iss / first_time / n_prior_series / regime / deal_size: the new-issue concession and deal descriptors, known at fair_day. Load from data/history/nightly/w2_primary_market_concession/new_issues.pkl, keyed by codigo and cnpj8.",
+    "research/nightly/w2_primary_market_concession/portfolio.py: sleeve(sel, mode='primary'|'secondary', noprint='model'|'carry'|'cash', cost_bps, holdout) is the primary-market sleeve engine, with par entry at settlement; blend(base_daily, sleeve_result, a) combines it with a base book on the same capital; load(holdout) returns new issues with the issuer's EQH/worstQ flags and the universe carry cut.",
+    "research/nightly/w2_primary_market_concession/seasoning.py: add_new(panel, first_print()) adds new_d, the days since a bond's first SND print, to any harness panel. It is a PIT descriptor; new names have a small +0.45%/yr cohort drift vs U that is not harvestable vs P4+Q.",
+    "research/nightly/w2_primary_market_concession/analysis.py: univ_bh() is the buy-and-hold universe cohort benchmark, with members per grid pos, for event studies of bonds bought at a fresh print."
+   ],
+   "caveats": [
+    "Assuming a fill at the bookbuilding (SND contract) rate on every selected deal is optimistic. Hot deals are scaled back and cold deals are filled in full. The 30% fill blend is only a crude haircut, and the primary entry was charged no cost.",
+    "44% of all new series, and 69% of A2's, never print within the hold. These are marked to model (carry minus duration times the change in the peer-bucket median spread), so their credit events stay invisible. This is the stale-mark and survivorship zone, and the result ranges from -0.29 (cash) to +1.79 (par plus carry).",
+    "Settlement is proxied by the registry's accrual start ('Inicio da Rentabilidade'). The fair value and curves are taken on the grid day before it, while the true bookbuilding happens a few days earlier. The contract rate is today's registry rate, which could reflect repactuation for a few series. 12 series that traded before the proxy settlement date were dropped.",
+    "Concession thresholds (0/50 bps) were set after the pre-2026 event study, which is in-sample. A2 has global Holm p 0.067 across 30 variants; within the 11-variant portfolio family alone it would be 0.031."
+   ],
+   "verdicts": [
+    {
+     "refuted": false,
+     "severity": "minor",
+     "problems": [
+      "Mild look-ahead in dur_iss. The duration factor is dur_fp/T_fp, taken from the bond's FIRST SND print, which comes after settlement. It feeds the IPCA/PRE issue-spread conversion, the peer fair-value interpolation (so conc) and the dur x d(peer spread) model mark. Using the default factor for every bond barely changes the selection (1053 of 1064 series in common). But A2 vs P4+Q under the author's model marks falls from +1.31 (t 2.98) to +1.02 (t 1.87, p 0.06). The model-marked leg is sensitive to the duration assumption.",
+      "The eligibility filter drops 12 series that traded before their registry settlement date. This uses post-decision information, but the effect is negligible.",
+      "The model mark for never-printed bonds uses the peer-bucket spread change lagged one day (sp[start-1:e] diffs). The timing is off by one day. It is not a leak."
+     ],
+     "corrected": 1.02
+    }
+   ]
+  }
+ ],
+ "combined": {
+  "slug": "combined",
+  "headline": "P7 beats P4+Q by +0.50%/yr before 2026 (NW t 3.3, Holm p 0.01; +0.47 with realistic costs) and by +0.68%/yr in the sealed 2026 holdout (t 2.2). P7 is P4+Q minus the worst equity-health quintile, weighted by carry, with a liquidity cap for an R$500m fund. The gain comes mostly from avoiding a few blow-ups: without the 3 best months it drops to +0.09.",
+  "beats": true,
+  "best": "P7 (pre-registered). Candidates are P4+Q. Drop P4+Q names in the universe-listed bottom 20% of an equity-health composite: the mean percentile of eq_dd252 (+), -eq_vol63 and eq_r126 (+); unlisted names are kept. Weights are proportional to cdi_bps, with a 5% issuer cap and a cap per position of 25% of 91-day SND volume at R$500m. No timing overlay or hedge. Monthly decisions, 126-bday tranches, 25 bps.",
+  "metrics": {
+   "diff_vs_p4q_ann_pct": 0.5003,
+   "excess_vs_universe_ann_pct": 1.6167,
+   "t_vs_p4q": 3.29,
+   "holm_p": 0.01,
+   "sharpe": 2.7,
+   "max_dd_pct": -1,
+   "n_variants_tried": 11,
+   "net50_diff_vs_p4q_ann_pct": 0.4755
+  },
+  "insights": [
+   "The wave-1 avoid signals largely capture the same thing. On P4+Q rows the Jaccard overlaps of the dropped sets are: equity-health/zoo 0.29, equity-health/events 0.26, events/supply 0.19. Names flagged by only one signal do not underperform (6-month return relative to P4+Q of -0.02 to +0.33%), while names flagged by 3 or more signals underperform by -1.36%. Adding every flag (V6) removes 33% of the book and does 0.14%/yr worse than P7.",
+   "The screen and the construction do different jobs, and together they give +0.50. The equity-health screen alone gives +0.38 (t 2.1) and cuts maxDD from -1.39 to -0.70. The carry and liquidity construction alone gives +0.19. Ablations vs P7: no screen -0.32, EW instead of the carry tilt -0.22 (t -3.1), no Q filter -0.10.",
+   "The liquidity cap costs about 0.43%/yr: the uncapped carry version gets +0.93 vs P4+Q. In exchange, the share of weight above the R$500m liquidity limit falls from 17% (P4+Q) and 28% (uncapped) to 0.3%. Capacity decays slowly: +0.56 at R$100m, +0.50 at R$500m, +0.35 at R$1bn, +0.34 at R$2bn.",
+   "Under honest assumptions (bias_audit liquidity-bucket costs plus harsh survivorship, where every stopped bond below 0.98 goes to 40%), levels fall: P7 +1.77%/yr over CDI, P4+Q +1.04, universe +0.32. The gap vs P4+Q widens to +0.73 (t 3.4), because P7 avoids more of the bonds that later go silent.",
+   "Timing and hedging still subtract even inside the combined book. The IDA-DI mom63 entry gate costs 0.39 and the Ibov-slump entry gate costs 0.23 (t -2.5), although both reduce drawdown.",
+   "A placebo that drops the same number of listed P4+Q names at random, with the same construction, gives a mean of +0.16 and a p95 of +0.25, against +0.50 actual. Part of any listed-name exclusion gain is a mechanical tilt toward unlisted names.",
+   "The gain is fragile. By year it is 2022 +0.09, 2023 +0.66, 2024 +1.19, 2025 +0.07. Excluding the best 3 months (2024-12, 2025-04, 2023-01) leaves +0.09 (t 0.46). Dropping the top-5 or top-10 contributing issuers from both books leaves +0.24 (t 2.3) and +0.10 (t 0.9).",
+   "Sealed holdout (2026-01..09, run once): P7 +0.76%/yr over CDI, P4+Q +0.08, P4 -0.73, universe -3.26, IDA-DI +0.53. P7 vs P4+Q is +0.68 (t 2.2), +0.65 at 50 bps and +0.60 with liquidity-bucket costs, positive in 6 of 9 months, with maxDD -0.67."
+  ],
+  "signals": [
+   "P7 weights: research/nightly/combined/p7.py::signals(panel=None, holdout=False) returns (day, codigo, weight); make_signal(screen, construct, aum, base, gate) builds any variant for H.backtest(as_weights=True, issuer_cap=1.0)",
+   "Equity-health composite: p7.eqh_score(x) / p7.flag_eqh(x, q=0.2), where x is one decision cross-section of the harness panel",
+   "Liquidity-capped carry weights: p7.carry_weights(x, sel, aum=500e6, part=0.25, icap=0.05, mode='carry'|'ew'|'top25') and p7.waterfill()",
+   "Wave-1 flags on one panel: p7.flag_zoo, p7.flag_events (event_driven NegEvents), p7.flag_supply (alt_signals sup_iss_90d>0); p7.load(holdout) merges them together with liquidity",
+   "Realistic-cost and harsh-survivorship stress for any signal: run.py::cost_vector(P), harsh_R(), engine_run(fn, P, cost_b=..., R=...)"
+  ],
+  "caveats": [
+   "The components were chosen after reading wave-1 results on the same 2022-25 sample, so the Holm p of 0.01 over 12 rows understates the real search (more than 300 variants in wave 1). The 9-month holdout is the only clean test.",
+   "The edge is concentrated in a few blow-up avoidances in 2023-24. Without the 3 best months the gain is +0.09 (t 0.46); without the top-10 contributing issuers it is +0.10.",
+   "Smooth, stale, survivorship-biased marks inflate t and Sharpe. The harness also has a holiday-accrual bug worth about -0.13%/yr on levels (bias_audit).",
+   "The screen only sees listed issuers (about 41% of P4+Q). The unlisted tail is unscreened, and removing listed names mechanically tilts the book toward the unlisted zone where the survivorship bias lives."
+  ],
+  "verdicts": []
+ }
+}

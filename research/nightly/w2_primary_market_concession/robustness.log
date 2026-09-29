@@ -1,0 +1,24 @@
+dropped (traded before the registry settlement date): 12
+                                                               ann_excess_%  diff_ann_%  diff_t_nw  diff_p  diff_h1_%  diff_h2_%  vol_%  max_dd_%   n_pos
+A2_base                                                               3.531       1.313      2.984   0.003      0.959      1.667  1.747    -2.095  1064.0
+A2_printed_only(LOOKAHEAD split)                                      4.568       2.350      4.539   0.000      2.004      2.695  1.436    -0.491   327.0
+A2_unprinted_only(LOOKAHEAD split)                                    2.608       0.389      0.643   0.520      0.157      0.621  2.174    -2.872   737.0
+A2_noprint_cash                                                       1.931      -0.287     -0.553   0.580     -0.243     -0.331  0.671    -0.231  1064.0
+A2_noprint_carry                                                      4.008       1.790      3.596   0.000      2.229      1.350  0.647     0.000  1064.0
+B2_sec_conc50_scr                                                     4.026       1.808      2.516   0.012      0.664      2.951  2.502    -2.321   164.0
+A2_no_screens                                                         3.702       1.484      3.553   0.000      1.114      1.853  1.721    -1.926  1140.0
+A2_conc_peer_only>50                                                  3.518       1.300      2.943   0.003      0.933      1.667  1.680    -2.089  1089.0
+A2_conc>100                                                           3.787       1.569      3.201   0.001      1.074      2.065  1.901    -2.191   670.0
+A2_conc>25                                                            3.319       1.101      2.542   0.011      0.634      1.567  1.674    -2.137  1258.0
+A2_hold63                                                             3.163       0.945      1.677   0.094      0.021      1.868  2.487    -2.906  1064.0
+A2_hold252                                                            3.127       0.909      1.981   0.048      0.355      1.462  1.488    -1.926  1064.0
+carry_matched_new_issues(s_iss>=A2 median, any conc)                  3.370       1.152      1.556   0.120      1.054      1.251  2.324    -2.823   604.0
+harness: P4Q & cdi_bps >= A2 median spread                            2.956       0.738      3.500   0.000      0.487      0.989  1.073    -0.618     NaN
+harness: U & cdi_bps >= A2 median spread (not rich, press ok)         2.381       0.162      0.583   0.560      0.099      0.226  1.262    -1.065     NaN
+A2_ex_top10_issuers_by_count                                          3.546       1.328      2.963   0.003      0.932      1.723  1.758    -2.095     NaN
+_A2_median_issue_spread_bps 260.0
+_A2_share_printed_within_hold 0.3073308270676692
+_exit_reason_printed {'01/08/1998 - VENCIMENTO': 1}
+_exit_reason_unprinted {}
+_A2_vsP4Q_by_year_% {2022: 2.025, 2023: -0.106, 2024: 2.262, 2025: 1.071}
+_placebo_spread_matched_random_new_issues_vsP4Q {'mean': 0.5929533333333333, 'p95': 0.914345, 'actual': 1.3129}

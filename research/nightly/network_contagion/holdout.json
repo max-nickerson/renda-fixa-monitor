@@ -1,0 +1,22 @@
+{
+ "avoid_exposure_stress_q5": {
+  "exCDI_%": 0.0235,
+  "vs_p4q_%": -0.0564,
+  "t_vs_p4q": -0.7786,
+  "vs_u_%": 3.2846,
+  "n_months": null
+ },
+ "avoid_any_neighbour": {
+  "exCDI_%": 0.1273,
+  "vs_p4q_%": 0.0473,
+  "t_vs_p4q": 0.1607,
+  "vs_u_%": 3.3884,
+  "n_months": null
+ },
+ "P4Q": {
+  "exCDI_%": 0.08
+ },
+ "U": {
+  "exCDI_%": -3.2611
+ }
+}

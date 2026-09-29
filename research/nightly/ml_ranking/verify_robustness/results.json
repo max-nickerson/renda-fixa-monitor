@@ -1,0 +1,228 @@
+{
+ "reproduce_25": {
+  "ann_excess_%": 2.3898,
+  "diff_ann_%": 0.1716,
+  "diff_t_nw": 2.1787,
+  "diff_h1_%": 0.0136,
+  "diff_h2_%": 0.3295,
+  "diff_te_%": 0.1263
+ },
+ "reproduce_50": {
+  "ann_%": 0.17,
+  "t_nw": 2.14,
+  "n": 48,
+  "hit": 0.667
+ },
+ "turnover": {
+  "tilt": 2.956071166677865,
+  "p4q": 2.9446489721011804,
+  "tilt_cost_ann": 0.36950889583473306,
+  "p4q_cost_ann": 0.36808112151264755,
+  "n_avg": 103.29166666666667
+ },
+ "slices": {
+  "all": {
+   "ann_%": 0.1716,
+   "t_nw": 2.18,
+   "n": 48,
+   "hit": 0.667
+  },
+  "ex_2023": {
+   "ann_%": 0.2317,
+   "t_nw": 2.39,
+   "n": 36,
+   "hit": 0.75
+  },
+  "ex_2022_23": {
+   "ann_%": 0.3295,
+   "t_nw": 3.04,
+   "n": 24,
+   "hit": 0.792
+  },
+  "only_2024": {
+   "ann_%": 0.535,
+   "t_nw": 5.11,
+   "n": 12,
+   "hit": 1.0
+  },
+  "only_2025": {
+   "ann_%": 0.124,
+   "t_nw": 1.69,
+   "n": 12,
+   "hit": 0.583
+  },
+  "ex_2023H1_crisis": {
+   "ann_%": 0.1927,
+   "t_nw": 2.23,
+   "n": 42,
+   "hit": 0.69
+  },
+  "ex_best_3_months": {
+   "ann_%": 0.1124,
+   "t_nw": 1.99,
+   "n": 45,
+   "hit": 0.644
+  }
+ },
+ "top_months": {
+  "2024-12-01": 0.0962,
+  "2024-04-01": 0.0907,
+  "2024-10-01": 0.0777,
+  "2024-02-01": 0.0692,
+  "2025-04-01": 0.0666,
+  "2022-06-01": 0.0614
+ },
+ "issuer_contrib_top10": {
+  "12104241": 0.5913,
+  "12647827": 0.5809,
+  "61486650": 0.5231,
+  "12979552": 0.2917,
+  "09074183": 0.1865,
+  "09114805": 0.1791,
+  "08402943": 0.1759,
+  "27831352": 0.1651,
+  "15385166": 0.1391,
+  "33376989": 0.1386
+ },
+ "issuer_contrib_total": 3.7303,
+ "issuer_contrib_share_top5": 0.583,
+ "ex_top5_issuers": {
+  "ann_%": 0.0741,
+  "t_nw": 1.47,
+  "n": 48,
+  "hit": 0.646
+ },
+ "ex_top10_issuers": {
+  "ann_%": 0.0516,
+  "t_nw": 1.04,
+  "n": 48,
+  "hit": 0.625
+ },
+ "variants_vs_p4q": {
+  "base0.5_pct_universe(claimed)": {
+   "ann_%": 0.1716,
+   "t_nw": 2.18,
+   "n": 48,
+   "hit": 0.667
+  },
+  "base1.0": {
+   "ann_%": 0.1229,
+   "t_nw": 2.19,
+   "n": 48,
+   "hit": 0.667
+  },
+  "base0.25": {
+   "ann_%": 0.2141,
+   "t_nw": 2.17,
+   "n": 48,
+   "hit": 0.667
+  },
+  "pct_within_p4q": {
+   "ann_%": 0.2639,
+   "t_nw": 2.06,
+   "n": 48,
+   "hit": 0.646
+  },
+  "rank_squared": {
+   "ann_%": 0.2337,
+   "t_nw": 2.01,
+   "n": 48,
+   "hit": 0.646
+  },
+  "ctrl_cdi_bps": {
+   "ann_%": 0.0623,
+   "t_nw": 5.22,
+   "n": 48,
+   "hit": 0.771
+  },
+  "ctrl_cdi_x_dur": {
+   "ann_%": 0.0977,
+   "t_nw": 1.42,
+   "n": 48,
+   "hit": 0.604
+  },
+  "ctrl_cdi_vs_kind": {
+   "ann_%": 0.0906,
+   "t_nw": 2.96,
+   "n": 48,
+   "hit": 0.667
+  },
+  "ctrl_cdi_vs_peer": {
+   "ann_%": 0.0764,
+   "t_nw": 3.13,
+   "n": 48,
+   "hit": 0.667
+  },
+  "ctrl_resid_z": {
+   "ann_%": 0.0764,
+   "t_nw": 3.23,
+   "n": 48,
+   "hit": 0.688
+  },
+  "ctrl_peercarry+resid": {
+   "ann_%": 0.0737,
+   "t_nw": 3.39,
+   "n": 48,
+   "hit": 0.646
+  }
+ },
+ "ml_vs_controls": {
+  "ctrl_cdi_bps": {
+   "ann_%": 0.1093,
+   "t_nw": 1.41,
+   "n": 48,
+   "hit": 0.604
+  },
+  "ctrl_cdi_x_dur": {
+   "ann_%": 0.0739,
+   "t_nw": 2.05,
+   "n": 48,
+   "hit": 0.542
+  },
+  "ctrl_cdi_vs_kind": {
+   "ann_%": 0.081,
+   "t_nw": 1.41,
+   "n": 48,
+   "hit": 0.521
+  },
+  "ctrl_cdi_vs_peer": {
+   "ann_%": 0.0952,
+   "t_nw": 1.4,
+   "n": 48,
+   "hit": 0.604
+  },
+  "ctrl_resid_z": {
+   "ann_%": 0.0951,
+   "t_nw": 1.17,
+   "n": 48,
+   "hit": 0.625
+  },
+  "ctrl_peercarry+resid": {
+   "ann_%": 0.0978,
+   "t_nw": 1.31,
+   "n": 48,
+   "hit": 0.625
+  }
+ },
+ "placebo_random_tilt": {
+  "n": 100,
+  "mean": -0.0132,
+  "p95": 0.0299,
+  "p99": 0.0601,
+  "sd": 0.0323,
+  "p_value": 0.0
+ },
+ "lagged6m_score_tilt": {
+  "ann_%": 0.1385,
+  "t_nw": 3.3,
+  "n": 48,
+  "hit": 0.604
+ },
+ "multiple_testing": {
+  "raw_p": 0.0293,
+  "bonferroni_51": 1.0,
+  "bonferroni_51x6trials_tuned_models": 1.0,
+  "note": "Best-of-51 selection; tuned hyperparameters (6 optuna trials per model), 4 overlay forms and 13 score sources chosen jointly. Holm over 51 already = 1.0."
+ },
+ "runtime_s": 208.8
+}

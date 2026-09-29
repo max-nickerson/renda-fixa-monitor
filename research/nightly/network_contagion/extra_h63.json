@@ -1,0 +1,34 @@
+{
+ "sector_mom_drop_bottom_q": {
+  "exCDI_%": 2.3064,
+  "exU_%": 1.0266,
+  "t_vsU": 2.5618,
+  "vs_bench_%": 0.0422,
+  "t_vs_bench": 0.4065,
+  "p_vs_bench": 0.6843,
+  "vol_%": 1.219,
+  "sharpe": 1.892,
+  "maxDD_%": -1.8518,
+  "h1_vs_bench": -0.2035,
+  "h2_vs_bench": 0.2879,
+  "turnover": 5.1617,
+  "n_avg": 85.7083,
+  "p_holm": 0.6843
+ },
+ "avoid_exposure_stress_q5": {
+  "exCDI_%": 2.3844,
+  "exU_%": 1.1046,
+  "t_vsU": 2.6248,
+  "vs_bench_%": 0.1202,
+  "t_vs_bench": 1.3438,
+  "p_vs_bench": 0.179,
+  "vol_%": 1.277,
+  "sharpe": 1.8672,
+  "maxDD_%": -1.8318,
+  "h1_vs_bench": -0.0106,
+  "h2_vs_bench": 0.251,
+  "turnover": 5.3711,
+  "n_avg": 81.3542,
+  "p_holm": 0.358
+ }
+}

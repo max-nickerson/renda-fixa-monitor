@@ -1,0 +1,18 @@
+dropped (traded before the registry settlement date): 12
+                                 exCDI_%  vsP4Q_%      t  vsU_%  n_months
+A0_prim_all                       -1.425   -1.505 -1.768  1.836       9.0
+A1_prim_conc0_scr                  1.937    1.857  2.579  5.198       9.0
+A2_prim_conc50_scr                 2.570    2.490  4.101  5.832       9.0
+A3_prim_top30carry_scr             2.717    2.637  3.254  5.978       9.0
+A4_prim_incent_conc0_scr          -0.890   -0.970 -0.474  2.371       9.0
+A5_prim_firsttime_conc0_scr        2.062    1.982  2.512  5.323       9.0
+A6_prim_conc0_scr_noprint_cash     1.053    0.973  1.531  4.314       9.0
+A7_prim_conc0_scr_noprint_carry    2.564    2.484  4.102  5.825       9.0
+A8_prim_conc0_scr_printed21        3.163    3.083  5.626  6.424       9.0
+B1_sec_conc0_scr                   1.567    1.487  2.235  4.828       9.0
+B3_sec_top30carry_scr              2.908    2.828  4.775  6.169       9.0
+P7                                 0.759    0.679  2.248  4.020       9.0
+P4Q                                0.080      NaN    NaN    NaN       NaN
+avg share of universe that is new (<=31d): 0.038
+dropped (traded before the registry settlement date): 12
+{'C1_new31_all': {'exCDI_%': -2.3262, 'vsP4Q_%': -2.4062, 't': -2.7571}, 'C2_new31_p4': {'exCDI_%': 1.8676, 'vsP4Q_%': 1.7877, 't': 2.5847}, 'C3_p4q_plus_new31': {'exCDI_%': 0.0798, 'vsP4Q_%': -0.0002, 't': -0.0172}, 'C4_p4q_ex_new92': {'exCDI_%': -0.0946, 'vsP4Q_%': -0.1746, 't': -1.8431}} {'vsP4Q_%': 0.5007, 't': 4.1447, 'exCDI_%': 0.5807} {'vsP4Q_%': 1.4837, 't': 2.3026, 'exCDI_%': 1.5637}

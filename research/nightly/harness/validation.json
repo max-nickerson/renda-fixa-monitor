@@ -1,0 +1,629 @@
+{
+ "panel": {
+  "M": {
+   "rows": 48339,
+   "dates": 58,
+   "cols": 113,
+   "univ_rows": 36998,
+   "MB": 43
+  },
+  "W": {
+   "rows": 210973,
+   "dates": 253,
+   "cols": 113,
+   "univ_rows": 160603,
+   "MB": 178
+  },
+  "coverage_univ_rows": {
+   "fundamentals": 0.8328,
+   "listed_equity": 0.6293,
+   "weekly_extras(trades_30d)": 0.9965,
+   "sector_known": 1.0
+  },
+  "columns": [
+   "codigo",
+   "day",
+   "date",
+   "ratio",
+   "cdi_bps",
+   "dur",
+   "kind",
+   "contract",
+   "incent",
+   "bench_rate",
+   "age",
+   "ret",
+   "fresh",
+   "peer",
+   "resid_bps",
+   "resid_z",
+   "eligible",
+   "cdi_pct",
+   "cnpj8",
+   "distress_2d",
+   "fact_2d",
+   "press_neg_7d",
+   "press_neg_30d",
+   "rat_days_since_down",
+   "eq_ret_1w",
+   "eq_ret_4w",
+   "mkt_mom_21",
+   "b",
+   "dpos",
+   "univ",
+   "entry_pos",
+   "executed",
+   "fwd_21",
+   "fwd_63",
+   "fwd_126",
+   "fwd_252",
+   "fwd_21_rec40",
+   "fwd_63_rec40",
+   "fwd_126_rec40",
+   "fwd_252_rec40",
+   "lab_end_21",
+   "dok_21",
+   "lab_end_63",
+   "dok_63",
+   "lab_end_126",
+   "dok_126",
+   "lab_end_252",
+   "dok_252",
+   "dist_stop_LOOKAHEAD",
+   "trades_30d",
+   "own_z",
+   "d_spread_4w",
+   "d_spread_1w",
+   "d_ratio_4w",
+   "carry_per_dur",
+   "n_fact_30d",
+   "n_fact_90d",
+   "n_distress_30d",
+   "n_distress_90d",
+   "n_deb_mtg_30d",
+   "n_deb_mtg_90d",
+   "n_rating_30d",
+   "n_rating_90d",
+   "n_oficio_30d",
+   "n_oficio_90d",
+   "days_since_distress",
+   "news_any_30d",
+   "distress_90d",
+   "mkt_distress_z",
+   "maturity",
+   "years_to_mat",
+   "f_lev",
+   "f_cov",
+   "f_cash_st",
+   "f_eq_ratio",
+   "f_gde",
+   "f_margin",
+   "f_rev_g",
+   "f_d_lev",
+   "f_d_cov",
+   "f_size",
+   "f_is_parent",
+   "f_age_days",
+   "f_source",
+   "covered",
+   "f_quality",
+   "worstQ",
+   "eq_ticker",
+   "eq_map_type",
+   "eq_confidence",
+   "eq_r5",
+   "eq_r21",
+   "eq_r63",
+   "eq_r126",
+   "eq_r252",
+   "eq_vol63",
+   "eq_dd252",
+   "eq_adtv",
+   "listed",
+   "idadi_x21",
+   "idadi_x63",
+   "ibov_x21",
+   "ibov_x63",
+   "ida_regime",
+   "cdi_ann",
+   "univ_cdi_med",
+   "univ_cdi_iqr",
+   "sector",
+   "p4f",
+   "p4",
+   "p4q",
+   "rich",
+   "decision_end_ok"
+  ]
+ },
+ "pre2026_baselines_25bps": {
+  "U": {
+   "exCDI_%": 1.1018,
+   "exU_%": 0.0,
+   "t_vsU": null,
+   "vs_bench_%": -1.1165,
+   "t_vs_bench": -2.4091,
+   "p_vs_bench": 0.016,
+   "vol_%": 1.498,
+   "sharpe": 0.7355,
+   "maxDD_%": -3.5071,
+   "h1_vs_bench": -1.6292,
+   "h2_vs_bench": -0.6037,
+   "turnover": 1.6738,
+   "n_avg": 698.5,
+   "p_holm": 0.048
+  },
+  "P4": {
+   "exCDI_%": 1.8897,
+   "exU_%": 0.7879,
+   "t_vsU": 1.588,
+   "vs_bench_%": -0.3286,
+   "t_vs_bench": -2.2746,
+   "p_vs_bench": 0.0229,
+   "vol_%": 1.0464,
+   "sharpe": 1.8058,
+   "maxDD_%": -1.5639,
+   "h1_vs_bench": -0.2956,
+   "h2_vs_bench": -0.3615,
+   "turnover": 2.738,
+   "n_avg": 129.5208,
+   "p_holm": 0.048
+  },
+  "P4Q": {
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": null,
+   "p_vs_bench": null,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": null
+  },
+  "P4_live": {
+   "exCDI_%": 1.3209,
+   "exU_%": 0.2191,
+   "t_vsU": 0.2865,
+   "vs_bench_%": -0.8973,
+   "t_vs_bench": -1.7891,
+   "p_vs_bench": 0.0736,
+   "vol_%": 0.9688,
+   "sharpe": 1.3634,
+   "maxDD_%": -1.0935,
+   "h1_vs_bench": 0.1734,
+   "h2_vs_bench": -1.9681,
+   "turnover": 2.662,
+   "n_avg": 128.4641,
+   "p_holm": 0.0736
+  }
+ },
+ "pre2026_baselines_vs_P4": {
+  "U": {
+   "exCDI_%": 1.1018,
+   "exU_%": 0.0,
+   "t_vsU": null,
+   "vs_bench_%": -0.7879,
+   "t_vs_bench": -1.588,
+   "p_vs_bench": 0.1123,
+   "vol_%": 1.498,
+   "sharpe": 0.7355,
+   "maxDD_%": -3.5071,
+   "h1_vs_bench": -1.3336,
+   "h2_vs_bench": -0.2423,
+   "turnover": 1.6738,
+   "n_avg": 698.5,
+   "p_holm": 0.2246
+  },
+  "P4Q": {
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.3286,
+   "t_vs_bench": 2.2746,
+   "p_vs_bench": 0.0229,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.2956,
+   "h2_vs_bench": 0.3615,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": 0.0687
+  },
+  "P4_live": {
+   "exCDI_%": 1.3209,
+   "exU_%": 0.2191,
+   "t_vsU": 0.2865,
+   "vs_bench_%": -0.5688,
+   "t_vs_bench": -1.2122,
+   "p_vs_bench": 0.2254,
+   "vol_%": 0.9688,
+   "sharpe": 1.3634,
+   "maxDD_%": -1.0935,
+   "h1_vs_bench": 0.4691,
+   "h2_vs_bench": -1.6066,
+   "turnover": 2.662,
+   "n_avg": 128.4641,
+   "p_holm": 0.2254
+  }
+ },
+ "pre2026_baselines_detail(diff=vs U)": {
+  "U": {
+   "ann_excess_%": 1.1018,
+   "vol_%": 1.498,
+   "sharpe": 0.7355,
+   "max_dd_%": -3.5071,
+   "worst_month_%": -1.1453,
+   "t_nw": 1.0943,
+   "h1_2022_23_%": -0.1469,
+   "h2_2024_25_%": 2.3505,
+   "diff_ann_%": 0.0,
+   "diff_t_nw": null,
+   "n_months": 48,
+   "period": "2022-01..2025-12",
+   "turnover_ann": 1.6738,
+   "cost_ann_pct": 0.2092,
+   "n_avg": 698.5,
+   "avg_exposure": 0.9346
+  },
+  "P4": {
+   "ann_excess_%": 1.8897,
+   "vol_%": 1.0464,
+   "sharpe": 1.8058,
+   "max_dd_%": -1.5639,
+   "worst_month_%": -0.6571,
+   "t_nw": 2.7284,
+   "h1_2022_23_%": 1.1866,
+   "h2_2024_25_%": 2.5927,
+   "diff_ann_%": 0.7879,
+   "diff_t_nw": 1.588,
+   "n_months": 48,
+   "period": "2022-01..2025-12",
+   "turnover_ann": 2.738,
+   "cost_ann_pct": 0.3423,
+   "n_avg": 129.5208,
+   "avg_exposure": 0.9104
+  },
+  "P4Q": {
+   "ann_excess_%": 2.2182,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "max_dd_%": -1.3929,
+   "worst_month_%": -0.6227,
+   "t_nw": 3.1386,
+   "h1_2022_23_%": 1.4823,
+   "h2_2024_25_%": 2.9542,
+   "diff_ann_%": 1.1165,
+   "diff_t_nw": 2.4091,
+   "n_months": 48,
+   "period": "2022-01..2025-12",
+   "turnover_ann": 2.9446,
+   "cost_ann_pct": 0.3681,
+   "n_avg": 103.2917,
+   "avg_exposure": 0.9075
+  },
+  "P4_live": {
+   "ann_excess_%": 1.3209,
+   "vol_%": 0.9688,
+   "sharpe": 1.3634,
+   "max_dd_%": -1.0935,
+   "worst_month_%": -0.4334,
+   "t_nw": 2.1479,
+   "h1_2022_23_%": 1.6557,
+   "h2_2024_25_%": 0.9861,
+   "diff_ann_%": 0.2191,
+   "diff_t_nw": 0.2865,
+   "n_months": 48,
+   "period": "2022-01..2025-12",
+   "turnover_ann": 2.662,
+   "cost_ann_pct": 1.0986,
+   "n_avg": 128.4641,
+   "avg_exposure": 0.7807
+  }
+ },
+ "pre2026_sensitivities": {
+  "50bps": {
+   "U": {
+    "exCDI_%": 0.8854,
+    "vs_U_%": 0.0,
+    "P4Q_vs_P4_%": 0.3017
+   },
+   "P4": {
+    "exCDI_%": 1.5354,
+    "vs_U_%": 0.65,
+    "P4Q_vs_P4_%": 0.3017
+   },
+   "P4Q": {
+    "exCDI_%": 1.8371,
+    "vs_U_%": 0.9518,
+    "P4Q_vs_P4_%": 0.3017
+   }
+  },
+  "rec40": {
+   "U": {
+    "exCDI_%": 1.0735,
+    "vs_U_%": 0.0,
+    "P4Q_vs_P4_%": 0.3871
+   },
+   "P4": {
+    "exCDI_%": 1.7986,
+    "vs_U_%": 0.7251,
+    "P4Q_vs_P4_%": 0.3871
+   },
+   "P4Q": {
+    "exCDI_%": 2.1858,
+    "vs_U_%": 1.1123,
+    "P4Q_vs_P4_%": 0.3871
+   }
+  },
+  "hold63": {
+   "U": {
+    "exCDI_%": 1.2799,
+    "vs_U_%": 0.0,
+    "P4Q_vs_P4_%": 0.2499
+   },
+   "P4": {
+    "exCDI_%": 2.0143,
+    "vs_U_%": 0.7344,
+    "P4Q_vs_P4_%": 0.2499
+   },
+   "P4Q": {
+    "exCDI_%": 2.2643,
+    "vs_U_%": 0.9844,
+    "P4Q_vs_P4_%": 0.2499
+   }
+  },
+  "hold252": {
+   "U": {
+    "exCDI_%": 1.1404,
+    "vs_U_%": 0.0,
+    "P4Q_vs_P4_%": 0.2218
+   },
+   "P4": {
+    "exCDI_%": 2.1474,
+    "vs_U_%": 1.007,
+    "P4Q_vs_P4_%": 0.2218
+   },
+   "P4Q": {
+    "exCDI_%": 2.3692,
+    "vs_U_%": 1.2288,
+    "P4Q_vs_P4_%": 0.2218
+   }
+  },
+  "weekly_tranche_hold126": {
+   "U": {
+    "exCDI_%": 1.0732,
+    "vs_U_%": 0.0,
+    "P4Q_vs_P4_%": 0.2286
+   },
+   "P4": {
+    "exCDI_%": 2.0473,
+    "vs_U_%": 0.9741,
+    "P4Q_vs_P4_%": 0.2286
+   },
+   "P4Q": {
+    "exCDI_%": 2.2759,
+    "vs_U_%": 1.2027,
+    "P4Q_vs_P4_%": 0.2286
+   }
+  }
+ },
+ "pre2026_engine_variants": {
+  "P4 monthly replace-the-book": {
+   "exCDI_%": 1.6276,
+   "vs_P4_tranche_%": -0.2621,
+   "t": -1.1009,
+   "turnover": 8.4299,
+   "cost_%": 1.0537,
+   "avg_expo": 0.9594
+  },
+  "P4 monthly sticky (sell when rich)": {
+   "exCDI_%": 2.0197,
+   "vs_P4_tranche_%": 0.13,
+   "t": 0.713,
+   "turnover": 2.2929,
+   "cost_%": 0.2866,
+   "avg_expo": 0.9849
+  },
+  "P4 weekly sticky (sell when rich)": {
+   "exCDI_%": 1.6116,
+   "vs_P4_tranche_%": -0.278,
+   "t": -1.2505,
+   "turnover": 2.662,
+   "cost_%": 0.3328,
+   "avg_expo": 0.9937
+  },
+  "P4 tranche 126 + IDA overlay": {
+   "exCDI_%": 1.5826,
+   "vs_P4_tranche_%": -0.3071,
+   "t": -0.77,
+   "turnover": 2.738,
+   "cost_%": 1.042,
+   "avg_expo": 0.716
+  },
+  "P4 tranche 126 + sell when rich (weekly checks)": {
+   "exCDI_%": 1.9474,
+   "vs_P4_tranche_%": 0.0578,
+   "t": 0.9342,
+   "turnover": 2.765,
+   "cost_%": 0.3522,
+   "avg_expo": 0.8957
+  }
+ },
+ "pre2026_cohort_level": {
+  "63": {
+   "P4_vs_U_ann_%": 0.7927,
+   "P4Q_vs_U_ann_%": 0.9897,
+   "P4Q_minus_P4_t_nw": 1.6887,
+   "n_cohorts": 45
+  },
+  "126": {
+   "P4_vs_U_ann_%": 0.8392,
+   "P4Q_vs_U_ann_%": 1.1874,
+   "P4Q_minus_P4_t_nw": 2.4383,
+   "n_cohorts": 42
+  },
+  "252": {
+   "P4_vs_U_ann_%": 0.8824,
+   "P4Q_vs_U_ann_%": 1.1505,
+   "P4Q_minus_P4_t_nw": 3.8158,
+   "n_cohorts": 36
+  }
+ },
+ "pre2026_placebo_P4Q_random_same_size": {
+  "actual": 2.2182,
+  "null_mean": 0.8228,
+  "null_p95": 0.947
+ },
+ "pre2026_ic_fwd126": {
+  "cdi_bps": {
+   "mean": 0.1416,
+   "t_nw": 1.4947,
+   "n_dates": 52
+  },
+  "resid_bps": {
+   "mean": 0.2091,
+   "t_nw": 11.5304,
+   "n_dates": 52
+  },
+  "f_quality": {
+   "mean": 0.0176,
+   "t_nw": 1.2058,
+   "n_dates": 52
+  },
+  "eq_r63": {
+   "mean": 0.0749,
+   "t_nw": 3.3418,
+   "n_dates": 46
+  },
+  "trades_30d": {
+   "mean": 0.0107,
+   "t_nw": 0.1723,
+   "n_dates": 52
+  }
+ },
+ "reproduction_incl_2026": {
+  "U": {
+   "exCDI_%": 0.4129,
+   "vol_%": 1.6697,
+   "sharpe": 0.2473,
+   "maxDD_%": -3.581,
+   "vs_P4_%": -1.0635,
+   "t": -2.1641,
+   "period": "2022-01..2026-09"
+  },
+  "P4": {
+   "exCDI_%": 1.4764,
+   "vol_%": 1.1183,
+   "sharpe": 1.3202,
+   "maxDD_%": -1.5639,
+   "vs_P4_%": 0.0,
+   "t": null,
+   "period": "2022-01..2026-09"
+  },
+  "P4Q": {
+   "exCDI_%": 1.8806,
+   "vol_%": 1.0886,
+   "sharpe": 1.7276,
+   "maxDD_%": -1.3929,
+   "vs_P4_%": 0.4042,
+   "t": 3.0294,
+   "period": "2022-01..2026-09"
+  },
+  "HY_lab_published": {
+   "U": 0.45,
+   "P4": 1.53,
+   "P4Q": 1.94,
+   "P4Q_vs_P4": "+0.41 (t 2.9)",
+   "vol P4": 1.09,
+   "maxDD P4": -1.52
+  },
+  "cohort_P4_vs_U_incl_2026": {
+   "63": 1.017,
+   "126": 0.9636,
+   "252": 0.951
+  },
+  "selection_lab_published_P4_vs_U": {
+   "63": 1.23,
+   "126": 1.1,
+   "252": 1.07
+  }
+ },
+ "timing_s": {
+  "core": 0.09,
+  "load_panel_M": 0.53,
+  "load_panel_W": 1.7,
+  "baseline_U": 3.46,
+  "baseline_P4": 1.22,
+  "baseline_P4Q": 1.11,
+  "baseline_P4_live": 5.28,
+  "U_50bps": 3.17,
+  "P4_50bps": 1.21,
+  "P4Q_50bps": 1.11,
+  "U_rec40": 3.24,
+  "P4_rec40": 1.2,
+  "P4Q_rec40": 1.14,
+  "U_hold63": 3.0,
+  "P4_hold63": 1.15,
+  "P4Q_hold63": 1.07,
+  "U_hold252": 3.72,
+  "P4_hold252": 1.29,
+  "P4Q_hold252": 1.21,
+  "U_weekly_tranche_hold126": 15.05,
+  "P4_weekly_tranche_hold126": 6.25,
+  "P4Q_weekly_tranche_hold126": 5.87,
+  "P4 monthly replace-the-book": 0.82,
+  "P4 monthly sticky (sell when rich)": 1.18,
+  "P4 weekly sticky (sell when rich)": 4.55,
+  "P4 tranche 126 + IDA overlay": 1.23,
+  "P4 tranche 126 + sell when rich (weekly checks)": 3.2,
+  "cohort_P4_63": 1.01,
+  "cohort_P4_126": 0.94,
+  "cohort_P4_252": 0.8,
+  "placebo_P4Q_n20": 24.91,
+  "plot": 5.39
+ },
+ "peak_working_set_MB_after_step": {
+  "core": 191,
+  "load_panel_M": 381,
+  "load_panel_W": 1094,
+  "baseline_U": 1094,
+  "baseline_P4": 1094,
+  "baseline_P4Q": 1094,
+  "baseline_P4_live": 1469,
+  "U_50bps": 1469,
+  "P4_50bps": 1469,
+  "P4Q_50bps": 1469,
+  "U_rec40": 1469,
+  "P4_rec40": 1469,
+  "P4Q_rec40": 1469,
+  "U_hold63": 1469,
+  "P4_hold63": 1469,
+  "P4Q_hold63": 1469,
+  "U_hold252": 1469,
+  "P4_hold252": 1469,
+  "P4Q_hold252": 1469,
+  "U_weekly_tranche_hold126": 1469,
+  "P4_weekly_tranche_hold126": 1469,
+  "P4Q_weekly_tranche_hold126": 1469,
+  "P4 monthly replace-the-book": 1469,
+  "P4 monthly sticky (sell when rich)": 1469,
+  "P4 weekly sticky (sell when rich)": 1469,
+  "P4 tranche 126 + IDA overlay": 1469,
+  "P4 tranche 126 + sell when rich (weekly checks)": 1469,
+  "cohort_P4_63": 1469,
+  "cohort_P4_126": 1469,
+  "cohort_P4_252": 1469,
+  "placebo_P4Q_n20": 1469,
+  "plot": 1469
+ },
+ "memory_final": {
+  "peak_working_set_MB": 1469,
+  "current_MB": 891
+ }
+}

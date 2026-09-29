@@ -1,0 +1,89 @@
+[     4s] docs 102359
+[    39s] features (21615, 180)
+[    41s] event ipe:rj 11 {'mean_%': -2.288, 't': -1.97, 'median_%': -1.064} {'mean_bps': 232.7, 'median_bps': 60.6, 't': 1.77, 'n': 10}
+[    42s] event ipe:default_waiver 108 {'mean_%': 0.608, 't': 0.95, 'median_%': 0.0} {'mean_bps': 54.6, 'median_bps': 6.2, 't': 2.36, 'n': 99}
+[    42s] event ipe:liab_mgmt 62 {'mean_%': -0.208, 't': -0.76, 'median_%': -0.174} {'mean_bps': -4.9, 'median_bps': -4.2, 't': -0.2, 'n': 52}
+[    44s] event ipe:call_redeem 212 {'mean_%': 0.228, 't': 0.66, 'median_%': -0.176} {'mean_bps': -0.6, 'median_bps': -1.5, 't': -0.07, 'n': 196}
+[    45s] event ipe:deb_holders 477 {'mean_%': -0.082, 't': -0.39, 'median_%': -0.14} {'mean_bps': 4.0, 'median_bps': 0.7, 't': 0.55, 'n': 444}
+[    49s] event ipe:new_debt 1192 {'mean_%': 0.028, 't': 0.27, 'median_%': -0.174} {'mean_bps': 7.4, 'median_bps': -1.4, 't': 2.06, 'n': 1119}
+[    50s] event ipe:equity_raise 445 {'mean_%': 0.043, 't': 0.32, 'median_%': -0.132} {'mean_bps': -7.5, 'median_bps': -3.7, 't': -1.03, 'n': 405}
+[    52s] event ipe:mna 666 {'mean_%': -0.281, 't': -2.41, 'median_%': -0.244} {'mean_bps': 15.6, 'median_bps': 1.8, 't': 2.87, 'n': 613}
+[    53s] event ipe:capex 357 {'mean_%': -0.1, 't': -1.05, 'median_%': -0.264} {'mean_bps': 18.2, 'median_bps': 2.5, 't': 2.47, 'n': 337}
+[    54s] event ipe:guidance_cut 207 {'mean_%': -0.538, 't': -2.2, 'median_%': -0.181} {'mean_bps': 14.3, 'median_bps': 1.6, 't': 1.44, 'n': 190}
+[    57s] event ipe:dividend 912 {'mean_%': -0.078, 't': -1.35, 'median_%': -0.226} {'mean_bps': 1.6, 'median_bps': -1.4, 't': 0.44, 'n': 855}
+[    58s] event ipe:rating_down 18 {'mean_%': 3.619, 't': 1.01, 'median_%': -0.664} {'mean_bps': 39.4, 'median_bps': 13.7, 't': 0.68, 'n': 18}
+[    59s] event ipe:rating_up 41 {'mean_%': 0.139, 't': 0.63, 'median_%': -0.107} {'mean_bps': -3.6, 'median_bps': 4.6, 't': -0.39, 'n': 36}
+[    61s] event ipe:mgmt_change 871 {'mean_%': -0.069, 't': -0.52, 'median_%': -0.115} {'mean_bps': 4.8, 'median_bps': 0.8, 't': 1.14, 'n': 810}
+[    63s] event ipe:oficio 519 {'mean_%': -0.241, 't': -1.99, 'median_%': -0.237} {'mean_bps': 10.7, 'median_bps': -1.4, 't': 2.12, 'n': 486}
+[    64s] event ipe:litigation 301 {'mean_%': 0.049, 't': 0.18, 'median_%': -0.112} {'mean_bps': 15.2, 'median_bps': 0.8, 't': 1.62, 'n': 279}
+[    65s] event news:rj 121 {'mean_%': -0.002, 't': -0.0, 'median_%': -0.397} {'mean_bps': 7.2, 'median_bps': 1.8, 't': 0.96, 'n': 119}
+[    65s] event news:default_waiver 23 {'mean_%': -0.628, 't': -1.02, 'median_%': -0.004} {'mean_bps': 0.4, 'median_bps': -7.1, 't': 0.03, 'n': 21}
+[    66s] event news:liab_mgmt 26 {'mean_%': 0.253, 't': 0.31, 'median_%': 0.098} {'mean_bps': -45.5, 'median_bps': -14.9, 't': -1.78, 'n': 24}
+[    67s] event news:rating_down 79 {'mean_%': 0.485, 't': 0.56, 'median_%': -0.359} {'mean_bps': 30.5, 'median_bps': -2.6, 't': 1.66, 'n': 77}
+[    68s] event news:litigation 378 {'mean_%': -0.115, 't': -0.49, 'median_%': -0.25} {'mean_bps': 2.8, 'median_bps': -2.1, 't': 0.45, 'n': 355}
+[    69s] event news:guidance_cut 106 {'mean_%': 0.001, 't': 0.01, 'median_%': -0.142} {'mean_bps': -8.9, 'median_bps': -0.8, 't': -0.84, 'n': 99}
+[    70s] event news:mna 132 {'mean_%': -0.349, 't': -2.37, 'median_%': -0.323} {'mean_bps': 13.8, 'median_bps': 5.4, 't': 1.97, 'n': 127}
+[    70s] event news:rating_up 6 {'mean_%': -1.537, 't': -1.74, 'median_%': -1.179} {'mean_bps': 140.7, 'median_bps': -13.3, 't': 0.82, 'n': 5}
+[    71s] event zs:rj 37 {'mean_%': -0.653, 't': -0.72, 'median_%': 0.014} {'mean_bps': 31.6, 'median_bps': -5.3, 't': 0.84, 'n': 35}
+[    71s] event zs:default_waiver 134 {'mean_%': 0.217, 't': 0.42, 'median_%': -0.309} {'mean_bps': 5.0, 'median_bps': 1.7, 't': 0.6, 'n': 121}
+[    73s] event zs:liab_mgmt 322 {'mean_%': -0.04, 't': -0.17, 'median_%': -0.297} {'mean_bps': 5.0, 'median_bps': 2.3, 't': 0.73, 'n': 297}
+[    73s] event zs:call_redeem 0 None None
+[    74s] event zs:deb_holders 0 None None
+[    75s] event zs:new_debt 560 {'mean_%': -0.043, 't': -0.56, 'median_%': -0.175} {'mean_bps': 5.5, 'median_bps': 0.0, 't': 0.86, 'n': 498}
+[    77s] event zs:equity_raise 545 {'mean_%': -0.249, 't': -2.45, 'median_%': -0.251} {'mean_bps': 5.5, 'median_bps': 1.5, 't': 1.13, 'n': 499}
+[    79s] event zs:mna 504 {'mean_%': -0.361, 't': -3.26, 'median_%': -0.332} {'mean_bps': 17.1, 'median_bps': 0.6, 't': 2.77, 'n': 466}
+[    80s] event zs:capex 110 {'mean_%': -0.331, 't': -1.51, 'median_%': -0.216} {'mean_bps': 16.8, 'median_bps': 3.1, 't': 1.44, 'n': 101}
+[    81s] event zs:guidance_cut 386 {'mean_%': -0.306, 't': -2.53, 'median_%': -0.223} {'mean_bps': 1.0, 'median_bps': -3.4, 't': 0.18, 'n': 353}
+[    82s] event zs:dividend 183 {'mean_%': 0.038, 't': 0.14, 'median_%': -0.3} {'mean_bps': 3.5, 'median_bps': 2.3, 't': 0.76, 'n': 172}
+[    83s] event zs:rating_down 17 {'mean_%': -2.608, 't': -1.1, 'median_%': 0.152} {'mean_bps': 240.7, 'median_bps': 17.7, 't': 1.94, 'n': 15}
+[    83s] event zs:rating_up 65 {'mean_%': 0.627, 't': 0.6, 'median_%': -0.104} {'mean_bps': 31.1, 'median_bps': 6.8, 't': 1.0, 'n': 61}
+[    84s] event zs:mgmt_change 307 {'mean_%': -0.171, 't': -1.04, 'median_%': -0.163} {'mean_bps': 12.1, 'median_bps': 0.4, 't': 1.14, 'n': 287}
+[    86s] event zs:oficio 596 {'mean_%': -0.184, 't': -1.68, 'median_%': -0.196} {'mean_bps': 12.6, 'median_bps': -0.8, 't': 2.15, 'n': 549}
+[    87s] event zs:litigation 236 {'mean_%': 0.232, 't': 0.73, 'median_%': -0.175} {'mean_bps': 11.3, 'median_bps': -0.2, 't': 1.51, 'n': 223}
+[    89s] event ipe:fato_relevante 859 {'mean_%': -0.268, 't': -2.48, 'median_%': -0.18} {'mean_bps': 9.9, 'median_bps': 0.9, 't': 1.99, 'n': 797}
+[    90s] event any:sent_top5% 688 {'mean_%': -0.246, 't': -1.89, 'median_%': -0.245} {'mean_bps': 9.8, 'median_bps': -0.4, 't': 1.71, 'n': 649}
+[    92s] event any:sent_bottom5% 805 {'mean_%': -0.238, 't': -2.36, 'median_%': -0.218} {'mean_bps': 4.9, 'median_bps': 0.2, 't': 1.02, 'n': 746}
+[    98s] lead time {'n_blowouts': 368, 'hard (rj/waiver/liab-mgmt kw)': {'blowouts_with_flag_prior_13w': 0.071, 'random_weeks_prior_13w': 0.068, 'blowouts_with_flag_prior_26w': 0.114, 'random_weeks_prior_26w': 0.101, 'lift_13w': 1.04, 'median_lead_days_first_flag_26w': 74.0, 'flag_during_or_after_(0,+8w)': 0.057}, 'any credit-negative kw': {'blowouts_with_flag_prior_13w': 0.247, 'random_weeks_prior_13w': 0.271, 'blowouts_with_flag_prior_26w': 0.345, 'random_weeks_prior_26w': 0.374, 'lift_13w': 0.91, 'median_lead_days_first_flag_26w': 126.0, 'flag_during_or_after_(0,+8w)': 0.204}, 'zero-shot negative': {'blowouts_with_flag_prior_13w': 0.264, 'random_weeks_prior_13w': 0.27, 'blowouts_with_flag_prior_26w': 0.353, 'random_weeks_prior_26w': 0.361, 'lift_13w': 0.98, 'median_lead_days_first_flag_26w': 131.5, 'flag_during_or_after_(0,+8w)': 0.179}, 'news any': {'blowouts_with_flag_prior_13w': 0.269, 'random_weeks_prior_13w': 0.277, 'blowouts_with_flag_prior_26w': 0.296, 'random_weeks_prior_26w': 0.304, 'lift_13w': 0.97, 'median_lead_days_first_flag_26w': 165.0, 'flag_during_or_after_(0,+8w)': 0.255}, 'ipe fato relevante': {'blowouts_with_flag_prior_13w': 0.242, 'random_weeks_prior_13w': 0.26, 'blowouts_with_flag_prior_26w': 0.351, 'random_weeks_prior_26w': 0.345, 'lift_13w': 0.93, 'median_lead_days_first_flag_26w': 129.0, 'flag_during_or_after_(0,+8w)': 0.204}, 'top-5% sentiment': {'blowouts_with_flag_prior_13w': 0.149, 'random_weeks_prior_13w': 0.151, 'blowouts_with_flag_prior_26w': 0.226, 'random_weeks_prior_26w': 0.228, 'lift_13w': 0.99, 'median_lead_days_first_flag_26w': 124.0, 'flag_during_or_after_(0,+8w)': 0.133}, 'by_year': {2021: 43, 2022: 36, 2023: 102, 2024: 81, 2025: 106}}
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\research\nightly\text_nlp\run.py:256: UserWarning: This pattern is interpreted as a regular expression, and has match groups. To actually get the groups, use str.extract.
+  ft[f"body_{k}"] = body.str.contains(KW[k], regex=True)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights:  13%|█▎        | 25/199 [00:00<00:00, 249.00it/s]Loading weights:  31%|███       | 61/199 [00:00<00:00, 302.02it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 728.20it/s]
+[   487s] fulltext {'n_sample': 700, 'extract_ok_share': 0.983, 'median_chars': 4510.0, 'random_titleclean_docs': 249, 'random_titleclean_body_hard_share': 0.072, 'flagged_title_hard_confirmed_by_body': 0.882, 'share_body_rj_(random)': 0.012, 'share_body_default_waiver_(random)': 0.032, 'share_body_liab_mgmt_(random)': 0.028, 'share_body_rating_down_(random)': 0.012, 'share_body_guidance_cut_(random)': 0.072, 'share_body_litigation_(random)': 0.197, 'share_body_oficio_(random)': 0.072, 'corr_title_vs_body_sent': 0.445, 'ES body_hard & title clean': {'n': 36, 'pre_-60_-1': {'mean_%': -5.141, 't': -3.06, 'median_%': -0.893}, 'pre_-120_-1': {'mean_%': -5.218, 't': -3.2, 'median_%': -1.509}, 'post_0_20': {'mean_%': 1.805, 't': 1.0, 'median_%': -0.01}, 'post_0_60': {'mean_%': 1.328, 't': 0.68, 'median_%': -0.008}, 'post_0_120': {'mean_%': 1.057, 't': 0.64, 'median_%': 0.02}, 'name': 'body_hard & title clean'}, 'ES title hard': {'n': 20, 'pre_-60_-1': {'mean_%': -0.681, 't': -0.2, 'median_%': -0.341}, 'pre_-120_-1': {'mean_%': -0.082, 't': -0.02, 'median_%': -0.674}, 'post_0_20': {'mean_%': -0.498, 't': -0.82, 'median_%': -0.0}, 'post_0_60': {'mean_%': -0.575, 't': -0.91, 'median_%': -0.188}, 'post_0_120': {'mean_%': -0.823, 't': -1.28, 'median_%': 0.036}, 'name': 'title hard'}, 'ES body clean & title clean (random)': {'n': 159, 'pre_-60_-1': {'mean_%': 0.418, 't': 0.97, 'median_%': -0.075}, 'pre_-120_-1': {'mean_%': -0.044, 't': -0.14, 'median_%': -0.349}, 'post_0_20': {'mean_%': 0.101, 't': 0.94, 'median_%': -0.041}, 'post_0_60': {'mean_%': -0.077, 't': -0.53, 'median_%': -0.175}, 'post_0_120': {'mean_%': -0.383, 't': -1.25, 'median_%': -0.375}, 'name': 'body clean & title clean (random)'}, 'ES body_sent top tercile': {'n': 155, 'pre_-60_-1': {'mean_%': -0.685, 't': -1.27, 'median_%': -0.316}, 'pre_-120_-1': {'mean_%': -0.717, 't': -1.17, 'median_%': -0.523}, 'post_0_20': {'mean_%': 0.014, 't': 0.11, 'median_%': -0.054}, 'post_0_60': {'mean_%': -0.619, 't': -2.3, 'median_%': -0.197}, 'post_0_120': {'mean_%': -0.291, 't': -0.76, 'median_%': -0.356}, 'name': 'body_sent top tercile'}}
+[   524s] IC done
+[   566s] learned {'ic63': -0.0055, 't63': -0.21, 'n_dates': 44}
+[   571s] V1 P4Q ex any credit-neg kw 90d 0.17
+[   573s] V2 P4Q ex hard events 180d -0.025
+[   575s] V3 P4Q ex IPE credit-neg 90d 0.181
+[   577s] V4 P4Q ex zero-shot neg 90d 0.267
+[   579s] V5 P4Q ex worst news sentiment 30d 0.002
+[   581s] V6 P4Q ex filing burst -0.004
+[   583s] V7 P4Q ex bottom-20% learned text score 0.088
+[   585s] V8 P4Q tilt 1/(1+neg_kw_90) 0.091
+[   587s] V9 P4Q + positive-event adds (top40% carry, equity raise/rating up 180d) -0.068
+[   604s] 
+                                                                          exCDI_%  exU_%  vs_bench_%  t_vs_bench  p_holm  h1_vs_bench  h2_vs_bench    n_avg
+V1 P4Q ex any credit-neg kw 90d                                             2.388  1.286       0.170       0.820   1.000        0.043        0.296   78.250
+V2 P4Q ex hard events 180d                                                  2.193  1.092      -0.025      -0.620   1.000       -0.063        0.013   97.604
+V3 P4Q ex IPE credit-neg 90d                                                2.400  1.298       0.181       0.926   1.000        0.058        0.305   80.312
+V4 P4Q ex zero-shot neg 90d                                                 2.485  1.383       0.267       1.282   1.000        0.057        0.477   74.146
+V5 P4Q ex worst news sentiment 30d                                          2.220  1.118       0.002       0.374   1.000       -0.004        0.007  102.938
+V6 P4Q ex filing burst                                                      2.214  1.113      -0.004      -0.506   1.000        0.001       -0.009  102.771
+V7 P4Q ex bottom-20% learned text score                                     2.307  1.205       0.088       1.305   1.000        0.006        0.171   92.271
+V8 P4Q tilt 1/(1+neg_kw_90)                                                 2.310  1.208       0.091       0.827   1.000        0.033        0.150  103.292
+V9 P4Q + positive-event adds (top40% carry, equity raise/rating up 180d)    2.150  1.049      -0.068      -1.411   1.000        0.037       -0.172  117.438
+P4Q                                                                         2.218  1.116       0.000         NaN     NaN        0.000        0.000  103.292
+P4                                                                          1.890  0.788      -0.329      -2.275   0.229       -0.296       -0.362  129.521
+U                                                                           1.102  0.000      -1.116      -2.409   0.176       -1.629       -0.604  698.500
+[   670s] excluded cohorts {'V1 P4Q ex any credit-neg kw 90d': {'mean_ann_%': 0.554, 'n_dates': 42, 't_nw': 0.69}, 'V2 P4Q ex hard events 180d': {'mean_ann_%': 1.177, 'n_dates': 26, 't_nw': 1.12}, 'V3 P4Q ex IPE credit-neg 90d': {'mean_ann_%': 0.335, 'n_dates': 42, 't_nw': 0.38}, 'V4 P4Q ex zero-shot neg 90d': {'mean_ann_%': 0.456, 'n_dates': 42, 't_nw': 0.68}, 'V5 P4Q ex worst news sentiment 30d': {'mean_ann_%': 3.134, 'n_dates': 1, 't_nw': nan}, 'V6 P4Q ex filing burst': {'mean_ann_%': 0.181, 'n_dates': 1, 't_nw': nan}, 'V7 P4Q ex bottom-20% learned text score': {'mean_ann_%': 0.335, 'n_dates': 41, 't_nw': 0.33}}
+[   757s] holdout {'ann_excess_%': 0.4093, 'vol_%': 1.2296, 'sharpe': 0.3329, 'max_dd_%': -0.7863, 'worst_month_%': -0.6207, 'hit': 0.4444, 'skew': -0.2488, 't_nw': 0.4194, 'h1_2022_23_%': nan, 'h2_2024_25_%': nan, 'cum_%': 0.3023, 'n_months': 9, 'period': '2026-01..2026-09', 'diff_ann_%': 0.3293, 'diff_t_nw': 1.5344, 'diff_p': 0.1249, 'diff_h1_%': nan, 'diff_h2_%': nan, 'diff_hit': 0.6667, 'diff_te_%': 0.2521}
+[   757s] done

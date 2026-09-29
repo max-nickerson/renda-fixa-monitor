@@ -1,13 +1,13 @@
-# secrets & personal data - never commit
-.env
-/watchlist.yaml
-/data/
-site/
 
 # python
-__pycache__/
-*.pyc
-.venv/
-venv/
-.pytest_cache/
+# secrets & personal data - never commit
 *.egg-info/
+*.pyc
+.env
+.pytest_cache/
+.venv/
+/data/
+/watchlist.yaml
+__pycache__/
+site/
+venv/

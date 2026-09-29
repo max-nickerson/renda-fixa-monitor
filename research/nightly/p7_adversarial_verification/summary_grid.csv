@@ -1,0 +1,31 @@
+variant,diff,t
+P7 (published spec),0.5003,3.2905
+P7 - placebo A_listed_random_carry (P7's ow,0.3248428002485696,2.1332175990594213
+P7 - placebo D_ctrl_bond_dec10xsector_carry,0.5069410915718235,2.283424909850477
+P7 - placebo E_ctrl_bond_tercile_carry,0.5470501881731759,2.3941624254485605
+P7 - placebo F_ctrl_issuer_q5xsector_carry,0.4897833237065502,2.268833037551877
+P7 - placebo G_perm_bond_tercile_carry,0.37304528271163057,2.657832076168354
+P7 - placebo H_ctrl_bond_tercile_EW (vs scr,0.5150447894365812,2.9281362564679454
+FV2 - its control placebo,0.7040881301484392,2.619866060449957
+EQH q=0.10,0.4477,3.462
+EQH q=0.20 (P7),0.5003,3.2905
+EQH q=0.30,0.4849,2.7419
+EQH only eq_dd252,0.4668,2.8756
+EQH only eq_vol63,0.3498,2.0564
+EQH only eq_r126,0.4174,2.7
+Q lag0 (both books),0.5003,3.2905
+Q lag60 (both books),0.4912,3.6389
+Q lag90 (both books),0.4922,3.9254
+Q lag120 (both books),0.5223,3.3712
+honest: liq_costs,0.4717,3.1618
+honest: harsh_surv,0.7595,3.5839
+honest: liq+harsh,0.7308,3.4274
+honest: liq+harsh+holiday,0.7195,3.4096
+fully honest (+lag90 Q),0.677,4.2301
+fully honest - placebo E_ctrl_bond_te,0.700101224809064,3.2072882037146564
+fully honest - placebo F_ctrl_issuer_,0.6857750994409164,3.258437283723699
+fully honest - placebo A_listed_rando,0.4425973474186974,3.000361341129547
+flag-vote FV2_carry (primary),0.605,4.1
+flag-vote FV3_carry,0.4314,4.196
+flag-vote FV2_EW,0.4818,2.618
+flag-vote FV3_EW,0.2659,2.4198

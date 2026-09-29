@@ -1,0 +1,18 @@
+repro {'ann_excess_%': 2.3009, 'diff_ann_%': 0.0827, 'diff_t_nw': 0.8637, 'diff_h1_%': -0.0787, 'diff_h2_%': 0.244, 'diff_hit': 0.5417} {'diff_ann_%': 0.1700421529943874, 't': 1.7237109229781464} {2022: 0.022, 2023: -0.179, 2024: 0.333, 2025: 0.155} 11
+q 0.1 {'ann_excess_%': 2.2269, 'diff_ann_%': 0.0087, 'diff_t_nw': 0.2326, 'diff_h1_%': -0.0025, 'diff_h2_%': 0.0199, 'diff_hit': 0.4167}
+q 0.15 {'ann_excess_%': 2.2407, 'diff_ann_%': 0.0225, 'diff_t_nw': 0.394, 'diff_h1_%': -0.0516, 'diff_h2_%': 0.0965, 'diff_hit': 0.4583}
+q 0.25 {'ann_excess_%': 2.3259, 'diff_ann_%': 0.1077, 'diff_t_nw': 0.9551, 'diff_h1_%': -0.0717, 'diff_h2_%': 0.287, 'diff_hit': 0.5417}
+q 0.3 {'ann_excess_%': 2.3876, 'diff_ann_%': 0.1694, 'diff_t_nw': 1.4393, 'diff_h1_%': 0.0138, 'diff_h2_%': 0.3249, 'diff_hit': 0.5625}
+q 0.4 {'ann_excess_%': 2.3769, 'diff_ann_%': 0.1587, 'diff_t_nw': 0.9358, 'diff_h1_%': 0.0656, 'diff_h2_%': 0.2518, 'diff_hit': 0.5625}
+63 None {'ann_excess_%': 2.4042, 'diff_ann_%': 0.1399, 'diff_t_nw': 1.0733, 'diff_h1_%': -0.1262, 'diff_h2_%': 0.406, 'diff_hit': 0.5208}
+252 None {'ann_excess_%': 2.3627, 'diff_ann_%': -0.0065, 'diff_t_nw': -0.0749, 'diff_h1_%': -0.1534, 'diff_h2_%': 0.1404, 'diff_hit': 0.5208}
+126 Q {'ann_excess_%': 2.4753, 'diff_ann_%': 0.0401, 'diff_t_nw': 0.383, 'diff_h1_%': -0.0939, 'diff_h2_%': 0.1741, 'diff_hit': 0.5208}
+thr 0.1 {'ann_excess_%': 2.2144, 'diff_ann_%': -0.0038, 'diff_t_nw': -0.0407, 'diff_h1_%': -0.0434, 'diff_h2_%': 0.0357, 'diff_hit': 0.5417}
+thr 0.5 {'ann_excess_%': 2.2592, 'diff_ann_%': 0.041, 'diff_t_nw': 0.4899, 'diff_h1_%': -0.0002, 'diff_h2_%': 0.0822, 'diff_hit': 0.4167}
+thr 0.75 {'ann_excess_%': 2.2876, 'diff_ann_%': 0.0694, 'diff_t_nw': 0.5077, 'diff_h1_%': -0.0788, 'diff_h2_%': 0.2176, 'diff_hit': 0.5417}
+placebo {'mean': -0.030862000000000004, 'sd': 0.0487870695574145, 'p95': 0.05303499999999997, 'share_ge_actual': 0.02}
+placebo shuffle {'mean': -0.045493333333333344, 'p95': 0.058404999999999915, 'share_ge_actual': 0.0}
+ex top5 {'ann_excess_%': 2.373, 'diff_ann_%': 0.0049, 'diff_t_nw': 0.0719, 'diff_h1_%': -0.0962, 'diff_h2_%': 0.1059, 'diff_hit': 0.5417}
+X5 {'ann_excess_%': 2.0584, 'diff_ann_%': -0.1599, 'diff_t_nw': -2.3613, 'diff_h1_%': -0.1341, 'diff_h2_%': -0.1856, 'diff_hit': 0.375} {'ann_excess_%': 2.0423, 'diff_ann_%': 0.005, 'diff_t_nw': 0.1911, 'diff_h1_%': 0.0178, 'diff_h2_%': -0.0077, 'diff_hit': 0.4792}
+X2 {'ann': 0.3212418614507542, 't': 2.269548326741023, 'ex2023_ann': 0.2006606295009851}
+done 352

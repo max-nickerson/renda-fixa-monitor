@@ -1,0 +1,37 @@
+                                                              variant  vsP4Q_%       t       p  holm_global
+0                                                         A0_prim_all  -1.3947 -2.4830  0.0130       0.2080
+1                                                   A1_prim_conc0_scr   0.7019  1.6459  0.0998       1.0000
+2                                                  A2_prim_conc50_scr   1.3129  2.9835  0.0028       0.0672
+3                                              A3_prim_top30carry_scr   0.7344  1.6546  0.0980       1.0000
+4                                            A4_prim_incent_conc0_scr   1.6541  1.7679  0.0771       1.0000
+5                                         A5_prim_firsttime_conc0_scr   0.6191  0.9450  0.3447       1.0000
+6                                      A6_prim_conc0_scr_noprint_cash  -0.5236 -1.0909  0.2753       1.0000
+7                                     A7_prim_conc0_scr_noprint_carry   1.1888  2.6379  0.0083       0.1577
+8                                         A8_prim_conc0_scr_printed21   1.7555  2.8794  0.0040       0.0840
+9                                                    B1_sec_conc0_scr   1.0671  1.6009  0.1094       1.0000
+10                                              B3_sec_top30carry_scr   1.0170  1.5730  0.1157       1.0000
+11                               rob:A2_printed_only(LOOKAHEAD split)   2.3496  4.5388  0.0000       0.0000
+12                             rob:A2_unprinted_only(LOOKAHEAD split)   0.3893  0.6431  0.5202       1.0000
+13                                                rob:A2_noprint_cash  -0.2872 -0.5531  0.5802       1.0000
+14                                               rob:A2_noprint_carry   1.7895  3.5956  0.0003       0.0087
+15                                              rob:B2_sec_conc50_scr   1.8076  2.5160  0.0119       0.2023
+16                                                  rob:A2_no_screens   1.4835  3.5528  0.0004       0.0112
+17                                           rob:A2_conc_peer_only>50   1.3000  2.9427  0.0033       0.0726
+18                                                    rob:A2_conc>100   1.5691  3.2013  0.0014       0.0350
+19                                                     rob:A2_conc>25   1.1009  2.5416  0.0110       0.1980
+20                                                      rob:A2_hold63   0.9446  1.6770  0.0935       1.0000
+21                                                     rob:A2_hold252   0.9088  1.9807  0.0476       0.7140
+22           rob:carry_matched_new_issues(s_iss>=A2 median, any conc)   1.1522  1.5562  0.1197       1.0000
+23                     rob:harness: P4Q & cdi_bps >= A2 median spread   0.7381  3.5004  0.0005       0.0135
+24  rob:harness: U & cdi_bps >= A2 median spread (not rich, press ok)   0.1624  0.5834  0.5596       1.0000
+25                                   rob:A2_ex_top10_issuers_by_count   1.3276  2.9627  0.0030       0.0690
+26                                                  seas:C1_new31_all  -1.0968 -2.7726  0.0056       0.1120
+27                                                   seas:C2_new31_p4  -1.8116 -3.3175  0.0009       0.0234
+28                                             seas:C3_p4q_plus_new31  -0.0117 -1.4945  0.1350       1.0000
+29                                               seas:C4_p4q_ex_new92   0.0658  0.8120  0.4168       1.0000
+dropped (traded before the registry settlement date): 12
+                       exCDI_%  exU_%  vsP4Q_%  ...  vsP4Q_50bps_%  sharpe  maxDD_%
+P4Q+20%A2 (100% fill)    2.483  1.382    0.265  ...          0.293   2.359   -1.461
+P4Q+20%A2 (30% fill)     2.298  1.196    0.080  ...          0.088   2.219   -1.400
+
+[2 rows x 9 columns]

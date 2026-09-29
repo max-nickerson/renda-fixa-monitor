@@ -1,0 +1,27 @@
+[     2s] agree 1.0
+[     9s] feature eq 1.0
+[    11s] V4 {'ann_excess_%': 2.485, 'diff_ann_%': 0.267, 'diff_t_nw': 1.282, 'diff_h1_%': 0.057, 'diff_h2_%': 0.477, 'sharpe': 2.515, 'max_dd_%': -0.895}
+[    12s] T0.50_90d {'ann_excess_%': 2.624, 'diff_ann_%': 0.405, 'diff_t_nw': 1.429, 'diff_h1_%': 0.058, 'diff_h2_%': 0.752, 'sharpe': 2.503, 'max_dd_%': -0.873, 'n_avg': 61.7}
+[    13s] T0.55_90d(recomp) {'ann_excess_%': 2.485, 'diff_ann_%': 0.267, 'diff_t_nw': 1.282, 'diff_h1_%': 0.057, 'diff_h2_%': 0.477, 'sharpe': 2.515, 'max_dd_%': -0.895, 'n_avg': 74.1}
+[    14s] T0.60_90d {'ann_excess_%': 2.306, 'diff_ann_%': 0.088, 'diff_t_nw': 0.725, 'diff_h1_%': -0.171, 'diff_h2_%': 0.346, 'sharpe': 2.223, 'max_dd_%': -1.365, 'n_avg': 89.1}
+[    15s] T0.65_90d {'ann_excess_%': 2.35, 'diff_ann_%': 0.132, 'diff_t_nw': 1.46, 'diff_h1_%': -0.043, 'diff_h2_%': 0.307, 'sharpe': 2.319, 'max_dd_%': -1.319, 'n_avg': 96.6}
+[    17s] T0.55_30d {'ann_excess_%': 2.242, 'diff_ann_%': 0.024, 'diff_t_nw': 0.302, 'diff_h1_%': -0.039, 'diff_h2_%': 0.087, 'sharpe': 2.238, 'max_dd_%': -1.265, 'n_avg': 90.4}
+[    18s] T0.55_60d {'ann_excess_%': 2.337, 'diff_ann_%': 0.119, 'diff_t_nw': 0.804, 'diff_h1_%': -0.015, 'diff_h2_%': 0.253, 'sharpe': 2.419, 'max_dd_%': -1.033, 'n_avg': 81.3}
+[    19s] T0.55_180d {'ann_excess_%': 2.62, 'diff_ann_%': 0.402, 'diff_t_nw': 1.499, 'diff_h1_%': 0.062, 'diff_h2_%': 0.742, 'sharpe': 2.45, 'max_dd_%': -0.886, 'n_avg': 62.5}
+[    20s] T0.55_90d_no_liab_mgmt {'ann_excess_%': 2.486, 'diff_ann_%': 0.268, 'diff_t_nw': 1.35, 'diff_h1_%': 0.081, 'diff_h2_%': 0.455, 'sharpe': 2.532, 'max_dd_%': -0.886, 'n_avg': 76.3}
+[    21s] IPE_only_90d {'ann_excess_%': 2.487, 'diff_ann_%': 0.269, 'diff_t_nw': 1.293, 'diff_h1_%': 0.057, 'diff_h2_%': 0.481, 'sharpe': 2.518, 'max_dd_%': -0.895, 'n_avg': 74.3}
+[    22s] news_only_90d {'ann_excess_%': 2.213, 'diff_ann_%': -0.005, 'diff_t_nw': -1.103, 'diff_h1_%': 0.002, 'diff_h2_%': -0.011, 'sharpe': 2.124, 'max_dd_%': -1.393, 'n_avg': 102.8}
+[    25s] cost50 {'ann_excess_%': 2.08, 'diff_ann_%': 0.243, 'diff_t_nw': 1.158, 'diff_h1_%': 0.022, 'diff_h2_%': 0.464, 'sharpe': 2.083, 'max_dd_%': -1.068}
+[    27s] rec40 {'ann_excess_%': 2.436, 'diff_ann_%': 0.251, 'diff_t_nw': 1.218, 'diff_h1_%': 0.057, 'diff_h2_%': 0.444, 'sharpe': 2.46, 'max_dd_%': -0.895}
+[    29s] hold63 {'ann_excess_%': 2.611, 'diff_ann_%': 0.347, 'diff_t_nw': 1.116, 'diff_h1_%': 0.039, 'diff_h2_%': 0.655, 'sharpe': 2.489, 'max_dd_%': -1.268}
+[    31s] hold252 {'ann_excess_%': 2.608, 'diff_ann_%': 0.239, 'diff_t_nw': 1.306, 'diff_h1_%': 0.043, 'diff_h2_%': 0.436, 'sharpe': 2.755, 'max_dd_%': -0.932}
+[    34s] cap5 {'ann_excess_%': 2.512, 'diff_ann_%': 0.28, 'diff_t_nw': 1.342, 'diff_h1_%': 0.063, 'diff_h2_%': 0.496, 'sharpe': 2.5, 'max_dd_%': -0.919}
+[    34s] monthly {'all': 0.267, 't': 1.28, 'ex2023': 0.225, 't_ex2023': 1.0, 'by_year': {2022: -0.277, 2023: 0.391, 2024: 1.029, 2025: -0.076}, 'ex_top3_months': -0.06, 'ex_top5_months': -0.164, 'share_months_pos': 0.521, 'top5_months_%': {'2025-04-01': 0.165, '2023-07-01': 0.2, '2023-02-01': 0.223, '2023-01-01': 0.392, '2024-12-01': 0.677}}
+[    76s] ex_top1_issuer {'ann_excess_%': 2.348, 'diff_ann_%': 0.13, 'diff_t_nw': 0.712, 'diff_h1_%': 0.075, 'diff_h2_%': 0.184, 'sharpe': 2.339, 'max_dd_%': -0.888}
+[    77s] ex_top3_issuers {'ann_excess_%': 2.227, 'diff_ann_%': 0.009, 'diff_t_nw': 0.048, 'diff_h1_%': -0.006, 'diff_h2_%': 0.025, 'sharpe': 2.211, 'max_dd_%': -0.87}
+[    78s] ex_top5_issuers {'ann_excess_%': 2.187, 'diff_ann_%': -0.032, 'diff_t_nw': -0.187, 'diff_h1_%': -0.058, 'diff_h2_%': -0.005, 'sharpe': 2.109, 'max_dd_%': -0.975}
+[    79s] ex_top10_issuers {'ann_excess_%': 2.137, 'diff_ann_%': -0.081, 'diff_t_nw': -0.529, 'diff_h1_%': -0.134, 'diff_h2_%': -0.028, 'sharpe': 2.061, 'max_dd_%': -1.031}
+[   142s] placebo_random_matched_bond_exclusion {'mean': -0.058, 'sd': 0.067, 'p95': 0.07, 'p_one_sided': 0.0, 'n': 50}
+[   212s] placebo_random_matched_issuer_exclusion {'mean': -0.043, 'sd': 0.055, 'p95': 0.048, 'p_one_sided': 0.0, 'n': 50}
+[   214s] visibility {'ann_excess_%': 2.44, 'diff_ann_%': 0.222, 'diff_t_nw': 1.107, 'diff_h1_%': -0.026, 'diff_h2_%': 0.47, 'sharpe': 2.421, 'max_dd_%': -1.01} {'ann_excess_%': 2.906, 'diff_ann_%': 0.688, 'diff_t_nw': 1.336, 'diff_h1_%': -0.049, 'diff_h2_%': 1.425, 'sharpe': 2.053, 'max_dd_%': -1.626}
+[   222s] done

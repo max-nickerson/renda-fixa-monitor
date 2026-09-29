@@ -1,0 +1,211 @@
+[harness +   0.0s] building core arrays (one-off, ~1 min)
+[harness +   2.0s] building panel M: 67 decision dates
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\.venv\Lib\site-packages\openpyxl\styles\stylesheet.py:237: UserWarning: Workbook contains no default style, apply openpyxl's default
+  warn("Workbook contains no default style, apply openpyxl's default")
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\.venv\Lib\site-packages\openpyxl\styles\stylesheet.py:237: UserWarning: Workbook contains no default style, apply openpyxl's default
+  warn("Workbook contains no default style, apply openpyxl's default")
+C:\Users\maxpn\OneDrive\Documents\itau\renda-fixa-monitor\.venv\Lib\site-packages\openpyxl\styles\stylesheet.py:237: UserWarning: Workbook contains no default style, apply openpyxl's default
+  warn("Workbook contains no default style, apply openpyxl's default")
+[harness +  24.9s] building panel W: 291 decision dates
+{
+ "module": "research.nightly.harness_audit.harness_candidate",
+ "core_gap_moved": 18321,
+ "baselines": {
+  "U": {
+   "exCDI_%": 1.1018,
+   "exU_%": 0.0,
+   "t_vsU": null,
+   "vs_bench_%": -1.1165,
+   "t_vs_bench": -2.4091,
+   "p_vs_bench": 0.016,
+   "vol_%": 1.498,
+   "sharpe": 0.7355,
+   "maxDD_%": -3.5071,
+   "h1_vs_bench": -1.6292,
+   "h2_vs_bench": -0.6037,
+   "turnover": 1.6738,
+   "n_avg": 698.5,
+   "p_holm": 0.048,
+   "cost_ann_%": 0.2092
+  },
+  "P4": {
+   "exCDI_%": 1.8897,
+   "exU_%": 0.7879,
+   "t_vsU": 1.588,
+   "vs_bench_%": -0.3286,
+   "t_vs_bench": -2.2746,
+   "p_vs_bench": 0.0229,
+   "vol_%": 1.0464,
+   "sharpe": 1.8058,
+   "maxDD_%": -1.5639,
+   "h1_vs_bench": -0.2956,
+   "h2_vs_bench": -0.3615,
+   "turnover": 2.738,
+   "n_avg": 129.5208,
+   "p_holm": 0.048,
+   "cost_ann_%": 0.3423
+  },
+  "P4Q": {
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "t_vsU": 2.4091,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": null,
+   "p_vs_bench": null,
+   "vol_%": 1.0415,
+   "sharpe": 2.1298,
+   "maxDD_%": -1.3929,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0,
+   "turnover": 2.9446,
+   "n_avg": 103.2917,
+   "p_holm": null,
+   "cost_ann_%": 0.3681
+  },
+  "P4_live": {
+   "exCDI_%": 1.3209,
+   "exU_%": 0.2191,
+   "t_vsU": 0.2865,
+   "vs_bench_%": -0.8973,
+   "t_vs_bench": -1.7891,
+   "p_vs_bench": 0.0736,
+   "vol_%": 0.9688,
+   "sharpe": 1.3634,
+   "maxDD_%": -1.0935,
+   "h1_vs_bench": 0.1734,
+   "h2_vs_bench": -1.9681,
+   "turnover": 2.662,
+   "n_avg": 128.4641,
+   "p_holm": 0.0736,
+   "cost_ann_%": 1.0986
+  }
+ },
+ "sensitivities": {
+  "50bps": {
+   "U": 0.8854,
+   "P4": 1.5354,
+   "P4Q": 1.8371,
+   "P4Q-P4": 0.3017
+  },
+  "rec40": {
+   "U": 1.0735,
+   "P4": 1.7986,
+   "P4Q": 2.1858,
+   "P4Q-P4": 0.3871
+  },
+  "hold63": {
+   "U": 1.2799,
+   "P4": 2.0143,
+   "P4Q": 2.2643,
+   "P4Q-P4": 0.2499
+  },
+  "hold252": {
+   "U": 1.1404,
+   "P4": 2.1474,
+   "P4Q": 2.3692,
+   "P4Q-P4": 0.2218
+  },
+  "weekly_tranche": {
+   "U": 1.0732,
+   "P4": 2.0473,
+   "P4Q": 2.2759,
+   "P4Q-P4": 0.2286
+  }
+ },
+ "engine_variants": {
+  "P4 monthly replace-the-book": {
+   "exCDI_%": 1.6276,
+   "vs_P4_tranche_%": -0.2621,
+   "t": -1.1009,
+   "turnover": 8.43,
+   "cost_%": 1.054
+  },
+  "P4 monthly sticky (sell when rich)": {
+   "exCDI_%": 2.0197,
+   "vs_P4_tranche_%": 0.13,
+   "t": 0.713,
+   "turnover": 2.293,
+   "cost_%": 0.287
+  },
+  "P4 weekly sticky (sell when rich)": {
+   "exCDI_%": 1.6116,
+   "vs_P4_tranche_%": -0.278,
+   "t": -1.2505,
+   "turnover": 2.662,
+   "cost_%": 0.333
+  },
+  "P4 tranche 126 + IDA overlay": {
+   "exCDI_%": 1.5826,
+   "vs_P4_tranche_%": -0.3071,
+   "t": -0.77,
+   "turnover": 2.738,
+   "cost_%": 1.042
+  },
+  "P4 tranche 126 + sell when rich (weekly checks)": {
+   "exCDI_%": 1.9474,
+   "vs_P4_tranche_%": 0.0578,
+   "t": 0.9342,
+   "turnover": 2.765,
+   "cost_%": 0.352
+  }
+ },
+ "cohort": {
+  "63": {
+   "P4_vs_U": 0.7927,
+   "P4Q_vs_U": 0.9897,
+   "t_P4Q_vs_P4": 1.689
+  },
+  "126": {
+   "P4_vs_U": 0.8392,
+   "P4Q_vs_U": 1.1874,
+   "t_P4Q_vs_P4": 2.438
+  },
+  "252": {
+   "P4_vs_U": 0.8824,
+   "P4Q_vs_U": 1.1505,
+   "t_P4Q_vs_P4": 3.816
+  }
+ },
+ "reproduction_incl_2026": {
+  "U": {
+   "exCDI_%": 0.4129,
+   "vs_P4_%": -1.0635
+  },
+  "P4": {
+   "exCDI_%": 1.4764,
+   "vs_P4_%": 0.0
+  },
+  "P4Q": {
+   "exCDI_%": 1.8806,
+   "vs_P4_%": 0.4042
+  }
+ },
+ "placebo_P4Q_n10": {
+  "actual": 2.2182,
+  "null_mean": 0.7741,
+  "null_p95": 0.9262
+ },
+ "ic_fwd126": {
+  "cdi_bps": {
+   "mean": 0.1416,
+   "t_nw": 1.4947,
+   "n_dates": 52
+  },
+  "resid_bps": {
+   "mean": 0.2091,
+   "t_nw": 11.5304,
+   "n_dates": 52
+  },
+  "f_quality": {
+   "mean": 0.0176,
+   "t_nw": 1.2058,
+   "n_dates": 52
+  },
+  "eq_r63": {
+   "mean": 0.0749,
+   "t_nw": 3.3418,
+   "n_dates": 46
+  }
+ },
+ "runtime_s": 143.6
+}

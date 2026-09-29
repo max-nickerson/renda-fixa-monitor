@@ -1,0 +1,121 @@
+{
+ "books": {
+  "tilt05": {
+   "exCDI_%": 2.2446,
+   "exU_%": 1.1428,
+   "vs_bench_%": 0.0264,
+   "t_vs_bench": 0.6509,
+   "h1_vs_bench": 0.0152,
+   "h2_vs_bench": 0.0375
+  },
+  "tilt0_ctrl": {
+   "exCDI_%": 2.2125,
+   "exU_%": 1.1107,
+   "vs_bench_%": -0.0057,
+   "t_vs_bench": -2.7629,
+   "h1_vs_bench": -0.01,
+   "h2_vs_bench": -0.0015
+  },
+  "tilt05_lag1m": {
+   "exCDI_%": 2.2428,
+   "exU_%": 1.141,
+   "vs_bench_%": 0.0245,
+   "t_vs_bench": 0.9418,
+   "h1_vs_bench": 0.063,
+   "h2_vs_bench": -0.0139
+  },
+  "tilt05_perm": {
+   "exCDI_%": 2.2073,
+   "exU_%": 1.1056,
+   "vs_bench_%": -0.0109,
+   "t_vs_bench": -0.2339,
+   "h1_vs_bench": 0.0215,
+   "h2_vs_bench": -0.0434
+  },
+  "P4Q": {
+   "exCDI_%": 2.2182,
+   "exU_%": 1.1165,
+   "vs_bench_%": 0.0,
+   "t_vs_bench": NaN,
+   "h1_vs_bench": 0.0,
+   "h2_vs_bench": 0.0
+  }
+ },
+ "tilt05_vs_lam0": {
+  "diff_ann_%": 0.0321,
+  "diff_t_nw": 0.7854
+ },
+ "tilt05_50bps_vs_P4Q": {
+  "diff_ann_%": 0.0237,
+  "diff_t_nw": 0.5868
+ },
+ "pairs": {
+  "resid_same_day": {
+   "ann_%": 0.834,
+   "t_nw": 6.45,
+   "n": 5489,
+   "h1": 0.739,
+   "h2": 1.013
+  },
+  "resid_nonexec_as_cash": {
+   "ann_%": 0.784,
+   "t_nw": 5.81,
+   "n": 5693,
+   "h1": 0.666,
+   "h2": 1.005
+  },
+  "resid_lag1m": {
+   "ann_%": 0.368,
+   "t_nw": 2.66,
+   "n": 4635,
+   "h1": 0.265,
+   "h2": 0.558
+  },
+  "e_iss_same_day": {
+   "ann_%": 0.834,
+   "t_nw": 6.45,
+   "n": 5489,
+   "h1": 0.739,
+   "h2": 1.013
+  },
+  "e_iss_lag1m": {
+   "ann_%": 0.368,
+   "t_nw": 2.66,
+   "n": 4635,
+   "h1": 0.265,
+   "h2": 0.558
+  },
+  "cdi_same_day": {
+   "ann_%": 0.571,
+   "t_nw": 1.43,
+   "n": 5499,
+   "h1": 0.601,
+   "h2": 0.516
+  },
+  "cdi_lag1m": {
+   "ann_%": 0.236,
+   "t_nw": 0.61,
+   "n": 4983,
+   "h1": 0.262,
+   "h2": 0.187
+  },
+  "resid_fresh_today_only": {
+   "ann_%": 0.743,
+   "t_nw": 7.99,
+   "n": 2623,
+   "h1": 0.713,
+   "h2": 0.815
+  }
+ },
+ "entry_delay_bdays": {
+  "count": 35399.0,
+  "mean": 3.07,
+  "std": 3.53,
+  "min": 1.0,
+  "25%": 1.0,
+  "50%": 2.0,
+  "75%": 3.0,
+  "max": 20.0
+ },
+ "exec_rate_univ": 0.957
+}
