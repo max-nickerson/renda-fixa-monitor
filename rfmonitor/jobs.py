@@ -114,8 +114,21 @@ def _ativos():
         log.exception("ativos refresh failed")
 
 
+_IBKR_LOCK = threading.Lock()
+
+
 def _ibkr_forward(mark_only: bool = False):
-    """Forward validation of the IBKR-lab strategies on the PAPER login (research/ibkr_lab/runner)."""
+    """Forward validation of the IBKR-lab strategies on the PAPER login (research/ibkr_lab/runner).
+    One run at a time: a probe that finds the rebalance (or another probe) still running is skipped."""
+    if not _IBKR_LOCK.acquire(blocking=not mark_only):
+        return
+    try:
+        _ibkr_forward_run(mark_only)
+    finally:
+        _IBKR_LOCK.release()
+
+
+def _ibkr_forward_run(mark_only: bool):
     import asyncio
     import sys
     from .config import ROOT
@@ -148,10 +161,12 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(_ativos, "interval", seconds=60, id="ativos", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(seconds=20))
-    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=15, minute=40, id="ibkr_forward_day",
+    # IBKR paper books: rebalance once a day shortly after the B3 open (signals use the previous close), then live
+    # probes every 5 minutes while B3/CME/US are open: batched marks, intraday NAV, reconciliation with the account.
+    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=10, minute=35, id="ibkr_forward_day",
                   kwargs={"mark_only": False}, max_instances=1, coalesce=True)
-    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour="10-16", minute=47, id="ibkr_forward_mark",
-                  kwargs={"mark_only": True}, max_instances=1, coalesce=True)
+    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour="10-17", minute="*/5", id="ibkr_forward_mark",
+                  kwargs={"mark_only": True}, max_instances=1, coalesce=True, misfire_grace_time=120)
     sched.add_job(_paper, "interval", minutes=60, id="paper", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(minutes=3))
     sched.start()

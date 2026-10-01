@@ -37,6 +37,10 @@ CREATE TABLE IF NOT EXISTS fills (ts TEXT, strategy TEXT, key TEXT, action TEXT,
 CREATE TABLE IF NOT EXISTS nav (strategy TEXT, date TEXT, nav REAL, cash REAL, gross REAL, n_pos INTEGER,
     PRIMARY KEY (strategy, date));
 CREATE TABLE IF NOT EXISTS runs (ts TEXT, what TEXT, note TEXT);
+CREATE TABLE IF NOT EXISTS nav_intraday (strategy TEXT, ts TEXT, nav REAL, gross REAL, n_pos INTEGER,
+    PRIMARY KEY (strategy, ts));
+CREATE TABLE IF NOT EXISTS rebalances (strategy TEXT, date TEXT, PRIMARY KEY (strategy, date));
+CREATE TABLE IF NOT EXISTS recon (ts TEXT, conid INTEGER, symbol TEXT, ledger_qty REAL, ibkr_qty REAL);
 """
 
 
@@ -138,7 +142,7 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
                 con.execute("INSERT OR IGNORE INTO strategies VALUES (?,?,?,?,?,?,1)",
                             (name, mod.DESCRIPTION, mod.REBALANCE, json.dumps(getattr(mod, "EXPECTED", {})),
                              asof.isoformat(), CAPITAL_USD))
-                last = con.execute("SELECT max(date) d FROM nav WHERE strategy=?", (name,)).fetchone()["d"]
+                last = con.execute("SELECT max(date) d FROM rebalances WHERE strategy=?", (name,)).fetchone()["d"]
                 pos = {r["key"]: dict(r) for r in con.execute("SELECT * FROM positions WHERE strategy=?", (name,))}
                 cash_row = con.execute("SELECT cash FROM nav WHERE strategy=? ORDER BY date DESC LIMIT 1", (name,)).fetchone()
             cash = cash_row["cash"] if cash_row else CAPITAL_USD
@@ -150,6 +154,8 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
                     log.exception("%s targets failed", name)
                     tg, note = None, [f"targets error: {e!r}"[:150]]
                 if tg is not None:
+                    with db() as con:
+                        con.execute("INSERT OR IGNORE INTO rebalances VALUES (?,?)", (name, asof.isoformat()))
                     want = {t["key"]: t for t in tg}
                     for key in set(want) | set(pos):
                         t = want.get(key)
@@ -235,11 +241,13 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
             gross, value = 0.0, 0.0
             with db() as con:
                 rows = [dict(r) for r in con.execute("SELECT * FROM positions WHERE strategy=?", (name,))]
+            _prefetch(ib, [r["conid"] for r in rows])
             for r in rows:
                 from ib_async import Contract
                 c = Contract(conId=r["conid"])
                 try:
-                    ib.qualifyContracts(c)
+                    if r["conid"] not in _QCACHE:
+                        ib.qualifyContracts(c)
                     raw = _price(ib, c)["last"]
                     px = _unit(mod, c, raw, asof, r["multiplier"])[0] if raw else r["last_px"]
                 except Exception:
@@ -252,13 +260,63 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
             with db() as con:
                 con.execute("INSERT OR REPLACE INTO nav VALUES (?,?,?,?,?,?)",
                             (name, asof.isoformat(), cash + value, cash, gross, len(rows)))
+                con.execute("INSERT OR REPLACE INTO nav_intraday VALUES (?,?,?,?,?)",
+                            (name, datetime.now(timezone.utc).isoformat(timespec="minutes"), cash + value, gross, len(rows)))
             out[name] = {"nav": round(cash + value, 2), "positions": len(rows), "notes": note}
+        try:
+            _reconcile(ib)
+        except Exception as e:
+            log.warning("reconcile failed: %s", e)
         with db() as con:
             con.execute("INSERT INTO runs VALUES (?,?,?)", (datetime.now(timezone.utc).isoformat(timespec="seconds"),
                                                              "mark" if mark_only else "day", json.dumps(out)[:2000]))
     finally:
         ib.disconnect()
     return out
+
+
+def _prefetch(ib, conids: list) -> None:
+    """One batched market-data request for all contracts not yet quoted in this run (instead of 3 s each)."""
+    from ib_async import Contract
+    todo = [c for c in dict.fromkeys(conids) if c and c not in _QCACHE]
+    if not todo:
+        return
+    cs = [Contract(conId=c) for c in todo]
+    try:
+        cs = [c for c in ib.qualifyContracts(*cs) if c is not None and c.conId]
+    except Exception:
+        return
+    ib.reqMarketDataType(4)
+    ts = [(c, ib.reqMktData(c, "", False, False)) for c in cs]
+    ib.sleep(4)
+    ok = lambda v: v if v and v == v and v > 0 else None
+    for c, t in ts:
+        ib.cancelMktData(c)
+        mid = (ok(t.bid) + ok(t.ask)) / 2 if ok(t.bid) and ok(t.ask) else None
+        val = mid or ok(t.last) or ok(t.close)
+        if mid and (ok(t.ask) - ok(t.bid)) / mid > 0.015:
+            inside = [v for v in (ok(t.last), ok(t.close)) if v and ok(t.bid) <= v <= ok(t.ask)]
+            val = inside[0] if inside else mid
+        _QCACHE[c.conId] = {"bid": ok(t.bid), "ask": ok(t.ask), "last": val}
+
+
+def _reconcile(ib) -> None:
+    """Compare the runner's paper fills (sum over strategies per contract) with the paper account's positions."""
+    with db() as con:
+        paper = {r["conid"]: r["q"] for r in con.execute(
+            "SELECT p.conid, sum(p.qty) q FROM positions p JOIN (SELECT DISTINCT strategy, key FROM fills "
+            "WHERE mode LIKE 'paper:%') f ON f.strategy=p.strategy AND f.key=p.key GROUP BY p.conid")}
+    acct = {p.contract.conId: (p.position, p.contract.localSymbol or p.contract.symbol) for p in ib.positions()}
+    ts = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    rows = []
+    for cid in set(paper) | set(acct):
+        lq, (aq, sym) = paper.get(cid, 0.0), acct.get(cid, (0.0, str(cid)))
+        if abs((lq or 0) - (aq or 0)) > 1e-6:
+            rows.append((ts, cid, sym, lq, aq))
+    if rows:
+        with db() as con:
+            con.executemany("INSERT INTO recon VALUES (?,?,?,?,?)", rows)
+        log.warning("paper reconciliation: %d mismatches", len(rows))
 
 
 _FX = {}

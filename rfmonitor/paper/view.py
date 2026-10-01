@@ -82,13 +82,27 @@ def ibkr_forward() -> list[dict]:
             exp = json.loads(st["expected"] or "{}")
             last = nav[-1] if nav else {}
             ret = (last.get("nav", st["capital"]) / st["capital"] - 1) * 100 if nav else 0.0
-            out.append({"name": st["name"], "description": st["description"], "rebalance": st["rebalance"],
+            try:
+                intra = [dict(r) for r in con.execute(
+                    "SELECT ts, nav FROM nav_intraday WHERE strategy=? AND ts >= date('now') ORDER BY ts", (st["name"],))]
+            except sqlite3.OperationalError:
+                intra = []
+            out.append({"intraday": [round(r["nav"] / st["capital"] * 100, 3) for r in intra],
+                        "last_ts": intra[-1]["ts"][11:16] + " UTC" if intra else None,
+                        "intra_chg": ((intra[-1]["nav"] / intra[0]["nav"] - 1) * 100) if len(intra) > 1 else None,
+                        "name": st["name"], "description": st["description"], "rebalance": st["rebalance"],
                         "started": st["started"], "days": len(nav), "ret": ret, "n_pos": last.get("n_pos", 0),
                         "gross": last.get("gross", 0), "fills": len(fills),
                         "modes": sorted({f["mode"] for f in fills}),
                         "avg_spread_bps": sum(spreads) / len(spreads) if spreads else None,
                         "exp_ann": exp.get("ann_return"), "exp_sharpe": exp.get("sharpe"),
                         "curve": [round(r["nav"] / st["capital"] * 100, 3) for r in nav]})
+        try:
+            rc = con.execute("SELECT count(*) n, max(ts) t FROM recon WHERE ts >= datetime('now', '-1 hour')").fetchone()
+            if out:
+                out[0]["recon_recent"] = rc["n"]
+        except sqlite3.OperationalError:
+            pass
         return out
     finally:
         con.close()

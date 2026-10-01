@@ -104,12 +104,19 @@
   {% if ibkr %}
   <div class="scroll"><table class="small">
     <tr><th>Estratégia</th><th>Rebalanceia</th><th>Desde</th><th class="num">Dias</th><th class="num">Retorno</th><th class="num">Esperado a.a. (backtest)</th>
-      <th class="num">Posições</th><th class="num">Execuções</th><th>Modo</th><th class="num">Spread médio pago</th></tr>
+      <th class="num">Posições</th><th class="num">Execuções</th><th>Modo</th><th class="num">Spread médio pago</th><th>Hoje (ao vivo)</th></tr>
     {% for s in ibkr %}<tr><td><b>{{ s.name }}</b><div class="muted">{{ s.description[:90] }}</div></td><td>{{ s.rebalance }}</td><td>{{ s.started }}</td>
       <td class="num">{{ s.days }}</td><td class="num {{ 'up' if s.ret > 0 else 'down' if s.ret < 0 }}">{{ s.ret|fmt(2, '%') }}</td>
       <td class="num">{{ s.exp_ann|fmt(1, '%') if s.exp_ann is not none else '—' }}</td><td class="num">{{ s.n_pos }}</td><td class="num">{{ s.fills }}</td>
-      <td>{{ s.modes|join(', ') }}</td><td class="num">{{ s.avg_spread_bps|fmt(1) if s.avg_spread_bps is not none else '—' }} bps</td></tr>{% endfor %}
+      <td>{{ s.modes|join(', ') }}</td><td class="num">{{ s.avg_spread_bps|fmt(1) if s.avg_spread_bps is not none else '—' }} bps</td>
+      <td>{% if s.intraday|length > 1 %}{% set lo = s.intraday|min %}{% set hi = s.intraday|max %}{% set sp = (hi - lo) or 1 %}
+        <svg width="120" height="28" viewBox="0 0 120 28" role="img" aria-label="NAV de hoje"><polyline fill="none" stroke="currentColor" stroke-width="1.4"
+          points="{% for v in s.intraday %}{{ (loop.index0 / (s.intraday|length - 1) * 118 + 1)|round(1) }},{{ (26 - (v - lo) / sp * 24)|round(1) }} {% endfor %}"/></svg>
+        <div class="muted">{{ s.intra_chg|fmt(2, '%') if s.intra_chg is not none else '' }} · {{ s.last_ts or '' }}</div>{% else %}<span class="muted">{{ s.last_ts or 'aguardando pregão' }}</span>{% endif %}</td></tr>{% endfor %}
   </table></div>
+  <p class="small muted">Ao vivo: rebalanceia às 10:35 (sinais do fechamento anterior) e checa a cada 5 min das 10:00 às 17:55 — marca as posições,
+    grava a curva do dia e confere se o livro bate com as posições da conta paper.
+    {% if ibkr[0].recon_recent %}<span class="down">{{ ibkr[0].recon_recent }} divergência(s) com a conta paper na última hora.</span>{% endif %}</p>
   {% else %}<p class="muted small">Ainda sem estratégias ligadas: elas entram quando a pesquisa do laboratório terminar e a verificação aprovar.</p>{% endif %}
 </div>
 
