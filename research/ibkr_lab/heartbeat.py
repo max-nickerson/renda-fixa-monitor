@@ -47,7 +47,17 @@ def beat():
 
 if __name__ == "__main__":
     import asyncio
-    while True:
+    import subprocess
+    if "--once" in sys.argv:
         asyncio.set_event_loop(asyncio.new_event_loop())
         beat()
+        sys.exit(0)
+    # Each beat runs in a short-lived child process: any socket left half-open by a timed-out connect dies with it,
+    # so the Gateway never accumulates stale API connections.
+    while True:
+        try:
+            subprocess.run([sys.executable, __file__, "--once"], timeout=240,
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except subprocess.TimeoutExpired:
+            safe.log("heartbeat", {"ok": False, "error": "beat timed out (240 s)"})
         time.sleep(EVERY)
