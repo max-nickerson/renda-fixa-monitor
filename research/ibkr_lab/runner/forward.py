@@ -189,9 +189,24 @@ def run_day(asof: date | None = None, mark_only: bool = False) -> dict:
                         mode = None
                         if live_orders:
                             try:
-                                st = safe.place_paper_order(ib, c, action, abs(dq), "LMT",
-                                                            q["ask"] if action == "BUY" else q["bid"], strategy=name,
-                                                            est_notional_usd=abs(dq) * unit_usd)
+                                # marketable limit (touch +/- 0.3%), wait up to 45 s, cancel the rest: the ledger only
+                                # records what IBKR really filled, so it matches the paper account.
+                                lim = (q["ask"] or px) * 1.003 if action == "BUY" else (q["bid"] or px) * 0.997
+                                tick = 0.01 if (c.secType == "STK") else None
+                                if tick:
+                                    lim = round(lim / tick) * tick
+                                # futures/options: some are quoted in rate (DI1) or wide, so use a market order on
+                                # paper; stocks/bonds use the marketable limit above
+                                otype = "LMT" if c.secType in ("STK", "BOND") else "MKT"
+                                st = safe.place_paper_order(ib, c, action, abs(dq), otype, lim if otype == "LMT" else None,
+                                                            strategy=name,
+                                                            est_notional_usd=abs(dq) * unit_usd, wait=3,
+                                                            wait_fill=45, cancel_unfilled=True)
+                                filled = float(st.get("filled") or 0)
+                                if filled < 1:
+                                    note.append(f"{key}: paper order not filled ({st.get('status')})"[:120])
+                                    continue
+                                dq = filled if dq > 0 else -filled
                                 fill_px, mode = (st.get("avg_price") or px), f"paper:{st.get('status')}"
                             except ValueError as e:  # safe.py size cap -> never bypass it, shadow instead
                                 note.append(f"{key}: {e}"[:120])

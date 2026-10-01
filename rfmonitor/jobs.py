@@ -148,7 +148,7 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(_ativos, "interval", seconds=60, id="ativos", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(seconds=20))
-    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=17, minute=25, id="ibkr_forward_day",
+    sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=15, minute=40, id="ibkr_forward_day",
                   kwargs={"mark_only": False}, max_instances=1, coalesce=True)
     sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour="10-16", minute=47, id="ibkr_forward_mark",
                   kwargs={"mark_only": True}, max_instances=1, coalesce=True)

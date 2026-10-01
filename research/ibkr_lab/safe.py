@@ -74,8 +74,11 @@ def assert_paper(ib) -> None:
 
 
 def place_paper_order(ib, contract, action: str, qty: float, order_type: str = "LMT", limit: float | None = None,
-                      strategy: str = "unknown", est_notional_usd: float | None = None, wait: float = 5.0) -> dict:
-    """Send an order to the PAPER account (never live). Returns status dict; rejected orders are logged too."""
+                      strategy: str = "unknown", est_notional_usd: float | None = None, wait: float = 5.0,
+                      wait_fill: float = 0.0, cancel_unfilled: bool = False) -> dict:
+    """Send an order to the PAPER account (never live). Returns status dict; rejected orders are logged too.
+    wait_fill > 0: wait up to that many seconds for a complete fill; cancel_unfilled: cancel any remainder so the
+    caller's ledger only ever contains what IBKR actually filled ('filled' / 'avg_price' in the result)."""
     from ib_async import LimitOrder, MarketOrder
     assert_paper(ib)
     if est_notional_usd is not None and est_notional_usd > MAX_ORDER_USD:
@@ -85,6 +88,13 @@ def place_paper_order(ib, contract, action: str, qty: float, order_type: str = "
     try:
         trade = ib.placeOrder(contract, order)
         ib.sleep(wait)
+        waited = wait
+        while wait_fill and waited < wait_fill and trade.orderStatus.status not in ("Filled", "Cancelled", "Inactive"):
+            ib.sleep(2)
+            waited += 2
+        if cancel_unfilled and trade.orderStatus.status not in ("Filled", "Cancelled", "Inactive"):
+            ib.cancelOrder(trade.order)
+            ib.sleep(2)
         st = {"status": trade.orderStatus.status, "filled": trade.orderStatus.filled,
               "avg_price": trade.orderStatus.avgFillPrice,
               "log": [f"{e.status}: {e.message}" for e in trade.log][-4:]}

@@ -15,7 +15,7 @@ def beat():
     from ib_async import Stock, Forex
     rec = {"ok": False}
     try:
-        ib = safe.connect_paper(client_id=59, timeout=10)
+        ib = safe.connect_paper(client_id=59, timeout=45)
     except Exception as e:
         rec["error"] = repr(e)[:200]
         safe.log("heartbeat", rec)
