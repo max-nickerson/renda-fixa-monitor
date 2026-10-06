@@ -142,6 +142,29 @@ def _ibkr_forward_run(mark_only: bool):
         log.exception("ibkr forward run failed (is IB Gateway logged into the paper account?)")
 
 
+def _tv_store_update(retry: bool = False):
+    """Append the missing daily bars to the TradingView store (data/tv_lab) from IBKR paper historical data, for the
+    series the tv_core2_* plugins read (research/tv_lab/update_ibkr.py). Runs in a subprocess so a stale Gateway
+    socket dies with it; the retry only runs when the morning run did not complete (resumes where it stopped)."""
+    import os
+    import subprocess
+    import sys
+    from .config import ROOT
+    args = [sys.executable, "-m", "research.tv_lab.update_ibkr", "--client-id", "141"]
+    if retry:
+        args.append("--if-incomplete")
+    env = {**os.environ, "PYTHONPATH": str(ROOT), "PYTHONIOENCODING": "utf-8"}
+    try:
+        r = subprocess.run(args, cwd=str(ROOT), env=env, capture_output=True, text=True, encoding="utf-8",
+                           errors="replace", timeout=(18 if retry else 90) * 60,
+                           creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        log.info("tv store update%s: exit %s %s", " (retry)" if retry else "", r.returncode, r.stdout[-400:])
+    except subprocess.TimeoutExpired:
+        log.error("tv store update%s timed out (see data/tv_lab/update_ibkr.log)", " (retry)" if retry else "")
+    except Exception:
+        log.exception("tv store update failed")
+
+
 def _paper():
     """Paper trading: collect the day's data and advance the books (idempotent; cheap when nothing is new)."""
     try:
@@ -161,6 +184,11 @@ def start_scheduler():
                   max_instances=1, coalesce=True)
     sched.add_job(_ativos, "interval", seconds=60, id="ativos", max_instances=1, coalesce=True,
                   next_run_time=datetime.now() + timedelta(seconds=20))
+    # TradingView store top-up from IBKR (tv_core2_* inputs) before the rebalance; retry at 10:15 if incomplete.
+    sched.add_job(_tv_store_update, "cron", day_of_week="mon-fri", hour=8, minute=30, id="tv_store_update",
+                  max_instances=1, coalesce=True, misfire_grace_time=3600)
+    sched.add_job(_tv_store_update, "cron", day_of_week="mon-fri", hour=10, minute=15, id="tv_store_update_retry",
+                  kwargs={"retry": True}, max_instances=1, coalesce=True, misfire_grace_time=600)
     # IBKR paper books: rebalance once a day shortly after the B3 open (signals use the previous close), then live
     # probes every 5 minutes while B3/CME/US are open: batched marks, intraday NAV, reconciliation with the account.
     sched.add_job(_ibkr_forward, "cron", day_of_week="mon-fri", hour=10, minute=35, id="ibkr_forward_day",
